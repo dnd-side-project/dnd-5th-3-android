@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import how.about.it.R
 import how.about.it.databinding.ActivityLoginBinding
+import how.about.it.model.UserProfile
 
 
 class LoginActivity : AppCompatActivity() {
@@ -25,6 +26,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginViewBinding : ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         loginViewBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(loginViewBinding.root)
@@ -38,6 +40,11 @@ class LoginActivity : AppCompatActivity() {
             .build()
         // 위에서 만든 GoogleSignInOptions을 사용해 GoogleSignInClient 객체를 만듬
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        val gsa = GoogleSignIn.getLastSignedInAccount(this@LoginActivity)
+        if (gsa != null && gsa.id != null) { // 이미 로그인 한 경우 토큰으로 로그인 처리
+            Log.d(TAG,"already Login")
+            mGoogleSignInClient.silentSignIn().addOnCompleteListener(this, OnCompleteListener<GoogleSignInAccount?> { task -> handleSignInResult(task) })
+        }
 
         loginViewBinding.btnGoogleLogin.setOnClickListener {
             GoogleAccountSignIn()
@@ -56,32 +63,43 @@ class LoginActivity : AppCompatActivity() {
         handleSignInResult(task)
     }
     private fun GoogleAccountSignIn() {
-        // 현재 로그인한 사용자의 프로필 정보를 요청하는 메소드를 통해 이미 로그인 되어있는지 확인
-        val gsa = GoogleSignIn.getLastSignedInAccount(this@LoginActivity)
-        if (gsa != null && gsa.id != null) { // 이미 로그인 한 경우 토큰으로 로그인 처리
-            Log.d(TAG,"already Login")
-            mGoogleSignInClient.silentSignIn().addOnCompleteListener(this, OnCompleteListener<GoogleSignInAccount?> { task -> handleSignInResult(task) })
-        } else { // 로그인이 되어있지 않은 경우 (앱에 연동되어있지 않은 경우)
+        // 로그인이 되어있지 않은 경우 (앱에 연동되어있지 않은 경우)
             val googleSignInIntent = mGoogleSignInClient.signInIntent
             googleSigninResultLauncher.launch(googleSignInIntent)
-        }
-
     }
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account : GoogleSignInAccount? = completedTask.getResult(ApiException::class.java)
-            val idToken = account!!.idToken
-            // TODO : 백엔드 서버에 ID Token 전송 후 인증
 
             if (account != null) {
                 // Signed in successfully, show authenticated UI.
                 // updateUI(account)
+                val loginIntent = Intent(this@LoginActivity, MainActivity::class.java)
+                loginIntent.putExtra("idToken", account.idToken) // 메인으로 넘겨줄 데이터 (아이디 토큰)
+                startActivity(loginIntent)
+
+                val personId = account.id
+                val idToken = account.idToken
                 val personName = account.displayName
                 val personGivenName = account.givenName
                 val personFamilyName = account.familyName
                 val personEmail = account.email
-                val personId = account.id
                 val personPhoto: Uri? = account.photoUrl
+
+                val userProfile = UserProfile(
+                    "$personId",
+                    "$idToken",
+                    "$personEmail",
+                    "$personName",
+                    "$personGivenName",
+                    "$personFamilyName",
+                    "$personPhoto"
+                )
+
+                // TODO : 백엔드 서버에 ID Token 전송 후 인증
+
+                //RetrofitBuilder.api.userProfileRequest(RequestLogin).enqueue(object : Callback<ResponseLogin>)
+
                 Log.d(TAG, "handleSignInResult:personName $personName")
                 Log.d(TAG, "handleSignInResult:personGivenName $personGivenName")
                 Log.d(TAG, "handleSignInResult:personEmail $personEmail")
@@ -95,10 +113,15 @@ class LoginActivity : AppCompatActivity() {
             Log.e(TAG, "signInResult:failed code=" + e.statusCode)
             // updateUI(null)
         }
+        finish()
     }
 
     private fun EmailAccountSignIn() {
-
+        // Email로 로그인하는 Fragment로 이동
+        val emailLoginFragment = EmailLoginFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.frameLayout_login_email_fragment, emailLoginFragment)
+        transaction.commit()
     }
 
     private fun GoogleAccountsignOut() { // 단순히 구글 계정 로그아웃 하려는 경우, 앱에 연결된 계정 삭제

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.EmailLoginFragment"
+    android:background="#FFFFFF"
+    >
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/et_login_email_id"
+        app:srcCompat="@drawable/ic_launcher_background"
+        />
+
+    <EditText
+        android:id="@+id/et_login_email_id"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleX="0.7"
+        android:hint="Email ID 입력"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/et_login_email_password"
+        />
+    <EditText
+        android:id="@+id/et_login_email_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleX="0.7"
+        android:hint="비밀번호 입력"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity=""
+        />
+    <Button
+        android:id="@+id/btn_login_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_login_email_password"
+        android:text="이메일 로그인"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
