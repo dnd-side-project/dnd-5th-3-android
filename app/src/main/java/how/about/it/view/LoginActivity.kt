@@ -66,23 +66,27 @@ class LoginActivity : AppCompatActivity() {
         // 로그인이 되어있지 않은 경우 (앱에 연동되어있지 않은 경우)
             val googleSignInIntent = mGoogleSignInClient.signInIntent
             googleSigninResultLauncher.launch(googleSignInIntent)
+        }
+
     }
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account : GoogleSignInAccount? = completedTask.getResult(ApiException::class.java)
+            val idToken = account!!.idToken
+            // TODO : 백엔드 서버에 ID Token 전송 후 인증
 
             if (account != null) {
                 // Signed in successfully, show authenticated UI.
-                // updateUI(account)
                 val loginIntent = Intent(this@LoginActivity, MainActivity::class.java)
                 loginIntent.putExtra("idToken", account.idToken) // 메인으로 넘겨줄 데이터 (아이디 토큰)
                 startActivity(loginIntent)
 
-                val personId = account.id
+                // TODO : 백엔드 서버에 ID Token 전송 후 인증
+                //RetrofitBuilder.api.userProfileRequest(RequestLogin).enqueue(object : Callback<ResponseLogin>)
+/*
                 val idToken = account.idToken
+                val personId = account.id
                 val personName = account.displayName
-                val personGivenName = account.givenName
-                val personFamilyName = account.familyName
                 val personEmail = account.email
                 val personPhoto: Uri? = account.photoUrl
 
@@ -91,21 +95,12 @@ class LoginActivity : AppCompatActivity() {
                     "$idToken",
                     "$personEmail",
                     "$personName",
-                    "$personGivenName",
-                    "$personFamilyName",
                     "$personPhoto"
                 )
-
-                // TODO : 백엔드 서버에 ID Token 전송 후 인증
-
-                //RetrofitBuilder.api.userProfileRequest(RequestLogin).enqueue(object : Callback<ResponseLogin>)
-
                 Log.d(TAG, "handleSignInResult:personName $personName")
-                Log.d(TAG, "handleSignInResult:personGivenName $personGivenName")
                 Log.d(TAG, "handleSignInResult:personEmail $personEmail")
                 Log.d(TAG, "handleSignInResult:personId $personId")
-                Log.d(TAG, "handleSignInResult:personFamilyName $personFamilyName")
-                Log.d(TAG, "handleSignInResult:personPhoto $personPhoto")
+                Log.d(TAG, "handleSignInResult:personPhoto $personPhoto") */
             }
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
@@ -129,7 +124,6 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) {
                 Log.d(TAG, "LOGOUT GOOGLE")
             }
-
     }
     private fun revokeAccess() { // 사용자가 회원 삭제를 요청하는 경우, 앱이 Google API에서 얻은 정보 삭제
         mGoogleSignInClient.revokeAccess()
