@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HowAboutIt</string>
+    <string name="server_client_id">SERVER_CLIENT_ID</string>
 </resources>
