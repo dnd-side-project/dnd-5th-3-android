@@ -8,16 +8,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import how.about.it.database.SharedManager
+import how.about.it.database.User
 import how.about.it.databinding.FragmentEmailLoginBinding
 import how.about.it.model.RequestLogin
 import how.about.it.model.ResponseLogin
 import how.about.it.network.RequestToServer
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.math.log
 
 class EmailLoginFragment : Fragment() {
     private var _binding : FragmentEmailLoginBinding?= null
     private val binding get() = _binding!!
+    private val sharedManager : SharedManager by lazy { SharedManager(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,11 +53,15 @@ class EmailLoginFragment : Fragment() {
                     ) {
                         if (response.isSuccessful) {
                             if (response.body()!!.success) {
-                                Log.d("성공", response.body()!!.data.toString())
-                                // TODO : 로그인 성공 후 토큰 저장 및 화면 전환
-                                // userJWT = response.body()!!.data!!.accessToken
+                                Log.d("성공", response.body()!!.token.toString())
+                                // 로그인 성공 후 토큰 저장 및 화면 전환
+                                val currentUser = User().apply {
+                                    accessToken = response.body()!!.token!!.accessToken
+                                    refreshToken = response.body()!!.token!!.refreshToken
+                                }
+                                sharedManager.saveCurrentUser(currentUser) // SharedPreference에 저장
+
                                 val loginIntent = Intent(activity, MainActivity::class.java)
-                                loginIntent.putExtra("idToken", "userJWT") // 메인으로 넘겨줄 데이터 (아이디 토큰)
                                 startActivity(loginIntent)
                             } else {
                                 Log.d("실패", "실패")

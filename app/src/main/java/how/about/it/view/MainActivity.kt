@@ -10,6 +10,9 @@ import how.about.it.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private val TAG ="MainActivity"
     private lateinit var mainViewBinding : ActivityMainBinding
+
+    private val sharedManager : SharedManager by lazy { SharedManager(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainViewBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -21,6 +24,8 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "$idToken" )
             mainViewBinding.mainText.text = idToken
         }
+        val currentUser = sharedManager.getCurrentUser()
+        mainViewBinding.mainText.text = currentUser.accessToken.toString()
 
 
     }
