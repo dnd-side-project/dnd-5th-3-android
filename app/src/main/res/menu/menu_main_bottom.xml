@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/feedFragment"
+        android:icon="@drawable/ic_feed"
+        android:title="@string/feed" />
+    <item
+        android:id="@+id/myPageFragment"
+        android:icon="@drawable/ic_my_page"
+        android:title="@string/my_page" />
+</menu>
