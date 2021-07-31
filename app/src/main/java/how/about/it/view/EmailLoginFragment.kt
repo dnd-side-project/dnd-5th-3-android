@@ -14,9 +14,9 @@ import how.about.it.databinding.FragmentEmailLoginBinding
 import how.about.it.model.RequestLogin
 import how.about.it.model.ResponseLogin
 import how.about.it.network.RequestToServer
+import how.about.it.view.main.MainActivity
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.math.log
 
 class EmailLoginFragment : Fragment() {
     private var _binding : FragmentEmailLoginBinding?= null
