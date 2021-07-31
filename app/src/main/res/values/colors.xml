@@ -22,5 +22,10 @@
     <color name="green_00EA6C">#00EA6C</color>
     <color name="blue_50B0FF">#50B0FF</color>
     <color name="brown_AA9683">#AA9683</color>
-    
+
+    <color name="gray_e1e3e8">#E1E3E8</color>
+    <color name="black_626670">#626670</color>
+    <color name="black_13161f">#13161F</color>
+    <color name="red_ff227c">#FF227c</color>
+    <color name="blue_0098ff">#0098ff</color>
 </resources>

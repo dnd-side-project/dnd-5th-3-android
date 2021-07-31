@@ -14,13 +14,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HowAboutIt"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.LoginActivity" />
-        <activity android:name=".view.main.MainActivity">
+        <activity android:name=".view.ToolbarActivity"></activity>
+        <activity android:name=".view.login.LoginActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".view.main.MainActivity">
         </activity>
     </application>
 
