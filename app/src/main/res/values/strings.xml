@@ -3,4 +3,18 @@
     <string name="server_client_id">SERVER_CLIENT_ID</string>
     <string name="feed">피드</string>
     <string name="my_page">마이페이지</string>
+
+    <string name="login_email">이메일로 시작하기</string>
+    <string name="signup">무물이 처음이신가요? <u>회원가입</u></string>
+    <string name="email">이메일</string>
+    <string name="password">비밀번호</string>
+    <string name="hint_email">이메일을 입력해주세요</string>
+    <string name="hint_password">비밀번호를 입력해주세요</string>
+
+    <string name="fail_message_email">등록된 이메일이 없어요! 이메일을 확인해주세요</string>
+    <string name="fail_message_password">비밀번호가 올바르지 않아요!</string>
+    <string name="reset_password">비밀번호를 잊어버리셨나요? <b><font color="#FF227C"><u>비밀번호 재설정</u></font></b></string>
+    <string name="next">계속하기</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
