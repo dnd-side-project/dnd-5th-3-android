@@ -4,51 +4,169 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.EmailLoginFragment"
-    android:background="#FFFFFF"
+    tools:context=".view.login.EmailLoginFragment"
+    android:background="@color/bluegray900_13161f"
+    android:clickable="true"
     >
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="wrap_content"
+    <include layout="@layout/activity_toolbar"
+        android:id="@+id/toolbar_login_board"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"/>
+
+    <TextView
+        android:id="@+id/tv_message_email"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="left"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_login_board"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/et_login_email_id"
-        app:srcCompat="@drawable/ic_launcher_background"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/email"
+        android:textColor="@color/bluegray200_E1E3E8"
         />
 
-    <EditText
-        android:id="@+id/et_login_email_id"
+    <FrameLayout
+        android:id="@+id/frameLayout_login_email_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_message_email"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+        <EditText
+            android:id="@+id/et_login_email_id"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_email"
+            android:textColorHint="@color/bluegray600_626670"
+            android:textColor="@color/bluegray200_E1E3E8"
+            android:backgroundTint="@color/bluegray300_CBCFD6"
+            />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_delete_et_email_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/ic_delete_edittext"
+            android:background="#00000000"
+            android:visibility="invisible"
+            />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_message_fail_email_check"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:scaleX="0.7"
-        android:hint="Email ID 입력"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout_login_email_id"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/et_login_email_password"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/fail_message_email"
+        android:textColor="@color/moomool_pink_ff227c"
+        android:visibility="invisible"
         />
-    <EditText
-        android:id="@+id/et_login_email_password"
+
+    <TextView
+        android:id="@+id/tv_message_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:scaleX="0.7"
-        android:hint="비밀번호 입력"
-        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="left"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout_login_email_id"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/password"
+        android:textColor="@color/bluegray200_E1E3E8"
+        />
+
+    <FrameLayout
+        android:id="@+id/frameLayout_login_email_password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_message_password"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="12dp">
+
+        <EditText
+            android:id="@+id/et_login_email_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_password"
+            android:textColorHint="@color/bluegray600_626670"
+            android:textColor="@color/bluegray200_E1E3E8"
+            android:backgroundTint="@color/bluegray300_CBCFD6"
+            />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_delete_et_email_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/ic_delete_edittext"
+            android:background="#00000000"
+            android:visibility="invisible"
+            />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_message_fail_password_check"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout_login_email_password"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/fail_message_password"
+        android:textColor="@color/moomool_pink_ff227c"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/tv_message_password_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/btn_login_email"
+        app:layout_constraintLeft_toLeftOf="@id/btn_login_email"
+        app:layout_constraintRight_toRightOf="@+id/btn_login_email"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/reset_password"
+        android:textColor="@color/bluegray300_CBCFD6"
+        android:visibility="visible"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_login_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:gravity=""
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/next_button"
+        android:textSize="16sp"
+        android:textColor="@color/bluegray600_626670"
+        android:background="@drawable/button_login_email_off"
+        android:stateListAnimator="@null"
+        android:textStyle="normal"
         />
-    <Button
-        android:id="@+id/btn_login_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_login_email_password"
-        android:text="이메일 로그인"
-        />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
