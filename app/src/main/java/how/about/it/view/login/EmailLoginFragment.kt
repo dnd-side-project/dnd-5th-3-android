@@ -2,12 +2,14 @@ package how.about.it.view.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import how.about.it.R
 import how.about.it.database.SharedManager
 import how.about.it.database.User
@@ -28,15 +30,13 @@ class EmailLoginFragment : Fragment() {
 
     val _loginActivity = activity
 
-        override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _binding = FragmentEmailLoginBinding.inflate(layoutInflater, container, false)
         val view = binding.root
         // val requestToServer = RequestToServer
-
         binding.toolbarLoginBoard.tvToolbarTitle.text = "로그인"
         (activity as LoginActivity).setSupportActionBar(binding.toolbarLoginBoard.toolbarBoard)
         (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -89,6 +89,9 @@ class EmailLoginFragment : Fragment() {
                                 Log.d("실패", "실패")
                                 Toast.makeText(activity, "이메일과 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT)
                                     .show()
+                                binding.tvMessageFailEmailCheck.visibility = View.VISIBLE
+                                binding.tvMessageFailPasswordCheck.visibility = View.VISIBLE
+                                binding.tvMessagePasswordReset.visibility = View.VISIBLE
                             }
                         }
                     }
@@ -96,10 +99,71 @@ class EmailLoginFragment : Fragment() {
             }
         }
 
-            binding.tvMessagePasswordReset.setOnClickListener {
-                // TODO : 이메일 계정 패스워드 분실 시 패스워드 초기화 하는 Fragment로 이동하는 코드 작성
+        binding.tvMessagePasswordReset.setOnClickListener {
+            (activity as LoginActivity).ReplaceEmailPasswordResetFragment()
+        }
+
+
+        binding.btnDeleteEtEmailId.setOnClickListener{
+            binding.etLoginEmailId.setText("")
+        }
+        binding.btnDeleteEtEmailPassword.setOnClickListener {
+            binding.etLoginEmailPassword.setText("")
+        }
+
+        binding.etLoginEmailId.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if(!s.isNullOrBlank() && !binding.etLoginEmailPassword.text.isNullOrBlank()){
+                        activeButtonLoginEmail()
+                } else { deactiveButtonLoginEmail() }
+
+                if(!s.isNullOrBlank()){
+                    binding.btnDeleteEtEmailId.visibility = View.VISIBLE
+                } else { binding.btnDeleteEtEmailId.visibility = View.INVISIBLE }
             }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if(!s.isNullOrBlank() && !binding.etLoginEmailPassword.text.isNullOrBlank()){
+                    activeButtonLoginEmail()
+                } else { deactiveButtonLoginEmail() }
+
+                if(!s.isNullOrBlank()){
+                    binding.btnDeleteEtEmailId.visibility = View.VISIBLE
+                } else { binding.btnDeleteEtEmailId.visibility = View.INVISIBLE }
+            }
+        })
+        binding.etLoginEmailPassword.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if(!s.isNullOrBlank() && !binding.etLoginEmailId.text.isNullOrBlank()){
+                    activeButtonLoginEmail()
+                } else { deactiveButtonLoginEmail() }
+
+                if(!s.isNullOrBlank()){
+                    binding.btnDeleteEtEmailPassword.visibility = View.VISIBLE
+                } else { binding.btnDeleteEtEmailPassword.visibility = View.INVISIBLE }
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if(!s.isNullOrBlank() && !binding.etLoginEmailId.text.isNullOrBlank()){
+                    activeButtonLoginEmail()
+                } else { deactiveButtonLoginEmail() }
+
+                if(!s.isNullOrBlank()){
+                    binding.btnDeleteEtEmailPassword.visibility = View.VISIBLE
+                } else { binding.btnDeleteEtEmailPassword.visibility = View.INVISIBLE }
+            }
+        })
+
         return view
+    }
+
+    fun activeButtonLoginEmail() {
+        binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_login_email))
+        binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray50_F9FAFC, context?.theme))
+    }
+    fun deactiveButtonLoginEmail() {
+        binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_login_email_off))
+        binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
     }
 
     override fun onDestroyView() {

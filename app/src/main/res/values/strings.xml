@@ -14,7 +14,10 @@
     <string name="fail_message_email">등록된 이메일이 없어요! 이메일을 확인해주세요</string>
     <string name="fail_message_password">비밀번호가 올바르지 않아요!</string>
     <string name="reset_password">비밀번호를 잊어버리셨나요? <b><font color="#FF227C"><u>비밀번호 재설정</u></font></b></string>
-    <string name="next">계속하기</string>
+    <string name="reset_password_message">비밀번호 재설정을 위해\n
+        재설정 메일을 이메일로 보내드릴게요.</string>
+    <string name="next_button">계속하기</string>
+    <string name="reset_password_button">비밀번호 초기화</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

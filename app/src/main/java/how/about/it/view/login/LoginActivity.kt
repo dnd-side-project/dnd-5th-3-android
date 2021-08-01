@@ -6,6 +6,8 @@ import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -99,7 +101,12 @@ class LoginActivity : ToolbarActivity() {
         }
         finish()
     }
-
+    public fun ReplaceEmailPasswordResetFragment() {
+        val emailPasswordResetFragment = EmailPasswordResetFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frameLayout_login_email_fragment, emailPasswordResetFragment)
+        transaction.commit()
+    }
     private fun EmailAccountSignIn() {
         // Email로 로그인하는 Fragment로 이동
         val emailLoginFragment = EmailLoginFragment()
@@ -107,7 +114,6 @@ class LoginActivity : ToolbarActivity() {
         transaction.add(R.id.frameLayout_login_email_fragment, emailLoginFragment)
         transaction.commit()
     }
-
     private fun GoogleAccountsignOut() { // 단순히 구글 계정 로그아웃 하려는 경우, 앱에 연결된 계정 삭제
         mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
