@@ -135,12 +135,12 @@ class EmailSignupSetPasswordFragment : Fragment() {
 
     private fun activeButtonNext() {
         binding.btnNext.isEnabled = true
-        binding.btnNext.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_login_email))
+        binding.btnNext.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_enable))
         binding.btnNext.setTextColor(resources.getColorStateList(R.color.bluegray50_F9FAFC, context?.theme))
     }
     private fun deactiveButtonNext() {
         binding.btnNext.isEnabled = false
-        binding.btnNext.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_login_email_off))
+        binding.btnNext.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
         binding.btnNext.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
     }
 

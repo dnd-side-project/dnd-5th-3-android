@@ -14,13 +14,7 @@ import how.about.it.R
 import how.about.it.database.SharedManager
 import how.about.it.database.User
 import how.about.it.databinding.FragmentEmailLoginBinding
-import how.about.it.model.RequestLogin
-import how.about.it.model.ResponseLogin
-import how.about.it.network.RequestToServer
-import how.about.it.view.ToolbarActivity
 import how.about.it.view.main.MainActivity
-import retrofit2.Callback
-import retrofit2.Response
 
 class EmailLoginFragment : Fragment() {
     private var _binding : FragmentEmailLoginBinding?= null
@@ -158,11 +152,11 @@ class EmailLoginFragment : Fragment() {
     }
 
     fun activeButtonLoginEmail() {
-        binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_login_email))
+        binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_enable))
         binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray50_F9FAFC, context?.theme))
     }
     fun deactiveButtonLoginEmail() {
-        binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_login_email_off))
+        binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
         binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
     }
 
