@@ -4,10 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -18,6 +14,9 @@ import com.google.android.gms.tasks.Task
 import how.about.it.R
 import how.about.it.databinding.ActivityLoginBinding
 import how.about.it.view.ToolbarActivity
+import how.about.it.view.signup.EmailSignupSetIDFragment
+import how.about.it.view.signup.EmailSignupSetNicknameFragment
+import how.about.it.view.signup.EmailSignupSetPasswordFragment
 
 
 class LoginActivity : ToolbarActivity() {
@@ -53,6 +52,9 @@ class LoginActivity : ToolbarActivity() {
         }
         loginViewBinding.btnEmailLogin.setOnClickListener {
             EmailAccountSignIn()
+        }
+        loginViewBinding.tvSignup.setOnClickListener{
+            EmailAccountSignUp()
         }
     }
 
@@ -101,18 +103,34 @@ class LoginActivity : ToolbarActivity() {
         }
         finish()
     }
+
+    public fun EmailAccountSignUp() {
+        // 액티비티 버튼이 눌리지 않도록 임시조치
+        loginViewBinding.btnEmailLogin.isEnabled = false
+        loginViewBinding.btnGoogleLogin.isEnabled = false
+        val emailSignupSetIDFragment = EmailSignupSetIDFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.frameLayout_login_signup_fragment, emailSignupSetIDFragment)
+            .commit()
+    }
+
     public fun ReplaceEmailPasswordResetFragment() {
         val emailPasswordResetFragment = EmailPasswordResetFragment()
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.frameLayout_login_email_fragment, emailPasswordResetFragment)
-        transaction.commit()
+        transaction.replace(R.id.frameLayout_login_signup_fragment, emailPasswordResetFragment)
+            .addToBackStack(null)
+            .commit()
     }
     private fun EmailAccountSignIn() {
+        // 액티비티 버튼이 눌리지 않도록 임시조치
+        loginViewBinding.btnEmailLogin.isEnabled = false
+        loginViewBinding.btnGoogleLogin.isEnabled = false
         // Email로 로그인하는 Fragment로 이동
         val emailLoginFragment = EmailLoginFragment()
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.frameLayout_login_email_fragment, emailLoginFragment)
-        transaction.commit()
+        transaction.add(R.id.frameLayout_login_signup_fragment, emailLoginFragment)
+            .addToBackStack(null)
+            .commit()
     }
     private fun GoogleAccountsignOut() { // 단순히 구글 계정 로그아웃 하려는 경우, 앱에 연결된 계정 삭제
         mGoogleSignInClient.signOut()
@@ -126,4 +144,19 @@ class LoginActivity : ToolbarActivity() {
                 // Update your UI here
             }
     }
+    public fun ReplaceEmailSignupSetPasswordFragment() {
+        val emailSignupSetPasswordFragment = EmailSignupSetPasswordFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frameLayout_login_signup_fragment, emailSignupSetPasswordFragment)
+            .addToBackStack(null)
+            .commit()
+    }
+    public fun ReplaceEmailSignupSetNicknameFragment() {
+        val emailSignupSetNicknameFragment = EmailSignupSetNicknameFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frameLayout_login_signup_fragment, emailSignupSetNicknameFragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
 }

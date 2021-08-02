@@ -18,6 +18,27 @@
         재설정 메일을 이메일로 보내드릴게요.</string>
     <string name="next_button">계속하기</string>
     <string name="reset_password_button">비밀번호 초기화</string>
+
+    <string name="fail_message_eamil_signup_id_format">잉? 이메일 형식을 확인해주세요</string>
+    <string name="fail_message_email_signup_id_duplicate">어라? 이미 가입된 이메일이에요!</string>
+    <string name="success_message_email_signup_id">멋진 이메일이네요!</string>
+    <string name="message_email_signup_id">이메일은 로그인과\n비밀번호 분실 시 사용될 거에요!</string>
+
+    <string name="hint_password_format">5자 이상으로 입력해주세요</string>
+    <string name="hint_password_check">비밀번호 확인할게요 :)</string>
+    <string name="fail_message_email_signup_password_format">5자리를 넘겨주세요</string>
+    <string name="password_check">비밀번호 확인</string>
+    <string name="fail_message_email_signup_password_empty">앗! 위에 비밀번호를 먼저 입력해주세요</string>
+    <string name="fail_message_email_signup_password_check">헉! 비밀번호가 다른데요? 확인해 주시겠어요?</string>
+    <string name="success_message_email_signup_password">좋은데요!</string>
+    <string name="success_message_email_signup_password_check">완벽해요! 다음으로 넘어갈까요?</string>
+
+    <string name="nickname">닉네임</string>
+    <string name="hint_ninckname">닉네임을 입력해주세요!</string>
+    <string name="fail_message_email_signup_nickname_format">8글자를 넘지않게 적어주세요</string>
+    <string name="fail_message_email_signup_nickname_duplicate">어라? 이미 있는 아이디네요?</string>
+    <string name="success_message_email_signup_nickname">세상에..너무 멋진 닉네임이에요!</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
