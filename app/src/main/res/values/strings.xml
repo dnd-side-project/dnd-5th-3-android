@@ -18,6 +18,21 @@
         재설정 메일을 이메일로 보내드릴게요.</string>
     <string name="next_button">계속하기</string>
     <string name="reset_password_button">비밀번호 초기화</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Feed -->
+    <string name="feed_empty">더이상 게시물이 없어요 ㅠ.ㅠ\n당신의 고민을 올려주세요!</string>
+    <string name="feed_list">무물리스트</string>
+    <string name="feed_category_popular">인기순</string>
+    <string name="feed_category_new">최신순</string>
+    <string name="feed_category_coming_end">마감임박순</string>
+    <string name="feed_category_end">최근마감순</string>
+    <string name="feed_item_title1">🔥불타고 있는 글</string>
+    <string name="feed_item_title2">❤사랑듬뿍받은 글</string>
+    <string name="feed_item_title3">😆최고의 반응글</string>
+    <string name="feed_item_title4">⭐무물의 추천글</string>
+    <string name="feed_item_title5">⚔막상막하 투표글</string>
+    <string name="feed_item_not_end">진행중</string>
+    <string name="feed_item_end">끝</string>
+    <string name="feed_item_nickname_time">%s · %s</string>
+    <string name="feed_item_percent">%d%</string>
 </resources>
