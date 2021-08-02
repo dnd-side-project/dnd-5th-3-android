@@ -12,7 +12,15 @@
         <action
             android:id="@+id/action_feedFragment_to_writeFragment"
             app:destination="@id/writeFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="how.about.it.view.notification.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
     <fragment
         android:id="@+id/writeFragment"
         android:name="how.about.it.view.write.WriteFragment"
