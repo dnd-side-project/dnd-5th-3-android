@@ -47,7 +47,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toTopOf="@id/tv_signup"
-            android:background="@drawable/button_login_email"
+            android:background="@drawable/button_default_enable"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:text="@string/login_email"

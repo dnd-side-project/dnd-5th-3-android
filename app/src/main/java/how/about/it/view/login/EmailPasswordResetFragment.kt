@@ -70,11 +70,11 @@ class EmailPasswordResetFragment : Fragment() {
     }
 
     fun activeButtonResetPassword() {
-        binding.btnResetEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_login_email))
+        binding.btnResetEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_enable))
         binding.btnResetEmail.setTextColor(resources.getColorStateList(R.color.bluegray50_F9FAFC, context?.theme))
     }
     fun deactiveButtonResetPassword() {
-        binding.btnResetEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_login_email_off))
+        binding.btnResetEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
         binding.btnResetEmail.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
     }
 
