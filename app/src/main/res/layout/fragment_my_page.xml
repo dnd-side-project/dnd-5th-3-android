@@ -6,4 +6,177 @@
     android:layout_height="match_parent"
     tools:context=".view.mypage.MyPageFragment">
 
+    <ImageButton
+        android:id="@+id/btn_my_page_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_feed_setting"
+        app:layout_constraintBottom_toBottomOf="@id/tv_my_page_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_my_page_title"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_my_page_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingVertical="14dp"
+        android:text="@string/my_page"
+        android:textColor="@color/bluegray50_F9FAFC"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_my_page_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="36dp"
+        android:src="@drawable/ic_my_page_profile_image"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_my_page_title"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_my_page_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/bluegray100_F0F2F5"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@id/img_my_page_profile"
+        app:layout_constraintTop_toTopOf="@id/img_my_page_profile"
+        tools:text="흥청망청솔로몬" />
+
+    <TextView
+        android:id="@+id/tv_my_page_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/bluegray300_CBCFD6"
+        android:textSize="12dp"
+        app:layout_constraintStart_toStartOf="@id/tv_my_page_nickname"
+        app:layout_constraintTop_toBottomOf="@id/tv_my_page_nickname"
+        tools:text="welcome@moomool.com" />
+
+    <TextView
+        android:id="@+id/tv_my_page_profile_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:drawablePadding="4dp"
+        android:includeFontPadding="false"
+        android:textColor="@color/bluegray300_CBCFD6"
+        android:textSize="12dp"
+        app:drawableEndCompat="@drawable/ic_my_page_profile_update"
+        app:layout_constraintStart_toStartOf="@id/tv_my_page_nickname"
+        app:layout_constraintTop_toBottomOf="@id/tv_my_page_email"
+        tools:text="프로필변경" />
+
+    <View
+        android:id="@+id/view_my_page_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="22dp"
+        android:background="@color/bluegray500_878C96"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_my_page_profile" />
+
+    <TextView
+        android:id="@+id/tv_my_page_my_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="나의 글"
+        android:textColor="@color/bluegray300_CBCFD6"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/img_my_page_profile"
+        app:layout_constraintTop_toBottomOf="@id/view_my_page_divider" />
+
+    <LinearLayout
+        android:id="@+id/layout_my_page_content_filter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="8dp"
+        android:weightSum="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_my_page_my_content">
+
+        <TextView
+            android:id="@+id/tv_my_page_my_write"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/background_feed_end_round_10"
+            android:backgroundTint="@color/bluegray100_F0F2F5"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/my_page_my_write"
+            android:textColor="@color/bluegray800_303540"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/tv_my_page_my_participate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_feed_end_round_10"
+            android:backgroundTint="@color/bluegray100_F0F2F5"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/my_page_my_participate"
+            android:textColor="@color/bluegray800_303540"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/tv_my_page_my_watch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_feed_end_round_10"
+            android:backgroundTint="@color/bluegray100_F0F2F5"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/my_page_my_watch"
+            android:textColor="@color/bluegray800_303540"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_my_page_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_my_page_content_filter"
+        tools:listitem="@layout/item_feed_all" />
+
+    <TextView
+        android:id="@+id/tv_my_page_content_empty"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="@string/my_page_my_write_empty"
+        android:textColor="@color/bluegray500_878C96"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_my_page_content_filter" />
 </androidx.constraintlayout.widget.ConstraintLayout>

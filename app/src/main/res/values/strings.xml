@@ -4,6 +4,7 @@
     <string name="feed">피드</string>
     <string name="my_page">마이페이지</string>
 
+    <!-- Login -->
     <string name="login_email">이메일로 시작하기</string>
     <string name="signup">무물이 처음이신가요? <u>회원가입</u></string>
     <string name="email">이메일</string>
@@ -11,6 +12,7 @@
     <string name="hint_email">이메일을 입력해주세요</string>
     <string name="hint_password">비밀번호를 입력해주세요</string>
 
+    <!-- ResetPassword -->
     <string name="fail_message_email">등록된 이메일이 없어요! 이메일을 확인해주세요</string>
     <string name="fail_message_password">비밀번호가 올바르지 않아요!</string>
     <string name="reset_password">비밀번호를 잊어버리셨나요? <b><font color="#FF227C"><u>비밀번호 재설정</u></font></b></string>
@@ -18,12 +20,14 @@
         재설정 메일을 이메일로 보내드릴게요.</string>
     <string name="next_button">계속하기</string>
     <string name="reset_password_button">비밀번호 초기화</string>
-
+    
+    <!-- SignupEmailID -->               
     <string name="fail_message_eamil_signup_id_format">잉? 이메일 형식을 확인해주세요</string>
     <string name="fail_message_email_signup_id_duplicate">어라? 이미 가입된 이메일이에요!</string>
     <string name="success_message_email_signup_id">멋진 이메일이네요!</string>
     <string name="message_email_signup_id">이메일은 로그인과\n비밀번호 분실 시 사용될 거에요!</string>
-
+  
+    <!-- SignupEmailPassword -->
     <string name="hint_password_format">5자 이상으로 입력해주세요</string>
     <string name="hint_password_check">비밀번호 확인할게요 :)</string>
     <string name="fail_message_email_signup_password_format">5자리를 넘겨주세요</string>
@@ -32,13 +36,36 @@
     <string name="fail_message_email_signup_password_check">헉! 비밀번호가 다른데요? 확인해 주시겠어요?</string>
     <string name="success_message_email_signup_password">좋은데요!</string>
     <string name="success_message_email_signup_password_check">완벽해요! 다음으로 넘어갈까요?</string>
-
+  
+    <!-- SignupEmailNickname -->
     <string name="nickname">닉네임</string>
     <string name="hint_ninckname">닉네임을 입력해주세요!</string>
     <string name="fail_message_email_signup_nickname_format">8글자를 넘지않게 적어주세요</string>
     <string name="fail_message_email_signup_nickname_duplicate">어라? 이미 있는 아이디네요?</string>
     <string name="success_message_email_signup_nickname">세상에..너무 멋진 닉네임이에요!</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Feed -->
+    <string name="feed_empty">더이상 게시물이 없어요 ㅠ.ㅠ\n당신의 고민을 올려주세요!</string>
+    <string name="feed_list">무물리스트</string>
+    <string name="feed_category_popular">인기순</string>
+    <string name="feed_category_new">최신순</string>
+    <string name="feed_category_coming_end">마감임박순</string>
+    <string name="feed_category_end">최근마감순</string>
+    <string name="feed_item_title1">🔥불타고 있는 글</string>
+    <string name="feed_item_title2">❤사랑듬뿍받은 글</string>
+    <string name="feed_item_title3">😆최고의 반응글</string>
+    <string name="feed_item_title4">⭐무물의 추천글</string>
+    <string name="feed_item_title5">⚔막상막하 투표글</string>
+    <string name="feed_item_not_end">진행중</string>
+    <string name="feed_item_end">끝</string>
+    <string name="feed_item_nickname_time">%s · %s</string>
+    <string name="feed_item_percent">%d%</string>
+
+    <!-- MyPage -->
+    <string name="my_page_my_write">내가쓴</string>
+    <string name="my_page_my_participate">투표참여</string>
+    <string name="my_page_my_watch">최근본</string>
+    <string name="my_page_my_write_empty">아직 게시물이 없어요 ㅠ.ㅠ\n당신의 고민을 올려주세요!</string>
+    <string name="my_page_my_participate_empty">아직 참여한 투표가 없어요 ㅇ.ㅇ\n투표를 참여해주세요!</string>
+    <string name="my_page_my_watch_empty">최근 본 글이 없어요 @_@\n다른사람들의 고민을 들어주세요!</string>
 </resources>

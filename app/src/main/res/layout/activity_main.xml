@@ -22,7 +22,7 @@
         android:id="@+id/bottom_navigation_main"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/black_13161f"
+        android:background="@color/bluegray900_13161f"
         app:itemIconTint="@drawable/selector_bottom_navi_color"
         app:itemTextColor="@drawable/selector_bottom_navi_color"
         app:labelVisibilityMode="labeled"

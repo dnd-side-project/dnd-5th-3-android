@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="20dp">
+
+    <TextView
+        android:id="@+id/tv_feed_hot_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/bluegray200_E1E3E8"
+        android:textSize="22dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/feed_item_title1" />
+
+    <ImageView
+        android:id="@+id/img_feed_hot"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_hot_category"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_feed_hot_is_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/background_feed_end_round_10"
+        android:backgroundTint="@color/bluegray100_F0F2F5"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:text="@string/feed_item_not_end"
+        android:textColor="@color/bluegray800_303540"
+        android:textSize="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_feed_hot" />
+
+    <TextView
+        android:id="@+id/tv_feed_hot_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:textColor="@color/bluegray200_E1E3E8"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_hot_is_end"
+        tools:text="이번주올리브영세일\n폼클렌징살까말까" />
+
+    <TextView
+        android:id="@+id/tv_feed_all_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/bluegray200_E1E3E8"
+        android:textSize="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_hot_title"
+        tools:text="갈팡질팡지름신 · 9시간 남음" />
+
+    <SeekBar
+        android:id="@+id/progress_feed_hot"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:clickable="false"
+        android:indeterminate="false"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:progress="50"
+        android:progressDrawable="@drawable/background_progress_round_10"
+        android:splitTrack="false"
+        android:thumb="@drawable/ic_feed_thumb_agree"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_all_detail" />
+
+    <TextView
+        android:id="@+id/tv_feed_agree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/moomool_blue_0098ff"
+        android:textSize="14dp"
+        app:layout_constraintStart_toStartOf="@id/progress_feed_hot"
+        app:layout_constraintTop_toBottomOf="@id/progress_feed_hot"
+        tools:text="50%" />
+
+    <TextView
+        android:id="@+id/tv_feed_disagree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/moomool_pink_ff227c"
+        android:textSize="14dp"
+        app:layout_constraintEnd_toEndOf="@id/progress_feed_hot"
+        app:layout_constraintTop_toBottomOf="@id/progress_feed_hot"
+        tools:text="50%" />
+</androidx.constraintlayout.widget.ConstraintLayout>
