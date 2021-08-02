@@ -35,4 +35,12 @@
     <string name="feed_item_end">끝</string>
     <string name="feed_item_nickname_time">%s · %s</string>
     <string name="feed_item_percent">%d%</string>
+
+    <!-- MyPage -->
+    <string name="my_page_my_write">내가쓴</string>
+    <string name="my_page_my_participate">투표참여</string>
+    <string name="my_page_my_watch">최근본</string>
+    <string name="my_page_my_write_empty">아직 게시물이 없어요 ㅠ.ㅠ\n당신의 고민을 올려주세요!</string>
+    <string name="my_page_my_participate_empty">아직 참여한 투표가 없어요 ㅇ.ㅇ\n투표를 참여해주세요!</string>
+    <string name="my_page_my_watch_empty">최근 본 글이 없어요 @_@\n다른사람들의 고민을 들어주세요!</string>
 </resources>
