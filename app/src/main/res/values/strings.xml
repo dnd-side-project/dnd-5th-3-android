@@ -43,4 +43,9 @@
     <string name="my_page_my_write_empty">아직 게시물이 없어요 ㅠ.ㅠ\n당신의 고민을 올려주세요!</string>
     <string name="my_page_my_participate_empty">아직 참여한 투표가 없어요 ㅇ.ㅇ\n투표를 참여해주세요!</string>
     <string name="my_page_my_watch_empty">최근 본 글이 없어요 @_@\n다른사람들의 고민을 들어주세요!</string>
+
+    <!-- Notification -->
+    <string name="notification_title">알림</string>
+    <string name="notification_empty_title">아직 알림이 없어요</string>
+    <string name="notification_empty_content">전해드릴 알림이 생기면\n곧바로 알려드릴게요!</string>
 </resources>

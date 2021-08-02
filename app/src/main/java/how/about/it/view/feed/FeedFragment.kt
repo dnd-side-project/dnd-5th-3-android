@@ -13,12 +13,21 @@ class FeedFragment : Fragment() {
     private var _binding: FragmentFeedBinding? = null
     private val binding get() = requireNotNull(_binding)
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFeedBinding.inflate(inflater, container, false)
+        setNotificationClickListener()
         setFabWriteClickListener()
         return binding.root
+    }
+
+    private fun setNotificationClickListener() {
+        binding.btnFeedNotification.setOnClickListener {
+            requireView().findNavController()
+                .navigate(R.id.action_feedFragment_to_notificationFragment)
+        }
     }
 
     private fun setFabWriteClickListener() {
