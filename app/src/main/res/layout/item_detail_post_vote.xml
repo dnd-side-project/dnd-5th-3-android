@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="20dp">
+
+    <TextView
+        android:id="@+id/tv_detail_post_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/detail_post_item_title"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/bluegray200_E1E3E8"
+        />
+
+    <TextView
+        android:id="@+id/tv_detail_post_author_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_detail_post_title"
+        android:layout_marginTop="8dp"
+        tools:text="갈팡질팡지름신 · 9시간 남음"
+        android:textSize="14dp"
+        android:textColor="@color/bluegray200_E1E3E8" />
+
+    <ImageView
+        android:id="@+id/img_detail_post"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_detail_post_author_time"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintDimensionRatio="16:11"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_detail_post_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_detail_post"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="20dp"
+        tools:text="@string/post_description"
+        android:textColor="@color/bluegray200_E1E3E8"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/tv_detail_post_remain_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_detail_post_description"
+        android:gravity="center_vertical"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/background_feed_end_round_10"
+        android:backgroundTint="@color/bluegray100_F0F2F5"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:drawableLeft="@drawable/ic_alarm"
+        android:drawablePadding="6dp"
+        android:text="@string/post_vote_remain_time"
+        android:textColor="@color/bluegray800_303540"
+        android:textSize="14dp" />
+
+    <SeekBar
+        android:id="@+id/progress_detail_post"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_detail_post_remain_time"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:clickable="false"
+        android:indeterminate="false"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:progress="50"
+        android:progressDrawable="@drawable/background_progress_round_10"
+        android:splitTrack="false"
+        android:thumb="@drawable/ic_feed_thumb_agree" />
+
+    <TextView
+        android:id="@+id/tv_feed_agree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/progress_detail_post"
+        app:layout_constraintTop_toBottomOf="@id/progress_detail_post"
+        tools:text="@string/post_vote_percentage_agree"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:textColor="@color/moomool_blue_0098ff" />
+
+    <TextView
+        android:id="@+id/tv_feed_disagree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/progress_detail_post"
+        app:layout_constraintTop_toBottomOf="@id/progress_detail_post"
+        tools:text="@string/post_vote_percentage_disagree"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:textColor="@color/moomool_pink_ff227c" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.detailPost.DetailPostFragment"
+    >
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/layout_scroll_detail_post"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/activity_toolbar"
+                android:id="@+id/toolbar_deatil_post_board"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_detail_post_vote"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar_deatil_post_board"
+                tools:listitem="@layout/item_detail_post_vote" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_detail_post_comments_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_detail_post_vote"
+                android:paddingVertical="20dp"
+                android:paddingStart="20dp"
+                android:background="@color/bluegray900_13161f"
+                android:text="@string/detail_post_comments_count"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:textColor="@color/bluegray500_878C96" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_detail_post_comments_all"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_post_comments_count"
+                tools:listitem="@layout/item_comments" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/tv_message_deatil_post_agree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/fab_detail_post_agree"
+        app:layout_constraintTop_toTopOf="@+id/fab_detail_post_agree"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_detail_post_agree"
+        android:background="@drawable/background_reaction_fab_round_16"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:text="@string/detail_post_vote_agree"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:textColor="@color/bluegray900_13161f"
+        android:visibility="visible"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_detail_post_agree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/fab_detail_post_disagree"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#00000000"
+        app:tint="transparent"
+        android:src="@drawable/ic_emoji_agree"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        tools:ignore="ContentDescription"
+        app:maxImageSize="56dp"
+        app:fabSize="normal"
+        />
+
+    <TextView
+        android:id="@+id/tv_message_deatil_post_disagree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/fab_detail_post_disagree"
+        app:layout_constraintTop_toTopOf="@+id/fab_detail_post_disagree"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_detail_post_disagree"
+        android:background="@drawable/background_reaction_fab_round_16"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:text="@string/detail_post_vote_disagree"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:textColor="@color/bluegray900_13161f"
+        android:visibility="visible"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_detail_post_disagree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/fab_detail_post_judge"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#00000000"
+        app:tint="transparent"
+        android:src="@drawable/ic_emoji_disagree"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        tools:ignore="ContentDescription"
+        app:maxImageSize="56dp"
+        app:fabSize="normal"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_detail_post_reaction_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/layout_detail_post_comment_write"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/bluegray700_4D535E"
+        app:tint="FF#D0D0D0"
+        android:src="@drawable/ic_x_sign"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        tools:ignore="ContentDescription"
+        app:fabSize="normal"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/tv_message_deatil_post_vote_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/fab_detail_post_judge"
+        app:layout_constraintTop_toTopOf="@+id/fab_detail_post_judge"
+        app:layout_constraintBottom_toBottomOf="@+id/fab_detail_post_judge"
+        android:background="@drawable/background_reaction_fab_round_16"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:text="@string/detail_post_vote_complete"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:textColor="@color/bluegray900_13161f"
+        android:visibility="visible"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_detail_post_judge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/layout_detail_post_comment_write"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/bluegray50_F9FAFC"
+        android:src="@drawable/ic_judge"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        tools:ignore="ContentDescription"
+        app:fabSize="normal"
+        android:visibility="visible"
+        />
+
+    <LinearLayout
+        android:id="@+id/layout_detail_post_comment_write"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/bluegray800_303540">
+        <EditText
+            android:id="@+id/et_detail_post_comment_write"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:paddingVertical="15dp"
+            android:hint="@string/hint_comments_write"
+            android:text="댓글이 들어갈 공간입니다.댓글이 들어갈 공간입니다.댓글이 들어갈 공간입니다."
+            android:textColor="@color/bluegray50_F9FAFC"
+            android:textColorHint="@color/bluegray600_626670"
+            android:backgroundTint="@color/bluegray600_626670"
+            />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
