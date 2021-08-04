@@ -84,7 +84,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="28dp"
                 android:drawablePadding="4dp"
-                android:text="@string/feed_category_popular"
                 android:textColor="@color/bluegray400_ABAFB8"
                 android:textSize="14dp"
                 android:textStyle="bold"

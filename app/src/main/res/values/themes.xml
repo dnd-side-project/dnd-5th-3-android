@@ -15,4 +15,9 @@
         <!-- Background color -->
         <item name="android:windowBackground">@color/bluegray900_13161f</item>
     </style>
+
+    <style name="feed_toggle_popup_menu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/bluegray800_303540</item>
+    </style>
 </resources>
