@@ -30,7 +30,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setNotificationClickListener()
         setFabWriteClickListener()
         setTvFeedToggleClickListener()
-        setToggleCategoryObserve()
+        setToggleCategoryCollect()
         return binding.root
     }
 
@@ -85,7 +85,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setToggleCategoryObserve() {
+    private fun setToggleCategoryCollect() {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             feedViewModel.toggleCategory.collect { category ->
                 setTvToggleText(category)
