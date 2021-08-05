@@ -25,13 +25,13 @@
     <string name="reset_password">비밀번호를 잊어버리셨나요? <b><font color="#FF227C"><u>비밀번호 재설정</u></font></b></string>
     <string name="reset_password_message">비밀번호 재설정을 위해\n재설정 메일을 이메일로 보내드릴게요.</string>
     <string name="reset_password_button">비밀번호 초기화</string>
-    
-    <!-- SignupEmailID -->               
+
+    <!-- SignupEmailID -->
     <string name="fail_message_eamil_signup_id_format">잉? 이메일 형식을 확인해주세요</string>
     <string name="fail_message_email_signup_id_duplicate">어라? 이미 가입된 이메일이에요!</string>
     <string name="success_message_email_signup_id">멋진 이메일이네요!</string>
     <string name="message_email_signup_id">이메일은 로그인과\n비밀번호 분실 시 사용될 거에요!</string>
-  
+
     <!-- SignupEmailPassword -->
     <string name="hint_password_format">5자 이상으로 입력해주세요</string>
     <string name="hint_password_check">비밀번호 확인할게요 :)</string>
@@ -40,7 +40,7 @@
     <string name="fail_message_email_signup_password_check">헉! 비밀번호가 다른데요? 확인해 주시겠어요?</string>
     <string name="success_message_email_signup_password">좋은데요!</string>
     <string name="success_message_email_signup_password_check">완벽해요! 다음으로 넘어갈까요?</string>
-  
+
     <!-- SignupEmailNickname -->
     <string name="fail_message_email_signup_nickname_format">8글자를 넘지않게 적어주세요</string>
     <string name="fail_message_email_signup_nickname_duplicate">어라? 이미 있는 아이디네요?</string>
@@ -75,8 +75,33 @@
     <string name="notification_title">알림</string>
     <string name="notification_empty_title">아직 알림이 없어요</string>
     <string name="notification_empty_content">전해드릴 알림이 생기면\n곧바로 알려드릴게요!</string>
-    
+
     <!-- Profile -->
     <string name="message_profile_change_nickname">변경을 원하신다면, 중복확인을 해주세요</string>
     <string name="success_message_profile_change_nickname">닉네임 중복확인을 완료했어요 :)</string>
+
+    <!-- DetailPost -->
+    <string name="detail_post_item_title">👀 비트코인 지금 들어갈까?</string>
+    <string name="detail_post_comments_count">28개의 댓글</string>
+    <string name="detail_post_vote_agree">대찬성</string>
+    <string name="detail_post_vote_disagree">이건좀...</string>
+    <string name="detail_post_vote_complete">투표 완료!</string>
+    <string name="hint_comments_write">댓글을 남겨주세요.</string>
+
+    <!-- Comment -->
+    <string name="comment_write_time">2시간 전</string>
+    <string name="comment_description">댓글 내용이 적힐 공간입니다. 댓글 내용이 적힐 공간입니다. 댓글 내용이 적힐 공간입니다. 댓글 내용이 적힐 공간입니다.</string>
+    <string name="comment_emoji_small_oh_count">2</string>
+    <string name="comment_emoji_small_wow_count">2</string>
+    <string name="comment_emoji_small_funny_count">2</string>
+    <string name="comment_emoji_small_sad_count">2</string>
+    <string name="comment_emoji_small_umm_count">2</string>
+
+    <!-- Post -->
+    <string name="post_description">글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.</string>
+    <string name="post_vote_remain_time">23:59:59</string>
+    <string name="post_vote_percentage_agree">50%</string>
+    <string name="post_vote_percentage_disagree">50%</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

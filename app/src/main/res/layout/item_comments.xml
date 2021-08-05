@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+    <View
+        android:id="@+id/view_item_comments_disagree"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/bluegray900_13161f"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_item_comments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_comments_agree"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/img_comments_not_read"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_notification_not_read"
+        app:layout_constraintStart_toEndOf="@+id/tv_item_comments_author"
+        app:layout_constraintTop_toTopOf="@id/tv_item_comments_author"
+        tools:ignore="ContentDescription"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_item_comments_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/img_item_comments"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="12dp"
+        tools:text="@string/nickname"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/bluegray100_F0F2F5"
+        />
+
+    <TextView
+        android:id="@+id/tv_item_comments_write_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/tv_item_comments_author"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_item_comments_author"
+        tools:text="@string/comment_write_time"
+        android:textSize="16dp"
+        android:textColor="@color/bluegray500_878C96"
+        />
+
+    <TextView
+        android:id="@+id/tv_item_comments_description"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toEndOf="@id/img_item_comments"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_item_comments_author"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="12dp"
+        tools:text="@string/comment_description"
+        android:textSize="14dp"
+        android:textColor="@color/bluegray100_F0F2F5" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/img_item_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_more_horizontal"
+        android:visibility="visible"
+        android:background="transparent" />
+
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/layout_comments_emoji_all"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@+id/tv_item_comments_description"
+        app:layout_constraintRight_toLeftOf="@id/img_item_more"
+        app:layout_constraintTop_toBottomOf="@id/tv_item_comments_description"
+        android:layout_marginTop="12dp"
+        app:flexWrap="wrap"
+        app:alignItems="stretch"
+        app:alignContent="stretch">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_emoji_small_oh"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_small_emoji_round_20"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:paddingLeft="10dp"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@drawable/ic_emoji_small_oh"
+            android:text="@string/comment_emoji_small_oh_count"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:textColor="@color/bluegray50_F9FAFC"
+            android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_emoji_small_wow"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_small_emoji_round_20"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:paddingLeft="10dp"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@drawable/ic_emoji_small_wow"
+            android:text="@string/comment_emoji_small_wow_count"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:textColor="@color/bluegray50_F9FAFC"
+            android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_emoji_small_funny"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_small_emoji_round_20"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:paddingLeft="10dp"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@drawable/ic_emoji_small_funny"
+            android:text="@string/comment_emoji_small_funny_count"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:textColor="@color/bluegray50_F9FAFC"
+            android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_emoji_small_sad"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_small_emoji_round_20"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:paddingLeft="10dp"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@drawable/ic_emoji_small_sad"
+            android:text="@string/comment_emoji_small_sad_count"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:textColor="@color/bluegray50_F9FAFC"
+            android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_emoji_small_umm"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_small_emoji_round_20"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:paddingLeft="10dp"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@drawable/ic_emoji_small_umm"
+            android:text="@string/comment_emoji_small_umm_count"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:textColor="@color/bluegray50_F9FAFC"
+            android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_emoji_small_etc"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/background_small_emoji_round_20"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:paddingLeft="10dp"
+            android:drawablePadding="4dp"
+            android:drawableLeft="@drawable/ic_emoji_small_oh"
+            android:text="@string/comment_emoji_small_oh_count"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:textColor="@color/bluegray50_F9FAFC"
+            android:visibility="visible" />
+    </com.google.android.flexbox.FlexboxLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
