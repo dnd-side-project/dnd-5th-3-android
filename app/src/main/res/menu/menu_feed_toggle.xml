@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_feed_toggle_new"
+        android:title="@string/feed_category_new" />
+    <item
+        android:id="@+id/menu_feed_toggle_popular"
+        android:title="@string/feed_category_popular" />
+    <item
+        android:id="@+id/menu_feed_toggle_coming_end"
+        android:title="@string/feed_category_coming_end" />
+    <item
+        android:id="@+id/menu_feed_toggle_end"
+        android:title="@string/feed_category_end" />
+</menu>
