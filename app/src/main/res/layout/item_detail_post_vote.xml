@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="20dp">
+    android:paddingTop="16dp"
+    android:paddingBottom="20dp"
+    android:background="@color/bluegray900_13161f"
+    >
 
     <TextView
         android:id="@+id/tv_detail_post_title"
