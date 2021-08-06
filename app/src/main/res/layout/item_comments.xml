@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="20dp">
+    android:padding="20dp"
+    >
 
     <View
         android:id="@+id/view_item_comments_disagree"
@@ -27,12 +28,13 @@
         tools:ignore="ContentDescription" />
 
     <ImageView
-        android:id="@+id/img_comments_not_read"
+        android:id="@+id/img_comments_mine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_notification_not_read"
         app:layout_constraintStart_toEndOf="@+id/tv_item_comments_author"
         app:layout_constraintTop_toTopOf="@id/tv_item_comments_author"
+        android:layout_margin="2dp"
         tools:ignore="ContentDescription"
         android:visibility="visible" />
 
@@ -83,8 +85,7 @@
         android:layout_marginTop="12dp"
         android:src="@drawable/ic_more_horizontal"
         android:visibility="visible"
-        android:background="transparent" />
-
+        android:background="@android:color/transparent" />
 
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/layout_comments_emoji_all"
