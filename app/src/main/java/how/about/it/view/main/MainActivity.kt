@@ -8,8 +8,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import how.about.it.R
 import how.about.it.databinding.ActivityMainBinding
+import how.about.it.view.ToolbarActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ToolbarActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

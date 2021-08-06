@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="12dp">
+
+    <ImageView
+        android:id="@+id/img_write_save_temp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.24"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_write_save_temp_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/img_write_save_temp"
+        app:layout_constraintTop_toTopOf="@id/img_write_save_temp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="12dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/bluegray200_E1E3E8"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        tools:text="제목이 들어가는 곳입니다" />
+
+    <TextView
+        android:id="@+id/tv_write_save_temp_detail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/tv_write_save_temp_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_write_save_temp_title"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="20dp"
+        tools:text="글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다..."
+        android:textSize="14dp"
+        android:textColor="@color/bluegray200_E1E3E8" />
+
+    <TextView
+        android:id="@+id/tv_write_save_temp_savetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/tv_write_save_temp_detail"
+        app:layout_constraintBottom_toBottomOf="@+id/img_write_save_temp"
+        android:text="2시간 전"
+        android:textSize="10dp"
+        android:textColor="@color/bluegray200_E1E3E8"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
