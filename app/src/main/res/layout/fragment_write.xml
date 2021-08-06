@@ -6,5 +6,80 @@
     android:layout_height="match_parent"
     tools:context=".view.write.WriteFragment">
 
+    <include layout="@layout/activity_toolbar"
+        android:id="@+id/toolbar_write_board"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"/>
+
+    <TextView
+        android:id="@+id/tv_message_write_guide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_write_board"
+        android:layout_marginTop="28dp"
+        android:layout_marginStart="20dp"
+        android:text="👀 당신의 고민은 무엇인가요?"
+        android:textColor="@color/bluegray500_878C96"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:id="@+id/et_write_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_message_write_guide"
+        android:layout_margin="20dp"
+        android:hint="제목"
+        android:textSize="20dp"
+        android:textColor="@color/bluegray100_F0F2F5"
+        android:textColorHint="@color/bluegray500_878C96"
+        android:backgroundTint="@color/bluegray500_878C96"
+        android:textStyle="bold"
+        />
+    <EditText
+        android:id="@+id/et_write_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_write_title"
+        android:layout_margin="20dp"
+        android:hint="내용을 작성해주세요"
+        android:textSize="14dp"
+        android:textColor="@color/bluegray300_CBCFD6"
+        android:textColorHint="@color/bluegray500_878C96"
+        />
+
+    <ImageView
+        android:id="@+id/img_detail_post"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_write_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintDimensionRatio="16:11"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_write_to_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="22dp"
+        app:backgroundTint="@color/bluegray500_878C96"
+        android:src="@drawable/ic_check_sign"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@null"
+        tools:ignore="ContentDescription"
+        android:enabled="false"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

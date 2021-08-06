@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.write.TempSavedWriteFragment">
+
+    <include layout="@layout/activity_toolbar"
+        android:id="@+id/toolbar_write_temp_saved_board"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"/>
+
+    <EditText
+        android:id="@+id/et_temp_saved_write_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_write_temp_saved_board"
+        android:layout_margin="20dp"
+        android:text="자고싶은데 잘까?"
+        android:textSize="20dp"
+        android:textColor="@color/bluegray100_F0F2F5"
+        android:textColorHint="@color/bluegray500_878C96"
+        android:backgroundTint="@color/bluegray500_878C96"
+        android:textStyle="bold"
+        android:enabled="false"
+        />
+
+    <TextView
+        android:id="@+id/tv_temp_saved_write_detail"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_temp_saved_write_title"
+        android:layout_margin="20dp"
+        android:text="글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다."
+        android:textSize="14dp"
+        android:textColor="@color/bluegray300_CBCFD6"
+        />
+
+    <ImageView
+        android:id="@+id/img_temp_saved_write"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_temp_saved_write_detail"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintDimensionRatio="16:11"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="ContentDescription" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
