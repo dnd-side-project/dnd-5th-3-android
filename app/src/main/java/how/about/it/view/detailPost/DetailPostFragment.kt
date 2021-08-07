@@ -4,13 +4,13 @@ import android.animation.ObjectAnimator
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import how.about.it.R
 import how.about.it.databinding.FragmentDetailPostBinding
+import how.about.it.view.ToastDefaultBlack
 import how.about.it.view.main.MainActivity
 
 class DetailPostFragment : Fragment() {
@@ -28,6 +28,11 @@ class DetailPostFragment : Fragment() {
         (activity as MainActivity).setSupportActionBar(binding.toolbarDetailPostBoard.toolbarBoard)
         (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
+
+        // TODO : 자신이 작성한 글인 경우 투표버튼 disable하는 조건문 작성
+        if(false) {
+            disableAction()
+        }
 
         binding.fabDetailPostJudge.setOnClickListener{
             toggleFab()
@@ -135,6 +140,28 @@ class DetailPostFragment : Fragment() {
 
     }
 
+    // 자신이 작성한 글인 경우 반응 버튼 사용불가
+    private fun disableAction(){
+        binding.fabDetailPostJudge.isEnabled = false
+        binding.fabDetailPostJudge.backgroundTintList = requireContext().resources.getColorStateList(R.color.bluegray500_878C96, context?.theme)
+        binding.fabDetailPostJudge.setColorFilter(ContextCompat.getColor(requireContext(), R.color.bluegray50_F9FAFC), android.graphics.PorterDuff.Mode.SRC_IN)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if(true /* TODO : 게시글의 글쓴이 == 현재 로그인 계정 이면 추가 메뉴가 나타나도록 조건문 설정 */) {
+            inflater.inflate(R.menu.menu_detail_post_mine_toolbar, menu)
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        if (item.itemId == android.R.id.home) {
+            (activity as MainActivity).onBackPressed()
+        } else if(item.itemId == R.id.action_delete_mine_post) {
+            ToastDefaultBlack.createToast(requireContext(), "자신의 게시글 삭제 버튼 클릭")?.show()
+        }
+        return true
+    }
     private fun showBackButton() {
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         this.setHasOptionsMenu(true)

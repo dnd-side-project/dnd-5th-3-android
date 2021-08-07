@@ -216,7 +216,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/bluegray50_F9FAFC"
+        app:backgroundTint="@color/bluegray50_F9FAFC"
         app:tint="@null"
         android:src="@drawable/ic_judge"
         app:borderWidth="0dp"
