@@ -5,15 +5,29 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import how.about.it.R
 import how.about.it.databinding.FragmentWriteBinding
+import how.about.it.view.ToastDefaultBlack
 import how.about.it.view.main.MainActivity
 
 class WriteFragment : Fragment() {
     private var _binding: FragmentWriteBinding? = null
     private val binding get() = requireNotNull(_binding)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    requireView().findNavController().popBackStack()
+                }
+            }
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,7 +39,6 @@ class WriteFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         showBackButton()
-        setHasOptionsMenu(true)
 
         binding.etWriteTitle.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { afterTextChanged(s as Editable?) }
@@ -52,7 +65,11 @@ class WriteFragment : Fragment() {
         })
 
         binding.fabWriteToComplete.setOnClickListener {
-            Toast.makeText(requireContext(), "저장버튼 클릭", Toast.LENGTH_LONG).show()
+            ToastDefaultBlack.createToast(requireContext(), "저장 버튼 클릭")?.show()
+        }
+
+        binding.btnWriteTempPostsArchive.setOnClickListener {
+            requireView().findNavController().navigate(R.id.action_writeFragment_to_tempListWriteFragment)
         }
         return binding.root
     }
@@ -64,20 +81,18 @@ class WriteFragment : Fragment() {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        when(item.itemId) {
-            R.id.action_save_temp_post -> {
-                if(binding.etWriteTitle.text.toString().trim().isNullOrBlank() || binding.etWriteContent.text.toString().trim().isNullOrBlank()) {
-                    Toast.makeText(requireContext(), "내용 작성 후 저장해주세요.", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(requireContext(), "작성 중인 글이 임시 저장되었어요.", Toast.LENGTH_LONG).show()
-                }
-                return super.onOptionsItemSelected(item)
+        if (item.itemId == android.R.id.home) {
+            (activity as MainActivity).onBackPressed()
+        } else if(item.itemId == R.id.action_save_temp_post) {
+            if(binding.etWriteTitle.text.toString().trim().isNullOrBlank() || binding.etWriteContent.text.toString().trim().isNullOrBlank()) {
+                ToastDefaultBlack.createToast(requireContext(), "내용 작성 후 저장해주세요.")?.show()
+            } else {
+                ToastDefaultBlack.createToast(requireContext(), "작성 중인 글이 임시 저장되었어요.")?.show()
             }
-            else -> return super.onOptionsItemSelected(item)
         }
-        (activity as MainActivity).onBackPressed()
         return true
     }
+
     private fun showBackButton() {
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         this.setHasOptionsMenu(true)
