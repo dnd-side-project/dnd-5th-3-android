@@ -30,7 +30,7 @@
         android:textColor="@color/bluegray200_E1E3E8"
         android:textSize="18dp"
         android:textStyle="bold"
-        tools:text="제목이 들어가는 곳입니다" />
+        tools:text="@string/title" />
 
     <TextView
         android:id="@+id/tv_write_save_temp_detail"
@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_write_save_temp_title"
         android:layout_marginTop="4dp"
         android:layout_marginRight="20dp"
-        tools:text="글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다..."
+        tools:text="@string/post_description"
         android:textSize="14dp"
         android:textColor="@color/bluegray200_E1E3E8" />
 
@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@id/tv_write_save_temp_detail"
-        app:layout_constraintBottom_toBottomOf="@+id/img_write_save_temp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_write_save_temp_detail"
         android:text="2시간 전"
         android:textSize="10dp"
         android:textColor="@color/bluegray200_E1E3E8"

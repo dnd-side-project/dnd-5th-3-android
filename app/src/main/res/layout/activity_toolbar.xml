@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Title"
+            android:text="@string/title"
             android:textColor="@color/bluegray50_F9FAFC"
             android:textSize="18sp"
             android:textStyle="bold"

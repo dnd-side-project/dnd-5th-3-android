@@ -14,6 +14,18 @@
     <string name="next_button">계속하기</string>
     <string name="save_button">저장하기</string>
     <string name="duplicate_check">중복확인</string>
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
+    <string name="title">제목</string>
+    <string name="delete">삭제</string>
+    <string name="recall">불러오기</string>
+
+    <!-- Dialog -->
+    <string name="dialog_title">다이얼로그 타이틀입니다.</string>
+    <string name="dialog_description">다이어로그 내용입니다</string>
+
+    <!-- Toast -->
+    <string name="toast_description">Toast Message</string>
 
     <!-- Login -->
     <string name="login_email">이메일로 시작하기</string>
@@ -22,9 +34,11 @@
     <!-- ResetPassword -->
     <string name="fail_message_email">등록된 이메일이 없어요! 이메일을 확인해주세요</string>
     <string name="fail_message_password">비밀번호가 올바르지 않아요!</string>
-    <string name="reset_password">비밀번호를 잊어버리셨나요? <b><font color="#FF227C"><u>비밀번호 재설정</u></font></b></string>
+    <string name="reset_password_button">비밀번호를 잊어버리셨나요? <b><font color="#FF227C"><u>비밀번호 재설정</u></font></b></string>
     <string name="reset_password_message">비밀번호 재설정을 위해\n재설정 메일을 이메일로 보내드릴게요.</string>
-    <string name="reset_password_button">비밀번호 초기화</string>
+    <string name="reset_password">비밀번호 초기화</string>
+    <string name="reset_password_dialog_title">전송 완료!</string>
+    <string name="reset_password_dialog_description">재설정 메일이 발송되었어요.\n이메일을 확인해주세요 :-)</string>
 
     <!-- SignupEmailID -->
     <string name="fail_message_eamil_signup_id_format">잉? 이메일 형식을 확인해주세요</string>
@@ -77,16 +91,25 @@
     <string name="notification_empty_content">전해드릴 알림이 생기면\n곧바로 알려드릴게요!</string>
 
     <!-- Profile -->
+    <string name="profile_change_nickname">프로필 변경</string>
     <string name="message_profile_change_nickname">변경을 원하신다면, 중복확인을 해주세요</string>
     <string name="success_message_profile_change_nickname">닉네임 중복확인을 완료했어요 :)</string>
+    <string name="profile_change_nickname_success_dialog_title">중복확인 성공</string>
+    <string name="profile_change_nickname_success_dialog_description">사용할 수 있는 닉네임이에요!</string>
+    <string name="profile_change_nickname_fail_dialog_title">중복확인 실패</string>
+    <string name="profile_change_nickname_fail_dialog_description">이런...이미 있는 닉네임이에요\n다른 닉네임으로 시도해주세요</string>
+    <string name="profile_change_all_success_dialog_title">프로필 변경 성공!</string>
+    <string name="profile_change_all_success_dialog_description">보다 멋진 프로필로 변경되었어요!\n이제 다시 활동을 시작해볼까요?</string>
 
     <!-- DetailPost -->
+    <string name="detail_post_vote">투표하기</string>
     <string name="detail_post_item_title">👀 비트코인 지금 들어갈까?</string>
     <string name="detail_post_comments_count">28개의 댓글</string>
     <string name="detail_post_vote_agree">대찬성</string>
     <string name="detail_post_vote_disagree">이건좀...</string>
     <string name="detail_post_vote_complete">투표 완료!</string>
     <string name="hint_comments_write">댓글을 남겨주세요.</string>
+    <string name="detail_post_message__delete_my_post">정말 삭제하시겠어요?\n삭제한 글은 되돌릴 수 없어요.</string>
 
     <!-- Comment -->
     <string name="comment_write_time">2시간 전</string>
@@ -102,6 +125,25 @@
     <string name="post_vote_remain_time">23:59:59</string>
     <string name="post_vote_percentage_agree">50%</string>
     <string name="post_vote_percentage_disagree">50%</string>
+
+    <!-- Write -->
+    <string name="hint_wirte_description">내용을 작성해주세요</string>
+    <string name="write_save_fail_format_dialog_title">올바르지 않은 형식</string>
+    <string name="write_save_fail_format_dialog_description">jpg, png, gif 형식의 이미지 파일만 업로드 가능합니다.</string>
+    <string name="write_save_fail_server_error_dialog_title">이미지 등록 실패</string>
+    <string name="write_save_fail_server_error_dialog_description">서버 상의 오류가 발생했습니다.\n다시 시도해주세요.</string>
+
+    <string name="write_temp_save">임시저장</string>
+    <string name="write_temp_save_fail_empty_message">내용 작성 후 저장해주세요.</string>
+    <string name="write_temp_save_success_meesage">작성 중인 글이 임시 저장되었어요.</string>
+
+    <string name="write_add_photo">이미지 추가</string>
+    <string name="write_temp_archive">임시 보관함</string>
+    <string name="write_temp_list_delete_dialog_description">선택한 임시저장 글을 삭제할까요?\n삭제한 글은 되돌릴 수 없어요.</string>
+    <string name="write_temp_list_delete_toast_description">선택한 임시 저장글이 삭제되었어요.</string>
+    <string name="write_temp_list_delete_empty_dialog_title">선택없음</string>
+    <string name="write_temp_list_delete_empty_dialog_description">선택한 임시저장 글이 없어요.</string>
+    <string name="write_temp_post_recall_dialog_description">작성 중이던 글은 저장되지 않습니다. 선택한 글을 불러올까요?</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

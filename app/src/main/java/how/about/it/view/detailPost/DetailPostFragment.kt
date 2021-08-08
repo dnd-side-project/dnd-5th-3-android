@@ -1,10 +1,13 @@
 package how.about.it.view.detailPost
 
 import android.animation.ObjectAnimator
+import android.app.AlertDialog
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -24,7 +27,7 @@ class DetailPostFragment : Fragment() {
     ): View {
         _binding = FragmentDetailPostBinding.inflate(inflater, container, false)
 
-        binding.toolbarDetailPostBoard.tvToolbarTitle.text = "투표하기"
+        binding.toolbarDetailPostBoard.tvToolbarTitle.setText(R.string.detail_post_vote)
         (activity as MainActivity).setSupportActionBar(binding.toolbarDetailPostBoard.toolbarBoard)
         (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
@@ -39,13 +42,11 @@ class DetailPostFragment : Fragment() {
         }
 
         binding.fabDetailPostAgree.setOnClickListener {
-            Toast.makeText(activity, "찬성 버튼 클릭.", Toast.LENGTH_SHORT).show()
             voteComplete(R.drawable.ic_emoji_vote_complete_agree)
             voteAction(R.drawable.ic_emoji_vote_complete_agree)
         }
 
         binding.fabDetailPostDisagree.setOnClickListener {
-            Toast.makeText(activity, "반대 버튼 클릭.", Toast.LENGTH_SHORT).show()
             voteComplete(R.drawable.ic_emoji_vote_complete_disagree)
             voteAction(R.drawable.ic_emoji_vote_complete_disagree)
         }
@@ -53,7 +54,6 @@ class DetailPostFragment : Fragment() {
     }
 
     private fun toggleFab() {
-        Toast.makeText(activity, "토클 버튼 클릭.", Toast.LENGTH_SHORT).show()
         if (isFabOpen) {
             closeVoteFab()
         } else {
@@ -158,7 +158,29 @@ class DetailPostFragment : Fragment() {
         if (item.itemId == android.R.id.home) {
             (activity as MainActivity).onBackPressed()
         } else if(item.itemId == R.id.action_delete_mine_post) {
-            ToastDefaultBlack.createToast(requireContext(), "자신의 게시글 삭제 버튼 클릭")?.show()
+
+            // TODO : Dialog 띄우기 코드 개선 필요
+            val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+            val mBuilder = AlertDialog.Builder(requireContext())
+                .setView(mDialogView)
+            val mAlertDialog = mBuilder.show()
+
+            // Dialog 제목 및 내용 설정
+            mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.delete)
+            mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.detail_post_message__delete_my_post)
+
+            // Dialog 확인, 취소버튼 설정
+            val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
+            val cancelButton = mDialogView.findViewById<Button>(R.id.btn_dialog_cancel)
+
+            // Dialog 확인 버튼을 클릭 한 경우
+            confirmButton.setOnClickListener {
+                // TODO : 현재 작성한 게시글 삭제 코드 작성
+                mAlertDialog.dismiss()
+            }
+            cancelButton.setOnClickListener {
+                mAlertDialog.dismiss()
+            }
         }
         return true
     }

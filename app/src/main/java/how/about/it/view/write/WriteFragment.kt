@@ -1,11 +1,15 @@
 package how.about.it.view.write
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import how.about.it.R
@@ -64,6 +68,33 @@ class WriteFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
         })
 
+        binding.btnWriteAddPhoto.setOnClickListener {
+            /*
+            // TODO : Dialog 띄우기 코드 개선 필요
+            val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+            val mBuilder = AlertDialog.Builder(requireContext())
+                .setView(mDialogView)
+            val mAlertDialog = mBuilder.show()
+            // TODO : 파일 검사 조건문 설정
+            // Dialog 제목 및 내용 설정
+            if ( /** 형식이 올바르지 않은 경우 **/){
+                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.write_save_fail_format_dialog_title)
+                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_save_fail_format_dialog_description)
+            } else if (/** 서버와 연동에 실패한 경우 **/) {
+                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.write_save_fail_server_error_dialog_title)
+                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_save_fail_server_error_dialog_description)
+            }
+            // Dialog 확인, 취소버튼 설정
+            val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
+            mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
+
+            // Dialog 확인 버튼을 클릭 한 경우
+            confirmButton.setOnClickListener {
+                mAlertDialog.dismiss()
+            }
+             */
+        }
+
         binding.fabWriteToComplete.setOnClickListener {
             ToastDefaultBlack.createToast(requireContext(), "저장 버튼 클릭")?.show()
         }
@@ -85,9 +116,9 @@ class WriteFragment : Fragment() {
             (activity as MainActivity).onBackPressed()
         } else if(item.itemId == R.id.action_save_temp_post) {
             if(binding.etWriteTitle.text.toString().trim().isNullOrBlank() || binding.etWriteContent.text.toString().trim().isNullOrBlank()) {
-                ToastDefaultBlack.createToast(requireContext(), "내용 작성 후 저장해주세요.")?.show()
+                ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_save_fail_empty_message))?.show()
             } else {
-                ToastDefaultBlack.createToast(requireContext(), "작성 중인 글이 임시 저장되었어요.")?.show()
+                ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_save_success_meesage))?.show()
             }
         }
         return true

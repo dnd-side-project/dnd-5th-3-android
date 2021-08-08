@@ -146,7 +146,7 @@
         app:layout_constraintRight_toRightOf="@+id/btn_login_email"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="12dp"
-        android:text="@string/reset_password"
+        android:text="@string/reset_password_button"
         android:textColor="@color/bluegray300_CBCFD6"
         android:visibility="visible"
         />
