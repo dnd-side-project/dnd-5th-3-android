@@ -25,7 +25,16 @@
         android:id="@+id/writeFragment"
         android:name="how.about.it.view.write.WriteFragment"
         android:label="fragment_write"
-        tools:layout="@layout/fragment_write" />
+        tools:layout="@layout/fragment_write">
+        <action
+            android:id="@+id/action_writeFragment_to_tempListWriteFragment"
+            app:destination="@id/tempListWriteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tempListWriteFragment"
+        android:name="how.about.it.view.write.TempListWriteFragment"
+        android:label="fragment_temp_list_write"
+        tools:layout="@layout/fragment_temp_list_write" />
     <fragment
         android:id="@+id/myPageFragment"
         android:name="how.about.it.view.mypage.MyPageFragment"

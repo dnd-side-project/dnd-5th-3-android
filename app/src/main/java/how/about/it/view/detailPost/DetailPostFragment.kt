@@ -1,6 +1,7 @@
 package how.about.it.view.detailPost
 
 import android.animation.ObjectAnimator
+import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import androidx.fragment.app.Fragment
@@ -56,21 +57,18 @@ class DetailPostFragment : Fragment() {
         isFabOpen = !isFabOpen
     }
 
-    // TODO : DP 단위를 PX단위로 바꾸는 함수 작성하여 ObjectAnimator에 적용
-    private fun dpTopx(dp : Int) : Int {
-        var density = resources.displayMetrics.density
-        return Math.round(dp.toFloat() * density)
-    }
+    private fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
     private fun showVoteFab() {
         binding.tvMessageDetailPostAgree.visibility = View.VISIBLE
         binding.tvMessageDetailPostDisagree.visibility = View.VISIBLE
 
-        ObjectAnimator.ofFloat(binding.fabDetailPostAgree, "translationY", -300f).apply { start() }
-        ObjectAnimator.ofFloat(binding.tvMessageDetailPostAgree, "translationY", -300f).apply { start() }
+        // DP 단위를 PX단위로 바꾸는 함수 작성하여 ObjectAnimator에 적용 (BottomToBottom에 의해 Judge버튼 하단에서부터의 거리)
+        ObjectAnimator.ofFloat(binding.fabDetailPostAgree, "translationY", -(160.toPx().toFloat()) ).apply { start() }
+        ObjectAnimator.ofFloat(binding.tvMessageDetailPostAgree, "translationY", -(160.toPx().toFloat()) ).apply { start() }
 
-        ObjectAnimator.ofFloat(binding.fabDetailPostDisagree, "translationY", -150f).apply { start() }
-        ObjectAnimator.ofFloat(binding.tvMessageDetailPostDisagree, "translationY", -150f).apply { start() }
+        ObjectAnimator.ofFloat(binding.fabDetailPostDisagree, "translationY", -(80.toPx().toFloat())).apply { start() }
+        ObjectAnimator.ofFloat(binding.tvMessageDetailPostDisagree, "translationY", -(80.toPx().toFloat())).apply { start() }
 
         // Background DIM 처리
         binding.ivDetailPostBackgroundDimVoting.visibility = View.VISIBLE
