@@ -119,6 +119,11 @@
     <string name="comment_emoji_small_funny_count">2</string>
     <string name="comment_emoji_small_sad_count">2</string>
     <string name="comment_emoji_small_umm_count">2</string>
+    <string name="comment_reaction_yellow">올~~~</string>
+    <string name="comment_reaction_red">!?!?!?</string>
+    <string name="comment_reaction_green">ㅋㅋㅋ</string>
+    <string name="comment_reaction_blue">ㅠㅠㅠ</string>
+    <string name="comment_reaction_brown">.........</string>
 
     <!-- Post -->
     <string name="post_description">글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.</string>
@@ -144,6 +149,4 @@
     <string name="write_temp_list_delete_empty_dialog_title">선택없음</string>
     <string name="write_temp_list_delete_empty_dialog_description">선택한 임시저장 글이 없어요.</string>
     <string name="write_temp_post_recall_dialog_description">작성 중이던 글은 저장되지 않습니다. 선택한 글을 불러올까요?</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
