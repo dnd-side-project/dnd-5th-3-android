@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.comment.CommentFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_comment_yellow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/fab_comment_reaction"
+        app:layout_constraintTop_toTopOf="@id/fab_comment_reaction">
+
+        <TextView
+            android:id="@+id/tv_comment_yellow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            android:background="@drawable/background_reaction_fab_round_16"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:singleLine="true"
+            android:text="@string/comment_reaction_yellow"
+            android:textColor="@color/bluegray900_13161f"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_comment_yellow"
+            app:layout_constraintEnd_toStartOf="@id/btn_comment_yellow"
+            app:layout_constraintTop_toTopOf="@id/btn_comment_yellow"
+            app:layout_constraintWidth_percent="0.45" />
+
+        <ImageButton
+            android:id="@+id/btn_comment_yellow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_comment_yellow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_comment_red"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/fab_comment_reaction"
+        app:layout_constraintTop_toTopOf="@id/fab_comment_reaction">
+
+        <TextView
+            android:id="@+id/tv_comment_red"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            android:background="@drawable/background_reaction_fab_round_16"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:singleLine="true"
+            android:text="@string/comment_reaction_red"
+            android:textColor="@color/bluegray900_13161f"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_comment_red"
+            app:layout_constraintEnd_toStartOf="@id/btn_comment_red"
+            app:layout_constraintTop_toTopOf="@id/btn_comment_red"
+            app:layout_constraintWidth_percent="0.45" />
+
+        <ImageButton
+            android:id="@+id/btn_comment_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_comment_red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_comment_green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/fab_comment_reaction"
+        app:layout_constraintTop_toTopOf="@id/fab_comment_reaction">
+
+        <TextView
+            android:id="@+id/tv_comment_green"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            android:background="@drawable/background_reaction_fab_round_16"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:singleLine="true"
+            android:text="@string/comment_reaction_green"
+            android:textColor="@color/bluegray900_13161f"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_comment_green"
+            app:layout_constraintEnd_toStartOf="@id/btn_comment_green"
+            app:layout_constraintTop_toTopOf="@id/btn_comment_green"
+            app:layout_constraintWidth_percent="0.45" />
+
+        <ImageButton
+            android:id="@+id/btn_comment_green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_comment_green"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_comment_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/fab_comment_reaction"
+        app:layout_constraintTop_toTopOf="@id/fab_comment_reaction">
+
+        <TextView
+            android:id="@+id/tv_comment_blue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            android:background="@drawable/background_reaction_fab_round_16"
+            android:gravity="center"
+            android:padding="6dp"
+            android:singleLine="true"
+            android:text="@string/comment_reaction_blue"
+            android:textColor="@color/bluegray900_13161f"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_comment_blue"
+            app:layout_constraintEnd_toStartOf="@id/btn_comment_blue"
+            app:layout_constraintTop_toTopOf="@id/btn_comment_blue"
+            app:layout_constraintWidth_percent="0.45" />
+
+        <ImageButton
+            android:id="@+id/btn_comment_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_comment_blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_comment_brown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/fab_comment_reaction"
+        app:layout_constraintTop_toTopOf="@id/fab_comment_reaction">
+
+        <TextView
+            android:id="@+id/tv_comment_brown"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            android:background="@drawable/background_reaction_fab_round_16"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:singleLine="true"
+            android:text="@string/comment_reaction_brown"
+            android:textColor="@color/bluegray900_13161f"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_comment_brown"
+            app:layout_constraintEnd_toStartOf="@id/btn_comment_brown"
+            app:layout_constraintTop_toTopOf="@id/btn_comment_brown"
+            app:layout_constraintWidth_percent="0.45" />
+
+        <ImageButton
+            android:id="@+id/btn_comment_brown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_comment_brown"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_comment_reaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@null"
+        tools:ignore="ContentDescription" />
+</androidx.constraintlayout.widget.ConstraintLayout>
