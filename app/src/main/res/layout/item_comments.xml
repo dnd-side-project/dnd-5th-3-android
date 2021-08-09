@@ -58,7 +58,6 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_item_comments_author"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_item_comments_author"
-        tools:text="@string/comment_write_time"
         android:textSize="16dp"
         android:textColor="@color/bluegray500_878C96"
         />

@@ -113,7 +113,6 @@
 
     <!-- Comment -->
     <string name="comment_title">반응 남기기</string>
-    <string name="comment_write_time">2시간 전</string>
     <string name="comment_description">댓글 내용이 적힐 공간입니다. 댓글 내용이 적힐 공간입니다. 댓글 내용이 적힐 공간입니다. 댓글 내용이 적힐 공간입니다.</string>
     <string name="comment_emoji_small_oh_count">2</string>
     <string name="comment_emoji_small_wow_count">2</string>
@@ -125,6 +124,12 @@
     <string name="comment_reaction_green">ㅋㅋㅋ</string>
     <string name="comment_reaction_blue">ㅠㅠㅠ</string>
     <string name="comment_reaction_brown">.........</string>
+    <string name="comment_time">%d%s</string>
+    <string name="comment_time_now">방금 전</string>
+    <string name="comment_time_minute_ago">분 전</string>
+    <string name="comment_time_hour_ago">시간 전</string>
+    <string name="comment_time_day_ago">일 전</string>
+    <string name="comment_time_year_ago">년 전</string>
     <string name="comment_update">수정하기</string>
     <string name="comment_delete">삭제하기</string>
 
