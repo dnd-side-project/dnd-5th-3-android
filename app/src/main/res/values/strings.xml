@@ -112,6 +112,7 @@
     <string name="detail_post_message__delete_my_post">정말 삭제하시겠어요?\n삭제한 글은 되돌릴 수 없어요.</string>
 
     <!-- Comment -->
+    <string name="comment_title">반응 남기기</string>
     <string name="comment_write_time">2시간 전</string>
     <string name="comment_description">댓글 내용이 적힐 공간입니다. 댓글 내용이 적힐 공간입니다. 댓글 내용이 적힐 공간입니다. 댓글 내용이 적힐 공간입니다.</string>
     <string name="comment_emoji_small_oh_count">2</string>
