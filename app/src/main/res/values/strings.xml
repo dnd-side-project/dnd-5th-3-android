@@ -157,4 +157,15 @@
     <string name="write_temp_list_delete_empty_dialog_title">선택없음</string>
     <string name="write_temp_list_delete_empty_dialog_description">선택한 임시저장 글이 없어요.</string>
     <string name="write_temp_post_recall_dialog_description">작성 중이던 글은 저장되지 않습니다. 선택한 글을 불러올까요?</string>
+
+    <!-- OnBoarding -->
+    <string name="on_boarding_skip">SKIP</string>
+    <string name="on_boarding_first_title">물어보고 싶은것들\n무물에서 물어봐!</string>
+    <string name="on_boarding_first_content">나의 고민이나 의견을 들어보고 싶은\n모든것들을 물어봐요!</string>
+    <string name="on_boarding_second_title">고민에 대한\n사람들의 찬반투표</string>
+    <string name="on_boarding_second_content">고민에 대한 찬반투표를 남겨보고\n투표현황을 확인할 수 있어요</string>
+    <string name="on_boarding_third_title">주제에 대한\n실시간 댓글토론</string>
+    <string name="on_boarding_third_content">주제에 대한 나의 생각을\n댓글로 남겨 의견을 나누어보고</string>
+    <string name="on_boarding_fourth_title">이모지를 통해\n반응 남기기</string>
+    <string name="on_boarding_fourth_content">다양한 이모지를 통해서\n댓글에 대한 나의 반응을 남겨봐요!</string>
 </resources>

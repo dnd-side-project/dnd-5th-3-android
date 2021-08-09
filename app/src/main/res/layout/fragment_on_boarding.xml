@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.onboarding.OnBoardingFragment">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_on_boarding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@id/tv_on_boarding_skip"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_on_boarding_skip"
+        app:tabBackground="@drawable/selector_on_boarding_indicator"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabPaddingEnd="4dp"
+        app:tabPaddingStart="4dp" />
+
+    <TextView
+        android:id="@+id/tv_on_boarding_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/on_boarding_skip"
+        android:textColor="@color/bluegray600_626670"
+        android:textSize="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_on_boarding"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop='14dp'
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_on_boarding_skip" />
+</androidx.constraintlayout.widget.ConstraintLayout>
