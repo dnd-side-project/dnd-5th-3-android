@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import how.about.it.R
 import how.about.it.databinding.FragmentCommentBinding
+import how.about.it.util.TimeChangerUtil
 import how.about.it.view.comment.viewmodel.CommentViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -31,6 +32,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     ): View {
         _binding = FragmentCommentBinding.inflate(inflater, container, false)
         setCommentBackClickListener()
+        setTvCommentTimeText()
         setBtnCommentMoreClickListener()
         setFabCommentReactClickListener()
         setOpenReactCollect()
@@ -43,6 +45,11 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             requireView().findNavController()
                 .popBackStack()
         }
+    }
+
+    private fun setTvCommentTimeText() {
+        binding.tvCommentTime.text =
+            TimeChangerUtil.timeChange(requireContext(), "2021-08-09T15:35:00")
     }
 
     private fun setBtnCommentMoreClickListener() {

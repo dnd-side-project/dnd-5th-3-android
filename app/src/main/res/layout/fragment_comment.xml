@@ -88,8 +88,7 @@
                 android:textSize="16dp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_comment_nickname"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tv_comment_nickname"
-                tools:text="@string/comment_write_time" />
+                app:layout_constraintTop_toTopOf="@id/tv_comment_nickname" />
 
             <TextView
                 android:id="@+id/tv_comment_content"
@@ -113,7 +112,7 @@
                 app:alignItems="stretch"
                 app:dividerDrawable="@drawable/background_flexbox_divider"
                 app:flexWrap="wrap"
-                app:layout_constraintEnd_toStartOf="@id/tv_comment_time"
+                app:layout_constraintEnd_toEndOf="@id/tv_comment_time"
                 app:layout_constraintStart_toStartOf="@+id/tv_comment_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_comment_content"
                 app:showDivider="middle">
@@ -136,10 +135,10 @@
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
+                    android:text="2"
                     android:textColor="@color/bluegray50_F9FAFC"
                     android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_emoji_small_oh"
-                    tools:text="2" />
+                    app:drawableStartCompat="@drawable/ic_emoji_small_oh" />
 
                 <TextView
                     android:id="@+id/tv_comment_reaction_red"
@@ -151,10 +150,10 @@
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
+                    android:text="20"
                     android:textColor="@color/bluegray50_F9FAFC"
                     android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_emoji_small_wow"
-                    tools:text="20" />
+                    app:drawableStartCompat="@drawable/ic_emoji_small_wow" />
 
                 <TextView
                     android:id="@+id/tv_comment_reaction_green"
@@ -166,11 +165,11 @@
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
+                    android:text="100"
                     android:textColor="@color/bluegray50_F9FAFC"
                     android:textStyle="bold"
                     android:visibility="visible"
-                    app:drawableStartCompat="@drawable/ic_emoji_small_funny"
-                    tools:text="100" />
+                    app:drawableStartCompat="@drawable/ic_emoji_small_funny" />
 
                 <TextView
                     android:id="@+id/tv_comment_reaction_blue"
@@ -182,10 +181,10 @@
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
+                    android:text="100"
                     android:textColor="@color/bluegray50_F9FAFC"
                     android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_emoji_small_sad"
-                    tools:text="100" />
+                    app:drawableStartCompat="@drawable/ic_emoji_small_sad" />
 
                 <TextView
                     android:id="@+id/tv_comment_reaction_brown"
@@ -196,10 +195,10 @@
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
+                    android:text="100"
                     android:textColor="@color/bluegray50_F9FAFC"
                     android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_emoji_small_umm"
-                    tools:text="100" />
+                    app:drawableStartCompat="@drawable/ic_emoji_small_umm" />
             </com.google.android.flexbox.FlexboxLayout>
 
             <ImageButton
