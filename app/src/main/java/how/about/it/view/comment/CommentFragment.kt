@@ -4,19 +4,23 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import how.about.it.R
 import how.about.it.databinding.FragmentCommentBinding
 import how.about.it.view.comment.viewmodel.CommentViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 
-class CommentFragment : Fragment() {
+class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private var _binding: FragmentCommentBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val commentViewModel by viewModels<CommentViewModel>()
@@ -26,10 +30,47 @@ class CommentFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCommentBinding.inflate(inflater, container, false)
+        setCommentBackClickListener()
+        setBtnCommentMoreClickListener()
         setFabCommentReactClickListener()
         setOpenReactCollect()
+        setLayoutCommentClickListener(layoutReactionList())
         return binding.root
     }
+
+    private fun setCommentBackClickListener() {
+        binding.btnCommentBack.setOnClickListener {
+            requireView().findNavController()
+                .popBackStack()
+        }
+    }
+
+    private fun setBtnCommentMoreClickListener() {
+        binding.btnCommentMore.setOnClickListener {
+            PopupMenu(
+                ContextThemeWrapper(
+                    requireContext(),
+                    R.style.feed_toggle_popup_menu
+                ),
+                binding.btnCommentMore
+            ).apply {
+                setOnMenuItemClickListener(this@CommentFragment)
+                inflate(R.menu.menu_comment)
+                show()
+            }
+        }
+    }
+
+    override fun onMenuItemClick(item: MenuItem) =
+        when (item.itemId) {
+            R.id.menu_comment_update -> {
+                true
+            }
+            R.id.menu_comment_delete -> {
+                true
+            }
+            else -> false
+        }
 
     private fun setFabCommentReactClickListener() {
         binding.fabCommentReaction.setOnClickListener {
@@ -42,18 +83,24 @@ class CommentFragment : Fragment() {
             commentViewModel.openReact.collect { isOpen ->
                 when (isOpen) {
                     0 -> {
+                        setLayoutAlpha(1f)
                         setFabCommentReactionCloseBackground()
                         setLayoutCommentCloseAnimation(layoutReactionList())
                         delay(300)
                         setLayoutCommentCloseInvisible(layoutReactionList())
                     }
                     1 -> {
+                        setLayoutAlpha(0.2f)
                         setFabCommentReactionOpenBackground()
                         setLayoutCommentColorVisible(layoutReactionList())
                     }
                 }
             }
         }
+    }
+
+    private fun setLayoutAlpha(alpha: Float) {
+        binding.layoutCommentBackground.alpha = alpha
     }
 
     private fun setFabCommentReactionCloseBackground() {
@@ -74,11 +121,7 @@ class CommentFragment : Fragment() {
         list.indices.forEach { index ->
             list[index].apply {
                 visibility = View.VISIBLE
-                ObjectAnimator.ofFloat(
-                    this,
-                    "translationY",
-                    dpToPx(-(76 * (index + 1)).toFloat())
-                ).start()
+                setAnimation(this, dpToPx(-(76 * (index + 1)).toFloat()))
             }
         }
     }
@@ -92,7 +135,7 @@ class CommentFragment : Fragment() {
 
     private fun setLayoutCommentCloseAnimation(list: List<ConstraintLayout>) {
         list.forEach { layout ->
-            ObjectAnimator.ofFloat(layout, "translationY", 0f).start()
+            setAnimation(layout, 0f)
         }
     }
 
@@ -100,6 +143,34 @@ class CommentFragment : Fragment() {
         list.forEach { layout ->
             layout.visibility = View.INVISIBLE
         }
+    }
+
+    private fun setLayoutCommentClickListener(list: List<ConstraintLayout>) {
+        list.indices.forEach { index ->
+            list[index].setOnClickListener {
+                setLayoutCommentSelectClose(index, list)
+            }
+        }
+    }
+
+    private fun setLayoutCommentSelectClose(selected: Int, list: List<ConstraintLayout>) {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            list.indices.forEach { index ->
+                if (selected != index) {
+                    setAnimation(list[index], 0f)
+                    list[index].visibility = View.INVISIBLE
+                } else {
+                    setAnimation(list[index], dpToPx(-76f))
+                }
+            }
+            //TODO LOTTIE
+            delay(500)
+            commentViewModel.setOpenReact()
+        }
+    }
+
+    private fun setAnimation(layout: ConstraintLayout, value: Float) {
+        ObjectAnimator.ofFloat(layout, "translationY", value).start()
     }
 
     private fun layoutReactionList() =

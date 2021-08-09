@@ -125,6 +125,8 @@
     <string name="comment_reaction_green">ㅋㅋㅋ</string>
     <string name="comment_reaction_blue">ㅠㅠㅠ</string>
     <string name="comment_reaction_brown">.........</string>
+    <string name="comment_update">수정하기</string>
+    <string name="comment_delete">삭제하기</string>
 
     <!-- Post -->
     <string name="post_description">글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.</string>
