@@ -6,6 +6,221 @@
     android:layout_height="match_parent"
     tools:context=".view.comment.CommentFragment">
 
+    <ImageButton
+        android:id="@+id/btn_comment_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toBottomOf="@id/tv_comment_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_comment_title"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_comment_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingVertical="14dp"
+        android:text="@string/comment_title"
+        android:textColor="@color/bluegray50_F9FAFC"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/bluegray900_13161f"
+        android:paddingBottom="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_comment_title">
+
+        <ImageView
+            android:id="@+id/img_comment_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/ic_comments_agree"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_comment_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="@color/bluegray100_F0F2F5"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/img_comment_profile"
+            app:layout_constraintTop_toTopOf="@id/img_comment_profile"
+            tools:text="@string/nickname" />
+
+        <ImageView
+            android:id="@+id/img_comment_mine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_notification_not_read"
+            app:layout_constraintStart_toEndOf="@+id/tv_comment_nickname"
+            app:layout_constraintTop_toTopOf="@id/tv_comment_nickname"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_comment_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/bluegray500_878C96"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_comment_nickname"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_comment_nickname"
+            tools:text="@string/comment_write_time" />
+
+        <TextView
+            android:id="@+id/tv_comment_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="4dp"
+            android:textColor="@color/bluegray100_F0F2F5"
+            android:textSize="14dp"
+            app:layout_constraintEnd_toEndOf="@id/tv_comment_time"
+            app:layout_constraintStart_toStartOf="@id/tv_comment_nickname"
+            app:layout_constraintTop_toBottomOf="@id/tv_comment_nickname"
+            tools:text="@string/comment_description" />
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/layout_comment_reaction"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:alignContent="space_between"
+            app:alignItems="stretch"
+            app:dividerDrawable="@drawable/background_flexbox_divider"
+            app:flexWrap="wrap"
+            app:layout_constraintEnd_toStartOf="@id/tv_comment_time"
+            app:layout_constraintStart_toStartOf="@+id/tv_comment_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_comment_content"
+            app:showDivider="middle">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_comment_reaction_empty"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tv_comment_reaction_yellow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/background_small_emoji_round_20"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/bluegray50_F9FAFC"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_emoji_small_oh"
+                tools:text="2" />
+
+            <TextView
+                android:id="@+id/tv_comment_reaction_red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/background_small_emoji_round_20"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/bluegray50_F9FAFC"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_emoji_small_wow"
+                tools:text="20" />
+
+            <TextView
+                android:id="@+id/tv_comment_reaction_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/background_small_emoji_round_20"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/bluegray50_F9FAFC"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:drawableStartCompat="@drawable/ic_emoji_small_funny"
+                tools:text="100" />
+
+            <TextView
+                android:id="@+id/tv_comment_reaction_blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/background_small_emoji_round_20"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/bluegray50_F9FAFC"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_emoji_small_sad"
+                tools:text="100" />
+
+            <TextView
+                android:id="@+id/tv_comment_reaction_brown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_small_emoji_voted_round_20"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/bluegray50_F9FAFC"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_emoji_small_umm"
+                tools:text="100" />
+        </com.google.android.flexbox.FlexboxLayout>
+
+        <ImageButton
+            android:id="@+id/btn_comment_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_more_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="ContentDescription" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_re_comment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_comment"
+        tools:listitem="@layout/item_re_comment" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_comment_yellow"
         android:layout_width="wrap_content"
