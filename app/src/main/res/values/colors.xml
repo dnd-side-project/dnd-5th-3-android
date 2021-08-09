@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="balck_transparency80_2C2C2C">#FF2C2C2C</color>
 
     <color name="bluegray900_13161f">#13161F</color>
     <color name="bluegray800_303540">#303540</color>

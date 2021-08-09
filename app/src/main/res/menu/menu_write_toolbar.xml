@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_save_temp_post"
-        android:title="임시저장"
-        android:tooltipText="임시저장"
+        android:title="@string/write_temp_save"
+        android:tooltipText="@string/write_temp_save"
         app:showAsAction="always"
         />
 </menu>

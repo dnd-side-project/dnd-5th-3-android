@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_delete_mine_post"
-        android:title="삭제하기"
-        android:tooltipText="삭제하기"
+        android:title="@string/delete"
+        android:tooltipText="@string/delete"
         app:showAsAction="never"
         />
 </menu>

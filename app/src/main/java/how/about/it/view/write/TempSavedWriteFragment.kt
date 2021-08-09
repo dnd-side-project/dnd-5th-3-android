@@ -1,8 +1,10 @@
 package how.about.it.view.write
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -50,7 +52,29 @@ class TempSavedWriteFragment : Fragment() {
         if (item.itemId == android.R.id.home) {
             (activity as MainActivity).onBackPressed()
         } else if(item.itemId == R.id.action_recall_temp_post) {
-            Toast.makeText(requireContext(), "불러오기 버튼 클릭", Toast.LENGTH_LONG).show()
+            // TODO : Dialog 띄우기 코드 개선 필요
+            val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+            val mBuilder = AlertDialog.Builder(requireContext())
+                .setView(mDialogView)
+            val mAlertDialog = mBuilder.show()
+
+            // Dialog 제목 및 내용 설정
+            mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.recall)
+            mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_temp_post_recall_dialog_description)
+
+            // Dialog 확인, 취소버튼 설정
+            val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
+            val cancelButton = mDialogView.findViewById<Button>(R.id.btn_dialog_cancel)
+
+            // Dialog 확인 버튼을 클릭 한 경우
+            confirmButton.setOnClickListener {
+                // TODO : 임시 저장 내용을 현재 글쓰기 화면으로 돌아가면서 삽입하는 코드 작성
+                // TODO : 이후 임시 저장글 리스트에서 불러온 저장글 삭제하는 코드 작성
+                mAlertDialog.dismiss()
+            }
+            cancelButton.setOnClickListener {
+                mAlertDialog.dismiss()
+            }
         }
         return true
     }

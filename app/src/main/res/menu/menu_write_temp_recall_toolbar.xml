@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_recall_temp_post"
-        android:title="불러오기"
-        android:tooltipText="불러오기"
+        android:title="@string/recall"
+        android:tooltipText="@string/recall"
         app:showAsAction="always"
         />
 </menu>

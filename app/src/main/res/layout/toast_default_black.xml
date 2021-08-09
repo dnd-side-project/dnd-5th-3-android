@@ -20,7 +20,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="Toast Message"
+                android:text="@string/toast_description"
                 android:textColor="@android:color/white"
                 android:textSize="14dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
