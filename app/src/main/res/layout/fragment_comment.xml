@@ -416,6 +416,17 @@
             tools:ignore="ContentDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/img_reaction_lottie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="48dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/fab_comment_reaction"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_loop="false" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_comment_reaction"
         android:layout_width="wrap_content"

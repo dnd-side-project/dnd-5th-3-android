@@ -1,5 +1,6 @@
 package how.about.it.view.comment
 
+import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.TypedValue
@@ -36,7 +37,8 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setBtnCommentMoreClickListener()
         setFabCommentReactClickListener()
         setOpenReactCollect()
-        setLayoutCommentClickListener(layoutReactionList())
+        setLayoutCommentClickListener(getLayoutReactionList())
+        setLottieAnimationListener()
         return binding.root
     }
 
@@ -90,16 +92,18 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             commentViewModel.openReact.collect { isOpen ->
                 when (isOpen) {
                     0 -> {
+                        setLottieCancelAnimation()
                         setLayoutAlpha(1f)
                         setFabCommentReactionCloseBackground()
-                        setLayoutCommentCloseAnimation(layoutReactionList())
+                        setLayoutCommentCloseAnimation(getLayoutReactionList())
                         delay(300)
-                        setLayoutCommentCloseInvisible(layoutReactionList())
+                        setLayoutCommentCloseInvisible(getLayoutReactionList())
+
                     }
                     1 -> {
                         setLayoutAlpha(0.2f)
                         setFabCommentReactionOpenBackground()
-                        setLayoutCommentColorVisible(layoutReactionList())
+                        setLayoutCommentColorVisible(getLayoutReactionList())
                     }
                 }
             }
@@ -170,9 +174,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                     setAnimation(list[index], dpToPx(-76f))
                 }
             }
-            //TODO LOTTIE
-            delay(500)
-            commentViewModel.setOpenReact()
+            setLottiePlayAnimation(selected)
         }
     }
 
@@ -180,7 +182,51 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         ObjectAnimator.ofFloat(layout, "translationY", value).start()
     }
 
-    private fun layoutReactionList() =
+    private fun setLottieAnimationListener() {
+        binding.imgReactionLottie.apply {
+            addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(p0: Animator?) {
+                }
+
+                override fun onAnimationEnd(p0: Animator?) {
+                    visibility = View.INVISIBLE
+                    commentViewModel.setOpenReact()
+                }
+
+                override fun onAnimationCancel(p0: Animator?) {
+                }
+
+                override fun onAnimationStart(p0: Animator?) {
+                }
+            })
+        }
+    }
+
+    private fun setLottiePlayAnimation(selected: Int) {
+        binding.imgReactionLottie.apply {
+            setAnimation(getLottieRaw(selected))
+            visibility = View.VISIBLE
+            playAnimation()
+        }
+    }
+
+    private fun setLottieCancelAnimation() {
+        binding.imgReactionLottie.apply {
+            visibility = View.INVISIBLE
+            cancelAnimation()
+        }
+    }
+
+    private fun getLottieRaw(selected: Int) = when (selected) {
+        0 -> R.raw.lottie_reaction_brown
+        1 -> R.raw.lottie_reaction_blue
+        2 -> R.raw.lottie_reaction_green
+        3 -> R.raw.lottie_reaction_red
+        4 -> R.raw.lottie_reaction_yellow
+        else -> throw IndexOutOfBoundsException()
+    }
+
+    private fun getLayoutReactionList() =
         with(binding) {
             listOf(
                 layoutCommentBrown,
