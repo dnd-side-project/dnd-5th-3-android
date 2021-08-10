@@ -425,6 +425,7 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/fab_comment_reaction"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:lottie_loop="false" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
