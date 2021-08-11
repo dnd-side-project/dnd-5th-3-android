@@ -14,10 +14,10 @@ data class ResponseLogin(
     val msg : String,
     val token : tokenData?,
     val nickname : String,
-    val profilePhoto: Uri
+    val profile_image_url: Uri
 )
 
 data class tokenData(
-    val accessToken : String,
-    val refreshToken : String
+    val access_token : String,
+    val refresh_token : String
 )

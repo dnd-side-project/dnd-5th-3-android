@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="writeViewModel"
+            type="how.about.it.viewmodel.WriteViewModel" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.write.WriteFragment">
@@ -19,7 +25,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar_write_board"
         android:layout_marginTop="28dp"
         android:layout_marginStart="20dp"
-        android:text="👀 당신의 고민은 무엇인가요?"
+        android:text="@string/write_message_title"
         android:textColor="@color/bluegray500_878C96"
         android:textStyle="bold"
         />
@@ -137,3 +143,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    >
+    <data>
+        <variable
+            name="writeViewModel"
+            type="how.about.it.viewmodel.WriteViewModel" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.write.TempSavedWriteFragment">
@@ -11,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"/>
 
-    <EditText
-        android:id="@+id/et_temp_saved_write_title"
+    <TextView
+        android:id="@+id/tv_temp_saved_write_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +31,6 @@
         android:textColorHint="@color/bluegray500_878C96"
         android:backgroundTint="@color/bluegray500_878C96"
         android:textStyle="bold"
-        android:enabled="false"
         />
 
     <TextView
@@ -32,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_temp_saved_write_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_temp_saved_write_title"
         android:layout_margin="20dp"
         android:text="글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다."
         android:textSize="14dp"
@@ -54,3 +60,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

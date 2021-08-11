@@ -40,11 +40,13 @@ class EmailLoginFragment : Fragment() {
             if (binding.etLoginEmailId.text.isNullOrBlank() || binding.etLoginEmailPassword.text.isNullOrBlank()) {
                 Toast.makeText(activity, "이메일과 비밀번호를 모두 입력하세요.", Toast.LENGTH_SHORT).show()
             } else {
+
                 // 임시 더미데이터 저장
                 val currentUser = User().apply {
-                    accessToken = "Temp-AccessToken"
-                    refreshToken = "Temp-RefreshToken"
-                    nickname = "닉네임부분"
+                    access_token = "Temp-AccessToken"
+                    refresh_token = "Temp-RefreshToken"
+                    nickname = "TestUser"
+                    email = binding.etLoginEmailId.text.toString()
                 }
                 sharedManager.saveCurrentUser(currentUser)
                 val loginIntent = Intent(activity, MainActivity::class.java)
@@ -72,8 +74,8 @@ class EmailLoginFragment : Fragment() {
                                 Log.d("성공", response.body()!!.token.toString())
                                 // 로그인 성공 후 토큰 저장 및 화면 전환
                                 val currentUser = User().apply {
-                                    accessToken = response.body()!!.token!!.accessToken
-                                    refreshToken = response.body()!!.token!!.refreshToken
+                                    access_token = response.body()!!.token!!.access_token
+                                    refresh_token = response.body()!!.token!!.refresh_token
                                 }
                                 sharedManager.saveCurrentUser(currentUser) // SharedPreference에 저장
 
@@ -116,15 +118,7 @@ class EmailLoginFragment : Fragment() {
                     binding.btnDeleteEtEmailId.visibility = View.VISIBLE
                 } else { binding.btnDeleteEtEmailId.visibility = View.INVISIBLE }
             }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(!s.isNullOrBlank() && !binding.etLoginEmailPassword.text.isNullOrBlank()){
-                    activeButtonLoginEmail()
-                } else { deactiveButtonLoginEmail() }
-
-                if(!s.isNullOrBlank()){
-                    binding.btnDeleteEtEmailId.visibility = View.VISIBLE
-                } else { binding.btnDeleteEtEmailId.visibility = View.INVISIBLE }
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
         })
         binding.etLoginEmailPassword.addTextChangedListener(object :TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -137,15 +131,7 @@ class EmailLoginFragment : Fragment() {
                     binding.btnDeleteEtEmailPassword.visibility = View.VISIBLE
                 } else { binding.btnDeleteEtEmailPassword.visibility = View.INVISIBLE }
             }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(!s.isNullOrBlank() && !binding.etLoginEmailId.text.isNullOrBlank()){
-                    activeButtonLoginEmail()
-                } else { deactiveButtonLoginEmail() }
-
-                if(!s.isNullOrBlank()){
-                    binding.btnDeleteEtEmailPassword.visibility = View.VISIBLE
-                } else { binding.btnDeleteEtEmailPassword.visibility = View.INVISIBLE }
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
         })
 
         return view

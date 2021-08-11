@@ -1,6 +1,7 @@
 package how.about.it.view.write
 
 import android.app.AlertDialog
+import android.app.Application
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
@@ -8,17 +9,26 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import how.about.it.R
+import how.about.it.database.TempPost
 import how.about.it.databinding.FragmentTempListWriteBinding
+import how.about.it.databinding.ItemWriteSaveTempBinding
 import how.about.it.view.ToastDefaultBlack
 import how.about.it.view.main.MainActivity
+import how.about.it.viewmodel.WriteViewModel
 
 class TempListWriteFragment : Fragment() {
     private var _binding: FragmentTempListWriteBinding? = null
     private val binding get() = requireNotNull(_binding)
     // 임시 저장 글 삭제 중 확인
     var isEditing = false
+    private lateinit var writeViewModel : WriteViewModel
+    lateinit var tempPostList : List<TempPost>
+    var deletePost = mutableListOf<TempPost>()
+    val tempListAdapter = TempListWriteAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +46,23 @@ class TempListWriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTempListWriteBinding.inflate(layoutInflater)
+        writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(Application())).get(WriteViewModel::class.java)
+        binding.writeViewModel = writeViewModel
+        binding.rvWriteTempPostAll.adapter = tempListAdapter
+
+        writeViewModel.getAllTempList.observe(viewLifecycleOwner, Observer {
+            tempListAdapter.setData(it)
+            tempPostList = it
+        })
+
+        tempListAdapter.setItemClickListener(object : TempListWriteAdapter.ItemClickListener{
+            // 글 불러오기 화면으로 이동
+            override fun onClick(view: View, position: Int) {
+                val bundle = Bundle()
+                bundle.putParcelable("tempPost", tempPostList[position])
+                requireView().findNavController().navigate(R.id.action_tempListWriteFragment_to_tempSavedWriteFragment, bundle)
+            }
+        })
 
         binding.toolbarWriteTempListBoard.tvToolbarTitle.setText(R.string.write_temp_save)
         (activity as MainActivity).setSupportActionBar(binding.toolbarWriteTempListBoard.toolbarBoard)
@@ -52,7 +79,8 @@ class TempListWriteFragment : Fragment() {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        
+        binding.rvWriteTempPostAll.adapter = tempListAdapter
+
         if (item.itemId == android.R.id.home) {
             (activity as MainActivity).onBackPressed()
         } else if(item.itemId == R.id.action_delete_temp_post) {
@@ -68,20 +96,21 @@ class TempListWriteFragment : Fragment() {
                 val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
                 val cancelButton = mDialogView.findViewById<Button>(R.id.btn_dialog_cancel)
 
-                // 임시 저장글 false 임시처리
-                if(false/** 임시 저장글을 선택한 경우 **/ ){
+                if(deletePost.isNotEmpty()){
                     mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.delete)
                     mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_temp_list_delete_dialog_description)
 
                     confirmButton.setOnClickListener {
-                        // TODO : 임시 게시글 삭제 코드 작성
+                        // 임시 게시글 삭제
+                        for(post in deletePost){
+                            writeViewModel.deleteTempPost(post)
+                        }
                         mAlertDialog.dismiss()
                         ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_list_delete_toast_description))
                     }
                     cancelButton.setOnClickListener {
                         mAlertDialog.dismiss()
                     }
-
                 } else { /** 선택한 임시 저장글이 없는 상태로 누른 경우 **/
                     mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.write_temp_list_delete_empty_dialog_title)
                     mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_temp_list_delete_empty_dialog_description)
@@ -92,10 +121,28 @@ class TempListWriteFragment : Fragment() {
                     }
                 }
                 deleteItem.setIcon(R.drawable.ic_trashbin)
+
+                // 삭제로 인하여 onClick이 Override 되었기 때문에 다시 목록 선택click 이 될 수 있도록 override
+                // TODO : OnCreatedView에서 코드와 Duplicate Code
+                tempListAdapter.setItemClickListener(object : TempListWriteAdapter.ItemClickListener{
+                    // 글 불러오기 화면으로 이동
+                    override fun onClick(view: View, position: Int) {
+                        val bundle = Bundle()
+                        bundle.putParcelable("tempPost", tempPostList[position])
+                        requireView().findNavController().navigate(R.id.action_tempListWriteFragment_to_tempSavedWriteFragment, bundle)
+                    }
+                })
             }
             else if(!isEditing){
                 deleteItem.setIcon(null)
-                // TODO : 삭제 모드로 진입 (RecyclerView List 선택으로 변경)
+                // 삭제 모드로 진입. 삭제할 게시글들 선택하여 deletePost에 추가
+                tempListAdapter.setItemClickListener(object : TempListWriteAdapter.ItemClickListener{
+                    override fun onClick(view: View, position: Int) {
+                        TempListWriteAdapter.TempListViewHolder(ItemWriteSaveTempBinding.bind(view)).binding.layoutWriteTempListItem.setBackgroundColor(requireContext().resources.getColor(R.color.bluegray800_303540, context?.theme))
+                        deletePost += tempPostList[position]
+                    }
+                })
+                deletePost.clear()
             }
             isEditing = !isEditing
         }
