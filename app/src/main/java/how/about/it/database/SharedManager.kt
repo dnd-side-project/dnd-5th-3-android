@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import how.about.it.database.PreferenceHelper.get
 import how.about.it.database.PreferenceHelper.set
-
 class SharedManager(context: Context) {
     private val prefs: SharedPreferences = PreferenceHelper.defaultPrefs(context)
 
