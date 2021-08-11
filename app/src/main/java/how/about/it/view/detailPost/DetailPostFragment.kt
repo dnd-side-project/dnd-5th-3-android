@@ -8,12 +8,10 @@ import android.os.Handler
 import android.view.*
 import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import how.about.it.R
 import how.about.it.databinding.FragmentDetailPostBinding
-import how.about.it.view.ToastDefaultBlack
 import how.about.it.view.main.MainActivity
 
 class DetailPostFragment : Fragment() {
@@ -42,13 +40,13 @@ class DetailPostFragment : Fragment() {
         }
 
         binding.fabDetailPostAgree.setOnClickListener {
-            voteComplete(R.drawable.ic_emoji_vote_complete_agree)
-            voteAction(R.drawable.ic_emoji_vote_complete_agree)
+            voteComplete(R.drawable.ic_vote_complete_agree)
+            voteAction(R.drawable.ic_vote_complete_agree)
         }
 
         binding.fabDetailPostDisagree.setOnClickListener {
-            voteComplete(R.drawable.ic_emoji_vote_complete_disagree)
-            voteAction(R.drawable.ic_emoji_vote_complete_disagree)
+            voteComplete(R.drawable.ic_vote_complete_disagree)
+            voteAction(R.drawable.ic_vote_complete_disagree)
         }
         return binding.root
     }

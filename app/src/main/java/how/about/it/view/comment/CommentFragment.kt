@@ -98,7 +98,6 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                         setLayoutCommentCloseAnimation(getLayoutReactionList())
                         delay(300)
                         setLayoutCommentCloseInvisible(getLayoutReactionList())
-
                     }
                     1 -> {
                         setLayoutAlpha(0.2f)
