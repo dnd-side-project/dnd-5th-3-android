@@ -47,6 +47,8 @@ class EmailLoginFragment : Fragment() {
                     refresh_token = "Temp-RefreshToken"
                     nickname = "TestUser"
                     email = binding.etLoginEmailId.text.toString()
+                    user_id = "123456789"
+                    profile_image_url = "TestImageURL"
                 }
                 sharedManager.saveCurrentUser(currentUser)
                 val loginIntent = Intent(activity, MainActivity::class.java)

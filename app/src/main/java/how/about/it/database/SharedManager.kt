@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import how.about.it.database.PreferenceHelper.get
 import how.about.it.database.PreferenceHelper.set
-import java.math.BigInteger
 
 class SharedManager(context: Context) {
     private val prefs: SharedPreferences = PreferenceHelper.defaultPrefs(context)
@@ -21,7 +20,7 @@ class SharedManager(context: Context) {
         return User().apply {
             access_token = prefs["access_token", ""]
             refresh_token = prefs["refresh_token", ""]
-            user_id = prefs["user_id", BigInteger.ZERO]
+            user_id = prefs["user_id", ""]
             email = prefs["email", ""]
             nickname = prefs["nickname", ""]
             profile_image_url = prefs["profile_image_url"]

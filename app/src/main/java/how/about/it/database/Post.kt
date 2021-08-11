@@ -1,20 +1,18 @@
 package how.about.it.database
 
-import android.net.Uri
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
-import java.math.BigInteger
 import java.util.*
 
 data class Post(
-    var user_id: BigInteger?= null,
-    var post_id: BigInteger?= null,
+    var user_id: String?= null,
+    var post_id: String?= null,
     var title: String?= null,
     var product_name: String?= null,
     var content: String? = null,
-    var product_image_url: Uri?= null,
+    var product_image_url: String?= null,
     var is_voted: Boolean?= null,
     var permit_count: Int?= null,
     var reject_count: Int?= null,
