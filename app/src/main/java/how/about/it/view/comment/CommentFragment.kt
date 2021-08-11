@@ -1,7 +1,6 @@
 package how.about.it.view.comment
 
 import android.animation.Animator
-import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import how.about.it.R
 import how.about.it.databinding.FragmentCommentBinding
+import how.about.it.util.FloatingAnimationUtil
 import how.about.it.util.TimeChangerUtil
 import how.about.it.view.comment.viewmodel.CommentViewModel
 import kotlinx.coroutines.delay
@@ -50,18 +50,18 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setTvCommentTimeText() {
-        binding.tvCommentTime.text =
+        binding.layoutComment.tvCommentTime.text =
             TimeChangerUtil.timeChange(requireContext(), "2021-08-09T15:35:00")
     }
 
     private fun setBtnCommentMoreClickListener() {
-        binding.btnCommentMore.setOnClickListener {
+        binding.layoutComment.btnCommentMore.setOnClickListener {
             PopupMenu(
                 ContextThemeWrapper(
                     requireContext(),
                     R.style.feed_toggle_popup_menu
                 ),
-                binding.btnCommentMore
+                binding.layoutComment.btnCommentMore
             ).apply {
                 setOnMenuItemClickListener(this@CommentFragment)
                 inflate(R.menu.menu_comment)
@@ -132,7 +132,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         list.indices.forEach { index ->
             list[index].apply {
                 visibility = View.VISIBLE
-                setAnimation(this, dpToPx(-(76 * (index + 1)).toFloat()))
+                FloatingAnimationUtil.setAnimation(this, dpToPx(-(76 * (index + 1)).toFloat()))
             }
         }
     }
@@ -146,7 +146,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun setLayoutCommentCloseAnimation(list: List<ConstraintLayout>) {
         list.forEach { layout ->
-            setAnimation(layout, 0f)
+            FloatingAnimationUtil.setAnimation(layout, 0f)
         }
     }
 
@@ -168,18 +168,14 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             list.indices.forEach { index ->
                 if (selected != index) {
-                    setAnimation(list[index], 0f)
+                    FloatingAnimationUtil.setAnimation(list[index], 0f)
                     list[index].visibility = View.INVISIBLE
                 } else {
-                    setAnimation(list[index], dpToPx(-76f))
+                    FloatingAnimationUtil.setAnimation(list[index], dpToPx(-76f))
                 }
             }
             setLottiePlayAnimation(selected)
         }
-    }
-
-    private fun setAnimation(layout: ConstraintLayout, value: Float) {
-        ObjectAnimator.ofFloat(layout, "translationY", value).start()
     }
 
     private fun setLottieAnimationListener() {
