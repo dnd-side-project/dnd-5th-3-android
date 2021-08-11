@@ -1,23 +1,30 @@
 package how.about.it.view.write
 
 import android.app.AlertDialog
+import android.app.Application
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import how.about.it.R
+import how.about.it.database.TempPost
 import how.about.it.databinding.FragmentTempSavedWriteBinding
 import how.about.it.view.main.MainActivity
+import how.about.it.viewmodel.WriteViewModel
 
 class TempSavedWriteFragment : Fragment() {
     private var _binding: FragmentTempSavedWriteBinding? = null
     private val binding get() = requireNotNull(_binding)
+    private lateinit var writeViewModel : WriteViewModel
+    private lateinit var currentTempPost : TempPost
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        currentTempPost = arguments?.getParcelable<TempPost>("tempPost")!!
 
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
@@ -33,12 +40,18 @@ class TempSavedWriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTempSavedWriteBinding.inflate(layoutInflater)
+        writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(Application())).get(WriteViewModel::class.java)
+        binding.writeViewModel = writeViewModel
 
         binding.toolbarWriteTempSavedBoard.tvToolbarTitle.text = "저장된 글"
         (activity as MainActivity).setSupportActionBar(binding.toolbarWriteTempSavedBoard.toolbarBoard)
         (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         showBackButton()
+
+        binding.tvTempSavedWriteTitle.text = currentTempPost.title
+        binding.tvTempSavedWriteDetail.text = currentTempPost.content
+        // binding.imgTempSavedWrite = currentTempPost.product_image
 
         return binding.root
     }
@@ -68,8 +81,11 @@ class TempSavedWriteFragment : Fragment() {
 
             // Dialog 확인 버튼을 클릭 한 경우
             confirmButton.setOnClickListener {
-                // TODO : 임시 저장 내용을 현재 글쓰기 화면으로 돌아가면서 삽입하는 코드 작성
-                // TODO : 이후 임시 저장글 리스트에서 불러온 저장글 삭제하는 코드 작성
+                val bundle = Bundle()
+                bundle.putParcelable("currentTempPost", currentTempPost)
+                // 불러온 글을 WriteFragment로 데이터를 넘기면서 해당 임시 저장글 삭제하여 불러온 글이 임시저장 리스트에 남아있지 않도록 함
+                writeViewModel.deleteTempPost(currentTempPost)
+                requireView().findNavController().navigate(R.id.action_tempSavedWriteFragment_to_writeFragment, bundle)
                 mAlertDialog.dismiss()
             }
             cancelButton.setOnClickListener {

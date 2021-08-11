@@ -45,7 +45,48 @@
         android:id="@+id/tempListWriteFragment"
         android:name="how.about.it.view.write.TempListWriteFragment"
         android:label="fragment_temp_list_write"
-        tools:layout="@layout/fragment_temp_list_write" />
+        tools:layout="@layout/fragment_temp_list_write">
+        <action
+            android:id="@+id/action_tempListWriteFragment_to_tempSavedWriteFragment"
+            app:destination="@id/tempSavedWriteFragment">
+            <argument
+                android:name="tempPostTitle"
+                app:argType="string"
+                android:defaultValue="" />
+            <argument
+                android:name="tempPostContent"
+                app:argType="string"
+                android:defaultValue="" />
+            <argument
+                android:name="tempPostImage"
+                app:argType="string"
+                android:defaultValue="" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/tempSavedWriteFragment"
+        android:name="how.about.it.view.write.TempSavedWriteFragment"
+        android:label="fragment_temp_saved_write"
+        tools:layout="@layout/fragment_temp_saved_write">
+        <action
+            android:id="@+id/action_tempSavedWriteFragment_to_writeFragment"
+            app:destination="@id/writeFragment"
+            app:popUpTo="@id/writeFragment"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="tempPostTitle"
+                app:argType="string"
+                android:defaultValue="" />
+            <argument
+                android:name="tempPostContent"
+                app:argType="string"
+                android:defaultValue="" />
+            <argument
+                android:name="tempPostImage"
+                app:argType="string"
+                android:defaultValue="" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/myPageFragment"
         android:name="how.about.it.view.mypage.MyPageFragment"

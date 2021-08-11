@@ -1,25 +1,29 @@
 package how.about.it.view.write
 
-import android.app.AlertDialog
+import android.app.Application
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import how.about.it.R
+import how.about.it.database.TempPost
+import how.about.it.database.TempPostDatabase
 import how.about.it.databinding.FragmentWriteBinding
 import how.about.it.view.ToastDefaultBlack
 import how.about.it.view.main.MainActivity
+import how.about.it.viewmodel.WriteViewModel
+import java.util.*
 
 class WriteFragment : Fragment() {
     private var _binding: FragmentWriteBinding? = null
     private val binding get() = requireNotNull(_binding)
+    private lateinit var writeViewModel: WriteViewModel
+    private lateinit var db : TempPostDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,12 +41,22 @@ class WriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentWriteBinding.inflate(layoutInflater)
+        db = TempPostDatabase.getDatabase(requireContext())!!
+
+        writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(Application())).get(WriteViewModel::class.java)
+        binding.writeViewModel = writeViewModel
 
         binding.toolbarWriteBoard.tvToolbarTitle.text = "글쓰기"
         (activity as MainActivity).setSupportActionBar(binding.toolbarWriteBoard.toolbarBoard)
         (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         showBackButton()
+
+        // 임시 저장한 게시글을 불러온 경우 채워넣음
+        val tempPost = arguments?.getParcelable<TempPost>("currentTempPost")
+        binding.etWriteTitle.setText(tempPost?.title)
+        binding.etWriteContent.setText(tempPost?.content)
+        // binding.imgTempSavedWrite = arguments?.getString("image")
 
         binding.etWriteTitle.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { afterTextChanged(s as Editable?) }
@@ -105,7 +119,6 @@ class WriteFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_write_toolbar, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -118,6 +131,8 @@ class WriteFragment : Fragment() {
             if(binding.etWriteTitle.text.toString().trim().isNullOrBlank() || binding.etWriteContent.text.toString().trim().isNullOrBlank()) {
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_save_fail_empty_message))?.show()
             } else {
+                val tempPost = TempPost(binding.etWriteTitle.text.toString(), "TestProductName", binding.etWriteContent.text.toString(), "testProductImg", Date(System.currentTimeMillis()).toString())
+                writeViewModel.addTempPost(tempPost)
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_save_success_meesage))?.show()
             }
         }
