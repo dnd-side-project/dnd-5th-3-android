@@ -5,14 +5,12 @@ import how.about.it.R
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 object TimeChangerUtil {
+    private val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
+
     fun timeChange(context: Context, time: String): String {
-        val longTime = requireNotNull(
-            SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss",
-                Locale.KOREA
-            ).parse(time.replace("T", " "))
-        ).time
+        val longTime = requireNotNull(format.parse(time.replace("T", " "))).time
 
         val calTime = (System.currentTimeMillis() - longTime) / 1000
 
@@ -43,4 +41,18 @@ object TimeChangerUtil {
         time,
         context.getString(id)
     )
+
+    fun getDeadLine(time: String): Long {
+        val longTime = requireNotNull(format.parse(time.replace("T", " "))).time
+        val currentTime =
+            requireNotNull(format.parse(format.format(System.currentTimeMillis()))).time
+        return (longTime - currentTime)
+    }
+
+    fun getDeadLineString(time: Long): String {
+        val seconds = (time / 1000) % 60
+        val minutes = (time / 1000) / 60 % 60
+        val hours = (time / 1000) / (60 * 60)
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
 }

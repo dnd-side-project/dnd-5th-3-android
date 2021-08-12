@@ -1,6 +1,7 @@
 package how.about.it.view.vote
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.navigation.findNavController
 import how.about.it.R
 import how.about.it.databinding.FragmentVoteBinding
 import how.about.it.util.FloatingAnimationUtil
+import how.about.it.util.TimeChangerUtil
 import how.about.it.view.vote.viewmodel.VoteViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -22,6 +24,10 @@ class VoteFragment : Fragment() {
     private var _binding: FragmentVoteBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val voteViewModel by viewModels<VoteViewModel>()
+    private val timer by lazy {
+        setCountDownTimer()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,6 +35,8 @@ class VoteFragment : Fragment() {
     ): View {
         _binding = FragmentVoteBinding.inflate(inflater, container, false)
         setVoteBackClickListener()
+        setCountDownTimer()
+        startCountDownTimer()
         setFabVoteClickListener()
         setOpenVoteCollect()
         setLayoutVoteClickListener(getLayoutVoteList())
@@ -40,6 +48,29 @@ class VoteFragment : Fragment() {
             requireView().findNavController()
                 .popBackStack()
         }
+    }
+
+    private fun setCountDownTimer() =
+        object : CountDownTimer(
+            (TimeChangerUtil.getDeadLine(("2021-08-13T19:00:00"))),
+            1000
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding.tvVoteItemTime.text =
+                    TimeChangerUtil.getDeadLineString(millisUntilFinished)
+            }
+
+            override fun onFinish() {
+                binding.tvVoteItemTime.text = TimeChangerUtil.getDeadLineString(0)
+            }
+        }
+
+    private fun startCountDownTimer() {
+        timer.start()
+    }
+
+    private fun cancelCountDownTimer() {
+        timer.cancel()
     }
 
     private fun setFabVoteClickListener() {
@@ -176,6 +207,7 @@ class VoteFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        cancelCountDownTimer()
         _binding = null
     }
 }
