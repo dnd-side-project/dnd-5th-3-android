@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import how.about.it.R
 import how.about.it.databinding.FragmentOnBoardingBinding
@@ -21,6 +22,7 @@ class   OnBoardingFragment : Fragment() {
     ): View {
         _binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
         setVpOnBoardingAdapter()
+        setVpOnBoardingPageCallBack()
         setTabOnBoardingMediator()
         setTvOnBoardingSkipClickListener()
         return binding.root
@@ -38,6 +40,31 @@ class   OnBoardingFragment : Fragment() {
                     else -> throw IndexOutOfBoundsException()
                 }
             }
+        }
+    }
+
+    private fun setVpOnBoardingPageCallBack() {
+        binding.vpOnBoarding.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                setTvSkipVisibility(position)
+                setStartButtonVisibility(position)
+            }
+        })
+    }
+
+    private fun setTvSkipVisibility(position: Int) {
+        binding.tvOnBoardingSkip.visibility = when (position) {
+            3 -> View.INVISIBLE
+            else -> View.VISIBLE
+        }
+    }
+
+    private fun setStartButtonVisibility(position: Int) {
+        binding.btnOnBoardingStart.visibility = when (position) {
+            3 -> View.VISIBLE
+            else -> View.GONE
         }
     }
 

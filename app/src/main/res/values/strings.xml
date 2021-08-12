@@ -161,6 +161,7 @@
 
     <!-- OnBoarding -->
     <string name="on_boarding_skip">SKIP</string>
+    <string name="on_boarding_start">지금 시작하기</string>
     <string name="on_boarding_first_title">물어보고 싶은것들\n무물에서 물어봐!</string>
     <string name="on_boarding_first_content">나의 고민이나 의견을 들어보고 싶은\n모든것들을 물어봐요!</string>
     <string name="on_boarding_second_title">고민에 대한\n사람들의 찬반투표</string>

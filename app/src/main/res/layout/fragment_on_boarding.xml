@@ -39,8 +39,25 @@
         android:layout_height="0dp"
         android:layout_marginTop='14dp'
         android:overScrollMode="never"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_on_boarding_start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_on_boarding_skip" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_on_boarding_start"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/moomool_pink_ff227c"
+        android:paddingVertical="12dp"
+        android:text="@string/on_boarding_start"
+        android:textColor="@color/bluegray50_F9FAFC"
+        android:textSize="16dp"
+        android:visibility="gone"
+        app:cornerRadius="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
