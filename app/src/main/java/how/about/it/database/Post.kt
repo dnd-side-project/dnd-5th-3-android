@@ -7,10 +7,9 @@ import kotlinx.parcelize.Parcelize
 import java.util.*
 
 data class Post(
-    var user_id: String?= null,
-    var post_id: String?= null,
+    var user_id: Long?= null,
+    var post_id: Long?= null,
     var title: String?= null,
-    var product_name: String?= null,
     var content: String? = null,
     var product_image_url: String?= null,
     var is_voted: Boolean?= null,
@@ -26,7 +25,6 @@ data class Post(
 @Entity
 data class TempPost (
     var title: String? = null,
-    var product_name: String?= null,
     var content: String? = null,
     var product_image: String?= null, // String 형태로 형변환하여 이미지 저장
     var created_date: String?= null
