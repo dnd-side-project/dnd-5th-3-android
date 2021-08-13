@@ -42,7 +42,7 @@ class WriteFragment : Fragment() {
     private lateinit var writeViewModel: WriteViewModel
     private lateinit var db : TempPostDatabase
     private var productImageUpload : String = ""
-    private val t_dateFormat = SimpleDateFormat("yyyy-MM-dd kk:mm:ss E", Locale("ko", "KR"))
+    private val timeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -157,7 +157,7 @@ class WriteFragment : Fragment() {
             if(binding.etWriteTitle.text.toString().trim().isNullOrBlank() || binding.etWriteContent.text.toString().trim().isNullOrBlank()) {
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_save_fail_empty_message))?.show()
             } else {
-                val tempPost = TempPost(binding.etWriteTitle.text.toString(), binding.etWriteContent.text.toString(), productImageUpload, t_dateFormat.format(Date(System.currentTimeMillis())).toString())
+                val tempPost = TempPost(binding.etWriteTitle.text.toString(), binding.etWriteContent.text.toString(), productImageUpload, timeFormat.format(Date(System.currentTimeMillis())).toString())
                 writeViewModel.addTempPost(tempPost)
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_save_success_meesage))?.show()
             }
