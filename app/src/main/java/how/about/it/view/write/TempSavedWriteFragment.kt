@@ -2,11 +2,15 @@ package how.about.it.view.write
 
 import android.app.AlertDialog
 import android.app.Application
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -15,6 +19,7 @@ import how.about.it.database.TempPost
 import how.about.it.databinding.FragmentTempSavedWriteBinding
 import how.about.it.view.main.MainActivity
 import how.about.it.viewmodel.WriteViewModel
+import java.util.*
 
 class TempSavedWriteFragment : Fragment() {
     private var _binding: FragmentTempSavedWriteBinding? = null
@@ -51,7 +56,9 @@ class TempSavedWriteFragment : Fragment() {
 
         binding.tvTempSavedWriteTitle.text = currentTempPost.title
         binding.tvTempSavedWriteDetail.text = currentTempPost.content
-        // binding.imgTempSavedWrite = currentTempPost.product_image
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            binding.imgTempSavedWrite.setImageBitmap(currentTempPost.product_image?.toBitmap())
+        }
 
         return binding.root
     }
@@ -94,6 +101,14 @@ class TempSavedWriteFragment : Fragment() {
         }
         return true
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun String.toBitmap(): Bitmap?{
+        Base64.getDecoder().decode(this).apply {
+            return BitmapFactory.decodeByteArray(this,0,size)
+        }
+    }
+
     private fun showBackButton() {
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         this.setHasOptionsMenu(true)
