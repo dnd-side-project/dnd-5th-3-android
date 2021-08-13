@@ -108,6 +108,7 @@
             android:textColorHint="@color/bluegray600_626670"
             android:textColor="@color/bluegray200_E1E3E8"
             android:backgroundTint="@color/bluegray300_CBCFD6"
+            android:inputType="textPassword"
             />
 
         <androidx.appcompat.widget.AppCompatImageButton
@@ -148,7 +149,7 @@
         android:layout_marginBottom="12dp"
         android:text="@string/reset_password_button"
         android:textColor="@color/bluegray300_CBCFD6"
-        android:visibility="visible"
+        android:visibility="invisible"
         />
 
     <androidx.appcompat.widget.AppCompatButton
