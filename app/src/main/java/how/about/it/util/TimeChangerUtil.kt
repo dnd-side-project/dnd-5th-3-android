@@ -12,26 +12,23 @@ object TimeChangerUtil {
     fun timeChange(context: Context, time: String): String {
         val longTime = requireNotNull(format.parse(time.replace("T", " "))).time
 
-        val calTime = (System.currentTimeMillis() - longTime) / 1000
+        val seconds = (System.currentTimeMillis() - longTime) / 1000
 
         when {
-            calTime < 60 -> {
-                return String.format(
-                    context.getString(R.string.comment_time),
-                    context.getString(R.string.comment_time_now)
-                )
+            seconds < 60 -> {
+                return context.getString(R.string.comment_time_now)
             }
-            calTime < 60 * 60 -> {
-                return getString(context, calTime / 60, R.string.comment_time_minute_ago)
+            seconds < 60 * 60 -> {
+                return getString(context, seconds / 60, R.string.comment_time_minute_ago)
             }
-            calTime < 60 * 60 * 24 -> {
-                return getString(context, calTime / 3600, R.string.comment_time_hour_ago)
+            seconds < 60 * 60 * 24 -> {
+                return getString(context, seconds / 3600, R.string.comment_time_hour_ago)
             }
-            calTime < 60 * 60 * 24 * 30 -> {
-                return getString(context, calTime / 86400, R.string.comment_time_day_ago)
+            seconds < 60 * 60 * 24 * 30 -> {
+                return getString(context, seconds / 86400, R.string.comment_time_day_ago)
             }
             else -> {
-                return getString(context, calTime / 31104000, R.string.comment_time_year_ago)
+                return getString(context, seconds / 31104000, R.string.comment_time_year_ago)
             }
         }
     }
