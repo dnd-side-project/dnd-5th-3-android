@@ -7,18 +7,18 @@ import kotlinx.parcelize.Parcelize
 import java.util.*
 
 data class Post(
-    var user_id: Long?= null,
-    var post_id: Long?= null,
+    var userId: Long?= null,
+    var postId: Long?= null,
     var title: String?= null,
     var content: String? = null,
-    var product_image_url: String?= null,
-    var is_voted: Boolean?= null,
-    var permit_count: Int?= null,
-    var reject_count: Int?= null,
-    var view_count: Int?= null,
-    var created_date: Date?= null,
-    var updated_date: Date?= null,
-    var is_deleted: Boolean?= null
+    var productImageUrl: String?= null,
+    var isVoted: Boolean?= null,
+    var permitCount: Int?= null,
+    var rejectCount: Int?= null,
+    var viewCount: Int?= null,
+    var createdDate: Date?= null,
+    var updatedDate: Date?= null,
+    var isDeleted: Boolean?= null
 )
 
 @Parcelize
@@ -26,8 +26,8 @@ data class Post(
 data class TempPost (
     var title: String? = null,
     var content: String? = null,
-    var product_image: String?= null, // String 형태로 형변환하여 이미지 저장
-    var created_date: String?= null
+    var productImage: String?= null, // String 형태로 형변환하여 이미지 저장
+    var createdDate: String?= null
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true)
     var tempPostPosition = 0

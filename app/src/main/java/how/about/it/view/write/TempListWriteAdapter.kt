@@ -12,6 +12,7 @@ import how.about.it.database.TempPost
 import how.about.it.databinding.ItemWriteSaveTempBinding
 import java.util.*
 import how.about.it.util.TimeChangerUtil
+import java.lang.Math.min
 
 class TempListWriteAdapter : RecyclerView.Adapter<TempListWriteAdapter.TempListViewHolder>() {
     private var tempPostList = emptyList<TempPost>()
@@ -28,9 +29,9 @@ class TempListWriteAdapter : RecyclerView.Adapter<TempListWriteAdapter.TempListV
         holder.binding.tvWriteSaveTempTitle.text = currentTempPost.title.toString()
         holder.binding.tvWriteSaveTempDetail.text = currentTempPost.content.toString()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            holder.binding.imgWriteSaveTemp.setImageBitmap(currentTempPost.product_image?.toBitmap())
+            holder.binding.imgWriteSaveTemp.setImageBitmap(currentTempPost.productImage?.toBitmap()?.toSquare())
         }
-        holder.binding.tvWriteSaveTempSavetime.text = TimeChangerUtil.timeChange(holder.binding.tvWriteSaveTempSavetime.context, currentTempPost.created_date.toString())
+        holder.binding.tvWriteSaveTempSavetime.text = TimeChangerUtil.timeChange(holder.binding.tvWriteSaveTempSavetime.context, currentTempPost.createdDate.toString())
 
         holder.itemView.setOnClickListener{
             itemClickListener.onClick(it, position)
@@ -59,5 +60,23 @@ class TempListWriteAdapter : RecyclerView.Adapter<TempListWriteAdapter.TempListV
         Base64.getDecoder().decode(this).apply {
             return BitmapFactory.decodeByteArray(this,0,size)
         }
+    }
+    fun Bitmap.toSquare():Bitmap?{
+        // get the small side of bitmap
+        val side = min(width,height)
+
+        // calculate the x and y offset
+        val xOffset = (width - side) /2
+        val yOffset = (height - side)/2
+
+        // create a square bitmap
+        // a square is closed, two dimensional shape with 4 equal sides
+        return Bitmap.createBitmap(
+            this, // source bitmap
+            xOffset, // x coordinate of the first pixel in source
+            yOffset, // y coordinate of the first pixel in source
+            side, // width
+            side // height
+        )
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,12 @@ import how.about.it.R
 import how.about.it.database.SharedManager
 import how.about.it.database.User
 import how.about.it.databinding.FragmentEmailLoginBinding
+import how.about.it.model.RequestLogin
+import how.about.it.model.ResponseLogin
+import how.about.it.network.RequestToServer
 import how.about.it.view.main.MainActivity
+import retrofit2.Callback
+import retrofit2.Response
 
 class EmailLoginFragment : Fragment() {
     private var _binding : FragmentEmailLoginBinding?= null
@@ -43,12 +49,11 @@ class EmailLoginFragment : Fragment() {
 
                 // 임시 더미데이터 저장
                 val currentUser = User().apply {
-                    access_token = "Temp-AccessToken"
-                    refresh_token = "Temp-RefreshToken"
+                    accessToken = "Temp-AccessToken"
+                    refreshToken = "Temp-RefreshToken"
                     nickname = "TestUser"
                     email = binding.etLoginEmailId.text.toString()
-                    user_id = "123456789"
-                    profile_image_url = "TestImageURL"
+                    userId = 123456789
                 }
                 sharedManager.saveCurrentUser(currentUser)
                 val loginIntent = Intent(activity, MainActivity::class.java)
@@ -57,7 +62,7 @@ class EmailLoginFragment : Fragment() {
 
                 /* 서버와 연동하는 부분
                 // 로그인 요청
-                requestToServer.service.requestLogin(
+                RequestToServer.service.requestLogin(
                     RequestLogin(
                         userId = binding.etLoginEmailId.text.toString(),
                         password = binding.etLoginEmailPassword.text.toString()
@@ -72,12 +77,15 @@ class EmailLoginFragment : Fragment() {
                         response: Response<ResponseLogin>
                     ) {
                         if (response.isSuccessful) {
-                            if (response.body()!!.success) {
-                                Log.d("성공", response.body()!!.token.toString())
+                            if (response.body()!!.email.isNotEmpty()) {
+                                Log.d("성공", "성공")
                                 // 로그인 성공 후 토큰 저장 및 화면 전환
                                 val currentUser = User().apply {
-                                    access_token = response.body()!!.token!!.access_token
-                                    refresh_token = response.body()!!.token!!.refresh_token
+                                    accessToken = response.body()!!.accessToken
+                                    refreshToken = response.body()!!.refreshToken
+                                    nickname = response.body()!!.name
+                                    email = response.body()!!.email
+                                    userId = 123456789
                                 }
                                 sharedManager.saveCurrentUser(currentUser) // SharedPreference에 저장
 
