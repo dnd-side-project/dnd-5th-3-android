@@ -57,7 +57,7 @@ class TempSavedWriteFragment : Fragment() {
         binding.tvTempSavedWriteTitle.text = currentTempPost.title
         binding.tvTempSavedWriteDetail.text = currentTempPost.content
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            binding.imgTempSavedWrite.setImageBitmap(currentTempPost.product_image?.toBitmap())
+            binding.imgTempSavedWrite.setImageBitmap(currentTempPost.productImage?.toBitmap())
         }
 
         return binding.root

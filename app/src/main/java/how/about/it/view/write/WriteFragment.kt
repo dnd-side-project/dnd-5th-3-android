@@ -41,7 +41,7 @@ class WriteFragment : Fragment() {
     private val binding get() = requireNotNull(_binding)
     private lateinit var writeViewModel: WriteViewModel
     private lateinit var db : TempPostDatabase
-    private var product_image_upload : String = ""
+    private var productImageUpload : String = ""
     private val t_dateFormat = SimpleDateFormat("yyyy-MM-dd kk:mm:ss E", Locale("ko", "KR"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,9 +76,9 @@ class WriteFragment : Fragment() {
         val tempPost = arguments?.getParcelable<TempPost>("currentTempPost")
         binding.etWriteTitle.setText(tempPost?.title)
         binding.etWriteContent.setText(tempPost?.content)
-        product_image_upload = tempPost?.product_image.toString()
+        productImageUpload = tempPost?.productImage.toString()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            binding.imgDetailPost.setImageBitmap(tempPost?.product_image?.toBitmap())
+            binding.imgDetailPost.setImageBitmap(tempPost?.productImage?.toBitmap())
         }
 
         binding.etWriteTitle.addTextChangedListener(object : TextWatcher {
@@ -157,7 +157,7 @@ class WriteFragment : Fragment() {
             if(binding.etWriteTitle.text.toString().trim().isNullOrBlank() || binding.etWriteContent.text.toString().trim().isNullOrBlank()) {
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_save_fail_empty_message))?.show()
             } else {
-                val tempPost = TempPost(binding.etWriteTitle.text.toString(), binding.etWriteContent.text.toString(), product_image_upload, t_dateFormat.format(Date(System.currentTimeMillis())).toString())
+                val tempPost = TempPost(binding.etWriteTitle.text.toString(), binding.etWriteContent.text.toString(), productImageUpload, t_dateFormat.format(Date(System.currentTimeMillis())).toString())
                 writeViewModel.addTempPost(tempPost)
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_save_success_meesage))?.show()
             }
@@ -217,7 +217,7 @@ class WriteFragment : Fragment() {
                 if(resource is BitmapDrawable) {
                     val bitmap = resource.bitmap
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        product_image_upload = bitmap.toBase64String()
+                        productImageUpload = bitmap.toBase64String()
                     }
                 }
                 return false
