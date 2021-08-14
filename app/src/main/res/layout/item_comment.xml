@@ -87,6 +87,7 @@
             app:showDivider="middle">
 
             <ImageButton
+                android:id="@+id/btn_reaction_empty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
@@ -104,9 +105,9 @@
                 android:gravity="center"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="2"
                 android:textColor="@color/bluegray50_F9FAFC"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_emoji_small_oh" />
 
             <TextView
@@ -119,9 +120,9 @@
                 android:gravity="center"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="20"
                 android:textColor="@color/bluegray50_F9FAFC"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_emoji_small_wow" />
 
             <TextView
@@ -134,10 +135,9 @@
                 android:gravity="center"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="100"
                 android:textColor="@color/bluegray50_F9FAFC"
                 android:textStyle="bold"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_emoji_small_funny" />
 
             <TextView
@@ -150,9 +150,9 @@
                 android:gravity="center"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="100"
                 android:textColor="@color/bluegray50_F9FAFC"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_emoji_small_sad" />
 
             <TextView
@@ -164,9 +164,9 @@
                 android:gravity="center"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
-                android:text="100"
                 android:textColor="@color/bluegray50_F9FAFC"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_emoji_small_umm" />
         </com.google.android.flexbox.FlexboxLayout>
 

@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -34,11 +35,15 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         _binding = FragmentCommentBinding.inflate(inflater, container, false)
         setCommentBackClickListener()
         setTvCommentTimeText()
+        setBtnEmptyEmojiClickListener()
+        setEmptyReactCollect()
+        setCommentEmojiCollect()
         setBtnCommentMoreClickListener()
         setFabCommentReactClickListener()
         setOpenReactCollect()
         setLayoutCommentClickListener(getLayoutReactionList())
         setLottieAnimationListener()
+        commentViewModel.initEmojiList()
         return binding.root
     }
 
@@ -52,6 +57,78 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun setTvCommentTimeText() {
         binding.layoutComment.tvCommentTime.text =
             TimeChangerUtil.timeChange(requireContext(), "2021-08-09T15:35:00")
+    }
+
+    private fun setBtnEmptyEmojiClickListener() {
+        binding.layoutComment.btnReactionEmpty.setOnClickListener {
+            commentViewModel.setOpenReact()
+        }
+    }
+
+    private fun setEmptyReactCollect() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            commentViewModel.emptyReact.collect { isEmpty ->
+                binding.layoutComment.btnReactionEmpty.visibility = when (isEmpty) {
+                    true -> View.VISIBLE
+                    false -> View.GONE
+                }
+            }
+        }
+    }
+
+    private fun setCommentEmojiCollect() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            commentViewModel.commentEmoji.collect { emojiList ->
+                commentViewModel.setEmptyCommentReactVisibility()
+                emojiList.indices.forEach { index ->
+                    with(emojiList[index]) {
+                        getLayoutEmoji(emojiId).apply {
+                            setTvCommentReactVisibility(emojiCount)
+                            setTvCommentReactCount(emojiCount)
+                            setTvCommentReactClickListener(index)
+                            setTvCommentReactionBackground(checked)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun TextView.setTvCommentReactVisibility(emojiCount: Int) {
+        this.visibility = when (emojiCount) {
+            0 -> View.GONE
+            else -> View.VISIBLE
+        }
+    }
+
+    private fun TextView.setTvCommentReactCount(emojiCount: Int) {
+        this.text = emojiCount.toString()
+    }
+
+    private fun TextView.setTvCommentReactClickListener(index: Int) {
+        this.setOnClickListener {
+            commentViewModel.setCommentEmojiCount(index)
+        }
+    }
+
+    private fun TextView.setTvCommentReactionBackground(checked: Boolean) {
+        when (checked) {
+            true -> this.setBackgroundResource(R.drawable.background_small_emoji_voted_round_20)
+            false -> this.setBackgroundResource(R.drawable.background_small_emoji_round_20)
+        }
+    }
+
+    private fun getLayoutEmoji(emojiId: Int): TextView {
+        with(binding.layoutComment) {
+            return when (emojiId) {
+                1 -> tvCommentReactionBrown
+                2 -> tvCommentReactionBlue
+                3 -> tvCommentReactionGreen
+                4 -> tvCommentReactionRed
+                5 -> tvCommentReactionYellow
+                else -> throw IndexOutOfBoundsException()
+            }
+        }
     }
 
     private fun setBtnCommentMoreClickListener() {
@@ -198,6 +275,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setLottiePlayAnimation(selected: Int) {
+        commentViewModel.setFloatingCommentEmojiCount(selected)
         binding.imgReactionLottie.apply {
             setAnimation(getLottieRaw(selected))
             visibility = View.VISIBLE
