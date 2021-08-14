@@ -1,8 +1,10 @@
 package how.about.it.view.signup
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -10,15 +12,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import how.about.it.R
-import how.about.it.database.SharedManager
 import how.about.it.databinding.FragmentEmailSignupSetNicknameBinding
 import how.about.it.view.login.LoginActivity
+import how.about.it.viewmodel.SignupViewModel
 
 class EmailSignupSetNicknameFragment : Fragment() {
     private var _binding : FragmentEmailSignupSetNicknameBinding?= null
     private val binding get() = _binding!!
-    private val sharedManager : SharedManager by lazy { SharedManager(requireContext()) }
+    private val signupViewModel by activityViewModels<SignupViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,20 +32,30 @@ class EmailSignupSetNicknameFragment : Fragment() {
         _binding = FragmentEmailSignupSetNicknameBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
-        binding.toolbarSignupBoard.tvToolbarTitle.text = "회원가입"
+        binding.toolbarSignupBoard.tvToolbarTitle.setText(R.string.signup)
         (activity as LoginActivity).setSupportActionBar(binding.toolbarSignupBoard.toolbarBoard)
         (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
 
         binding.btnNext.setOnClickListener {
             if(binding.etSignupEmailNickname.text.isNullOrBlank()) {
-                Toast.makeText(activity, "닉네임을 입력하세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, R.string.hint_nickname, Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(activity, "가이드 화면으로 이동", Toast.LENGTH_SHORT).show()
-                // TODO : 닉네임 정보 저장
-                // TODO : 안내 화면으로 이동
+                signupViewModel.setNickname(binding.etSignupEmailNickname.text.toString().trim())
+                signupViewModel.signup()
             }
         }
+
+        signupViewModel.signupSuccess.observe(viewLifecycleOwner, Observer {
+            if(it) { // 회원가입이 성공할 경우 메인 화면으로 이동
+                val loginIntent = Intent(activity, LoginActivity::class.java)
+                startActivity(loginIntent)
+                (activity as LoginActivity).finish()
+            }
+        })
+        signupViewModel.signupFailedMessage.observe(viewLifecycleOwner, Observer {
+            Log.e("Login Error", it.toString())
+        })
 
         binding.btnDeleteEtEmailNickname.setOnClickListener{
             binding.etSignupEmailNickname.setText("")
@@ -62,25 +76,19 @@ class EmailSignupSetNicknameFragment : Fragment() {
 
                 // TODO : 닉네임 형식 확인 코드 작성
                 if(s.toString().trim().length <= 8 && !s.toString().trim().isNullOrBlank()) {
-                    // 형식 검사 성공시
-                    // 서버 연동전 중복 닉네임 검사 제외
-                    binding.tvMessageEmailNicknameCheck.setText(getString(R.string.success_message_email_signup_nickname))
-                    binding.tvMessageEmailNicknameCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
-                    activeButtonNext()
-
                     // TODO : 서버 연동 처리
-                    /* 서버 연동 부분 주석처리
-                    if(/** 중복계정 확인 구문 **/) {
+                    // 서버 연동 부분 임시 통과처리
+                    if(true /** 중복계정 확인 구문 **/) {
                         // 중복 계정 검사 성공시
-                        binding.tvMessageEmailIdCheck.setText(getString(R.string.success_message_email_signup_nickname))
-                        binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
+                        binding.tvMessageEmailNicknameCheck.setText(getString(R.string.success_message_email_signup_nickname))
+                        binding.tvMessageEmailNicknameCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
                         activeButtonNext()
                     } else {
                         // 중복 계정 검사 실패시
-                        binding.tvMessageEmailIdCheck.setText(getString(R.string.fail_message_email_signup_nickname_duplicate))
-                        binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                        binding.tvMessageEmailNicknameCheck.setText(getString(R.string.fail_message_email_signup_nickname_duplicate))
+                        binding.tvMessageEmailNicknameCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
                         deactiveButtonNext()
-                    } */
+                    }
                 } else {
                     // 형식 검사 실패시
                     binding.tvMessageEmailNicknameCheck.setText(getString(R.string.fail_message_email_signup_nickname_format))

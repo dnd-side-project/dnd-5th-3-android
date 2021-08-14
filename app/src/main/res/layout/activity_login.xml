@@ -61,7 +61,7 @@
             android:id="@+id/tv_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/signup"
+            android:text="@string/signup_guide_message"
             android:textColor="@color/bluegray300_CBCFD6"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
