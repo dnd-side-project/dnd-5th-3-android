@@ -11,24 +11,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import how.about.it.R
-import how.about.it.database.SharedManager
-import how.about.it.database.User
 import how.about.it.databinding.FragmentEmailLoginBinding
 import how.about.it.model.RequestLogin
-import how.about.it.model.ResponseLogin
-import how.about.it.network.RequestToServer
+import how.about.it.repository.LoginRepository
 import how.about.it.view.main.MainActivity
-import retrofit2.Callback
-import retrofit2.Response
+import how.about.it.viewmodel.LoginViewModel
+import how.about.it.viewmodel.LoginViewModelFactory
 
 class EmailLoginFragment : Fragment() {
     private var _binding : FragmentEmailLoginBinding?= null
     private val binding get() = _binding!!
-    private val sharedManager : SharedManager by lazy { SharedManager(requireContext()) }
-
-
-    val _loginActivity = activity
+    private lateinit var loginViewModel : LoginViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +32,8 @@ class EmailLoginFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentEmailLoginBinding.inflate(layoutInflater, container, false)
         val view = binding.root
-        // val requestToServer = RequestToServer
+        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(requireContext()))).get(LoginViewModel::class.java)
+
         binding.toolbarLoginBoard.tvToolbarTitle.text = "로그인"
         (activity as LoginActivity).setSupportActionBar(binding.toolbarLoginBoard.toolbarBoard)
         (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -46,69 +43,28 @@ class EmailLoginFragment : Fragment() {
             if (binding.etLoginEmailId.text.isNullOrBlank() || binding.etLoginEmailPassword.text.isNullOrBlank()) {
                 Toast.makeText(activity, "이메일과 비밀번호를 모두 입력하세요.", Toast.LENGTH_SHORT).show()
             } else {
-
-                // 임시 더미데이터 저장
-                val currentUser = User().apply {
-                    accessToken = "Temp-AccessToken"
-                    refreshToken = "Temp-RefreshToken"
-                    nickname = "TestUser"
-                    email = binding.etLoginEmailId.text.toString()
-                    userId = 123456789
-                }
-                sharedManager.saveCurrentUser(currentUser)
-                val loginIntent = Intent(activity, MainActivity::class.java)
-                startActivity(loginIntent)
-                (activity as LoginActivity).finish() // 로그인 액티비티 종료
-
-                /* 서버와 연동하는 부분
-                // 로그인 요청
-                RequestToServer.service.requestLogin(
-                    RequestLogin(
-                        userId = binding.etLoginEmailId.text.toString(),
-                        password = binding.etLoginEmailPassword.text.toString()
-                    )   //로그인 정보를 전달
-                ).enqueue(object : Callback<ResponseLogin> {
-                    override fun onFailure(call: retrofit2.Call<ResponseLogin>, t: Throwable) {
-                        Log.d("통신 실패", "${t.message}")
-                    }
-
-                    override fun onResponse(
-                        call: retrofit2.Call<ResponseLogin>,
-                        response: Response<ResponseLogin>
-                    ) {
-                        if (response.isSuccessful) {
-                            if (response.body()!!.email.isNotEmpty()) {
-                                Log.d("성공", "성공")
-                                // 로그인 성공 후 토큰 저장 및 화면 전환
-                                val currentUser = User().apply {
-                                    accessToken = response.body()!!.accessToken
-                                    refreshToken = response.body()!!.refreshToken
-                                    nickname = response.body()!!.name
-                                    email = response.body()!!.email
-                                    userId = 123456789
-                                }
-                                sharedManager.saveCurrentUser(currentUser) // SharedPreference에 저장
-
-                                val loginIntent = Intent(activity, MainActivity::class.java)
-                                startActivity(loginIntent)
-                            } else {
-                                Log.d("실패", "실패")
-                                Toast.makeText(activity, "이메일과 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT)
-                                    .show()
-                                binding.tvMessageFailEmailCheck.visibility = View.VISIBLE
-                                binding.tvMessageFailPasswordCheck.visibility = View.VISIBLE
-                                binding.tvMessagePasswordReset.visibility = View.VISIBLE
-                            }
-                        }
-                    }
-                })*/
+                loginViewModel.login(RequestLogin(binding.etLoginEmailId.text.toString(), binding.etLoginEmailPassword.text.toString()))
             }
         }
+
+        loginViewModel.loginSuccess.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                val loginIntent = Intent(activity, MainActivity::class.java)
+                startActivity(loginIntent)
+                (activity as LoginActivity).finish()
+            } else {
+                binding.tvMessageFailEmailCheck.visibility = View.VISIBLE
+                binding.tvMessageFailPasswordCheck.visibility = View.VISIBLE
+                binding.tvMessagePasswordReset.visibility = View.VISIBLE
+            }
+        })
+        loginViewModel.loginFailedMessage.observe(viewLifecycleOwner, Observer {
+            Log.e("Login Error", it.toString())
+        })
 
         binding.tvMessagePasswordReset.setOnClickListener {
             (activity as LoginActivity).ReplaceEmailPasswordResetFragment()
         }
-
 
         binding.btnDeleteEtEmailId.setOnClickListener{
             binding.etLoginEmailId.setText("")
