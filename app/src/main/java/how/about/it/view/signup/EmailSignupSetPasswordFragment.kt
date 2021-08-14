@@ -10,14 +10,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import how.about.it.R
 import how.about.it.database.SharedManager
 import how.about.it.databinding.FragmentEmailSignupSetPasswordBinding
 import how.about.it.view.login.LoginActivity
+import how.about.it.viewmodel.SignupViewModel
 
 class EmailSignupSetPasswordFragment : Fragment() {
     private var _binding : FragmentEmailSignupSetPasswordBinding?= null
     private val binding get() = _binding!!
+    private val signupViewModel by activityViewModels<SignupViewModel>()
     private val sharedManager : SharedManager by lazy { SharedManager(requireContext()) }
 
     override fun onCreateView(
@@ -37,7 +41,7 @@ class EmailSignupSetPasswordFragment : Fragment() {
             if(binding.etSignupEmailPassword.text.isNullOrBlank() || binding.etSignupEmailPasswordCheck.text.isNullOrBlank()) {
                 Toast.makeText(activity, "비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show()
             } else {
-                // TODO : 비밀번호 정보 저장
+                    signupViewModel.setPassword(binding.etSignupEmailPassword.text.toString())
                 // 닉네임 작성 화면으로 이동
                 (activity as LoginActivity).ReplaceEmailSignupSetNicknameFragment()
             }

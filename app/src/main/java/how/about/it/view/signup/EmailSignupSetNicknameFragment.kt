@@ -1,8 +1,10 @@
 package how.about.it.view.signup
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -10,14 +12,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import how.about.it.R
 import how.about.it.database.SharedManager
 import how.about.it.databinding.FragmentEmailSignupSetNicknameBinding
+import how.about.it.model.RequestMember
+import how.about.it.model.ResponseMember
+import how.about.it.network.RequestToServer
 import how.about.it.view.login.LoginActivity
+import how.about.it.viewmodel.SignupViewModel
+import retrofit2.Callback
+import retrofit2.Response
 
 class EmailSignupSetNicknameFragment : Fragment() {
     private var _binding : FragmentEmailSignupSetNicknameBinding?= null
     private val binding get() = _binding!!
+    private val signupViewModel by activityViewModels<SignupViewModel>()
     private val sharedManager : SharedManager by lazy { SharedManager(requireContext()) }
 
     override fun onCreateView(
@@ -37,8 +47,32 @@ class EmailSignupSetNicknameFragment : Fragment() {
             if(binding.etSignupEmailNickname.text.isNullOrBlank()) {
                 Toast.makeText(activity, "닉네임을 입력하세요.", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(activity, "가이드 화면으로 이동", Toast.LENGTH_SHORT).show()
-                // TODO : 닉네임 정보 저장
+                signupViewModel.setNickname(binding.etSignupEmailNickname.text.toString())
+
+                RequestToServer.service.requestMember(
+                    RequestMember(
+                        email = signupViewModel.getEmail(),
+                        password = signupViewModel.getPassword(),
+                        nickname = signupViewModel.getNickname()
+                    )
+                ).enqueue(object : Callback<ResponseMember> {
+                    override fun onFailure(call: retrofit2.Call<ResponseMember>, t: Throwable) {
+                        Log.d("통신 실패", "${t.message}")
+                    }
+
+                    override fun onResponse(
+                        call: retrofit2.Call<ResponseMember>,
+                        response: Response<ResponseMember>
+                    ) {
+                        if (response.isSuccessful) {
+                            val loginIntent = Intent(activity, LoginActivity::class.java)
+                            startActivity(loginIntent)
+                            (activity as LoginActivity).finish()
+                        } else {
+                            Log.e("Sign up Fail", response.toString())
+                        }
+                    }
+                })
                 // TODO : 안내 화면으로 이동
             }
         }

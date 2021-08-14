@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="signupViewModel"
+            type="how.about.it.viewmodel.SignupViewModel" />
+    </data>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -52,7 +58,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="12dp">
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_signup_email_id"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -119,3 +125,4 @@
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
