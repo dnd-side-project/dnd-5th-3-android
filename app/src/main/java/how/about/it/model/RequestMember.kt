@@ -7,7 +7,7 @@ data class RequestMember(
     var email : String,
     @SerializedName("password")
     var password : String,
-    @SerializedName("nickname")
+    @SerializedName("name")
     var nickname : String
 )
 
@@ -16,8 +16,8 @@ data class ResponseMember(
     var memberId : String,
     @SerializedName("email")
     var email : String,
-    @SerializedName("password")
-    var password : String,
-    @SerializedName("nickname")
-    var nickname : String
+    @SerializedName("name")
+    var nickname : String,
+    @SerializedName("memberType")
+    var memberType : String
 )

@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import how.about.it.R
-import how.about.it.database.SharedManager
 import how.about.it.databinding.FragmentEmailSignupSetIdBinding
 import how.about.it.view.login.LoginActivity
 import how.about.it.viewmodel.SignupViewModel
@@ -30,16 +29,16 @@ class EmailSignupSetIDFragment : Fragment() {
         _binding = FragmentEmailSignupSetIdBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
-        binding.toolbarSignupBoard.tvToolbarTitle.text = "회원가입"
+        binding.toolbarSignupBoard.tvToolbarTitle.setText(R.string.signup)
         (activity as LoginActivity).setSupportActionBar(binding.toolbarSignupBoard.toolbarBoard)
         (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
 
         binding.btnNext.setOnClickListener {
             if(binding.etSignupEmailId.text.isNullOrBlank()) {
-                Toast.makeText(activity, "이메일를 입력하세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, R.string.hint_email, Toast.LENGTH_SHORT).show()
             } else {
-                signupViewModel.setEmail(binding.etSignupEmailId.text.toString())
+                signupViewModel.setEmail(binding.etSignupEmailId.text.toString().trim())
                 // 비밀번호 작성 화면으로 이동
                 (activity as LoginActivity).ReplaceEmailSignupSetPasswordFragment()
             }
@@ -61,17 +60,10 @@ class EmailSignupSetIDFragment : Fragment() {
                     binding.tvMessageEmailIdCheck.visibility = View.INVISIBLE
                 }
 
-                // TODO : 이메일 형식 확인 코드 작성
-                if(s.toString().trim().length >= 5) {
-                    // 형식 검사 성공시
-                        // 서버 연동전 중복계정 검사 제외
-                        binding.tvMessageEmailIdCheck.setText(getString(R.string.success_message_email_signup_id))
-                        binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
-                        activeButtonNext()
-
-                    // TODO : 서버 연동 처리
-                        /* 서버 연동 부분 주석처리
-                        if(/** 중복계정 확인 구문 **/) {
+                // 안드로이드에서 제공하는 이메일 양식 검사 사용
+                if(android.util.Patterns.EMAIL_ADDRESS.matcher(s.toString().trim()).matches()) {
+                    // TODO : 서버 연동 임시 허용 처리
+                        if(true /** 중복계정 확인 구문 **/) {
                             // 중복 계정 검사 성공시
                             binding.tvMessageEmailIdCheck.setText(getString(R.string.success_message_email_signup_id))
                             binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
@@ -81,10 +73,10 @@ class EmailSignupSetIDFragment : Fragment() {
                             binding.tvMessageEmailIdCheck.setText(getString(R.string.fail_message_email_signup_id_duplicate))
                             binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
                             deactiveButtonNext()
-                        } */
+                        }
                 } else {
                     // 형식 검사 실패시
-                    binding.tvMessageEmailIdCheck.setText(getString(R.string.fail_message_eamil_signup_id_format))
+                    binding.tvMessageEmailIdCheck.setText(getString(R.string.fail_message_email_signup_id_format))
                     binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
                     deactiveButtonNext()
                 }

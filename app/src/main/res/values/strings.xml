@@ -29,7 +29,7 @@
 
     <!-- Login -->
     <string name="login_email">이메일로 시작하기</string>
-    <string name="signup">무물이 처음이신가요? <u>회원가입</u></string>
+    <string name="signup_guide_message">무물이 처음이신가요? <u>회원가입</u></string>
 
     <!-- ResetPassword -->
     <string name="fail_message_email">등록된 이메일이 없어요! 이메일을 확인해주세요</string>
@@ -41,7 +41,8 @@
     <string name="reset_password_dialog_description">재설정 메일이 발송되었어요.\n이메일을 확인해주세요 :-)</string>
 
     <!-- SignupEmailID -->
-    <string name="fail_message_eamil_signup_id_format">잉? 이메일 형식을 확인해주세요</string>
+    <string name="signup">회원가입</string>
+    <string name="fail_message_email_signup_id_format">잉? 이메일 형식을 확인해주세요</string>
     <string name="fail_message_email_signup_id_duplicate">어라? 이미 가입된 이메일이에요!</string>
     <string name="success_message_email_signup_id">멋진 이메일이네요!</string>
     <string name="message_email_signup_id">이메일은 로그인과\n비밀번호 분실 시 사용될 거에요!</string>
