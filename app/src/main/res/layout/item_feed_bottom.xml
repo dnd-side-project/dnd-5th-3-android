@@ -7,18 +7,18 @@
     android:paddingVertical="12dp">
 
     <ImageView
-        android:id="@+id/img_feed_all"
+        android:id="@+id/img_feed_bottom"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.24"
+        app:layout_constraintWidth_percent="0.25"
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/tv_feed_is_end"
+        android:id="@+id/tv_feed_bottom_is_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -29,11 +29,11 @@
         android:text="@string/feed_item_not_end"
         android:textColor="@color/bluegray800_303540"
         android:textSize="12dp"
-        app:layout_constraintStart_toEndOf="@id/img_feed_all"
-        app:layout_constraintTop_toTopOf="@id/img_feed_all" />
+        app:layout_constraintStart_toEndOf="@id/img_feed_bottom"
+        app:layout_constraintTop_toTopOf="@id/img_feed_bottom" />
 
     <TextView
-        android:id="@+id/tv_feed_all_title"
+        android:id="@+id/tv_feed_bottom_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -42,31 +42,37 @@
         android:textColor="@color/bluegray200_E1E3E8"
         android:textSize="18dp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/tv_feed_is_end"
-        app:layout_constraintTop_toBottomOf="@id/tv_feed_is_end"
+        app:layout_constraintStart_toStartOf="@id/tv_feed_bottom_is_end"
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_bottom_is_end"
         tools:text="애플워치 vs 치킨50마리" />
 
     <TextView
-        android:id="@+id/tv_feed_all_detail"
+        android:id="@+id/tv_feed_top_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:textColor="@color/bluegray200_E1E3E8"
         android:textSize="14dp"
-        app:layout_constraintStart_toStartOf="@id/tv_feed_all_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_feed_all_title"
+        app:layout_constraintStart_toStartOf="@id/tv_feed_bottom_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_bottom_title"
         tools:text="갈팡질팡지름신 · 9시간 남음" />
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progress_feed_all"
+    <SeekBar
+        android:id="@+id/progress_feed_bottom"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="40dp"
+        android:clickable="false"
         android:indeterminate="false"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
         android:progress="50"
         android:progressDrawable="@drawable/background_progress_round_10"
-        app:layout_constraintBottom_toBottomOf="@id/img_feed_all"
+        android:thumb="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@id/img_feed_bottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tv_feed_all_title" />
+        app:layout_constraintStart_toStartOf="@id/tv_feed_bottom_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_top_detail" />
 </androidx.constraintlayout.widget.ConstraintLayout>

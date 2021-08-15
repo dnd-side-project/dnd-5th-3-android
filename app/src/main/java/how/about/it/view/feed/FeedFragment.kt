@@ -11,10 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import how.about.it.R
 import how.about.it.databinding.FragmentFeedBinding
 import how.about.it.network.RequestToServer
 import how.about.it.network.feed.FeedServiceImpl
+import how.about.it.view.feed.adapter.FeedBottomAdapter
+import how.about.it.view.feed.adapter.FeedTopAdapter
 import how.about.it.view.feed.repository.FeedRepository
 import how.about.it.view.feed.viewmodel.FeedViewModel
 import how.about.it.view.feed.viewmodel.FeedViewModelFactory
@@ -41,6 +44,10 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setFabWriteClickListener()
         setTvFeedToggleClickListener()
         setToggleCategoryCollect()
+        setRvFeedTopAdapter()
+        setRvFeedBottomAdapter()
+        setFeedTopListCollect()
+        setFeedBottomListCollect()
         feedViewModel.requestTopFeedList()
         return binding.root
     }
@@ -123,12 +130,52 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         else -> throw IndexOutOfBoundsException()
     }
 
+    private fun setRvFeedTopAdapter() {
+        binding.rvFeedTop.adapter = FeedTopAdapter(FeedDiffUtil())
+    }
+
+    private fun setRvFeedBottomAdapter() {
+        binding.rvFeedBottom.adapter = FeedBottomAdapter(FeedDiffUtil())
+    }
+
+    private fun setFeedTopListCollect() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            feedViewModel.feedTopList.collect { feedList ->
+                feedList?.let {
+                    with(binding.rvFeedTop.adapter as FeedTopAdapter) {
+                        submitList(feedList)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setFeedBottomListCollect() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            feedViewModel.feedBottomList.collect { feedList ->
+                feedList?.let {
+                    with(binding.rvFeedBottom.adapter as FeedBottomAdapter) {
+                        submitList(feedList)
+                    }
+                }
+            }
+        }
+    }
+
     private fun setNetworkErrorCollect() {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             feedViewModel.networkError.collect {
                 //TODO networkerrorpage
             }
         }
+    }
+
+    private class FeedDiffUtil : DiffUtil.ItemCallback<Feed>() {
+        override fun areItemsTheSame(oldItem: Feed, newItem: Feed) =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: Feed, newItem: Feed): Boolean =
+            oldItem == newItem
     }
 
     override fun onDestroyView() {
