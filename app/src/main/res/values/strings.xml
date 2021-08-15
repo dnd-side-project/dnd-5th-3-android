@@ -64,10 +64,14 @@
     <!-- Feed -->
     <string name="feed_empty">더이상 게시물이 없어요 ㅠ.ㅠ\n당신의 고민을 올려주세요!</string>
     <string name="feed_list">무물리스트</string>
-    <string name="feed_category_popular">인기순</string>
     <string name="feed_category_new">최신순</string>
+    <string name="feed_category_popular">인기순</string>
     <string name="feed_category_coming_end">마감임박순</string>
     <string name="feed_category_end">최근마감순</string>
+    <string name="feed_request_popular">rank_count</string>
+    <string name="feed_request_new">created_date</string>
+    <string name="feed_request_coming_end">almost_done</string>
+    <string name="feed_request_end">already_done</string>
     <string name="feed_item_title1">🔥불타고 있는 글</string>
     <string name="feed_item_title2">❤사랑듬뿍받은 글</string>
     <string name="feed_item_title3">😆최고의 반응글</string>

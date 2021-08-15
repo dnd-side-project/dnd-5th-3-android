@@ -13,13 +13,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import how.about.it.R
 import how.about.it.databinding.FragmentFeedBinding
+import how.about.it.network.RequestToServer
+import how.about.it.network.feed.FeedServiceImpl
+import how.about.it.view.feed.repository.FeedRepository
 import how.about.it.view.feed.viewmodel.FeedViewModel
+import how.about.it.view.feed.viewmodel.FeedViewModelFactory
 import kotlinx.coroutines.flow.collect
 
 class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private var _binding: FragmentFeedBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private val feedViewModel by viewModels<FeedViewModel>()
+    private val feedViewModel by viewModels<FeedViewModel> {
+        FeedViewModelFactory(
+            FeedRepository(
+                FeedServiceImpl(RequestToServer.feedInterface)
+            )
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +41,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setFabWriteClickListener()
         setTvFeedToggleClickListener()
         setToggleCategoryCollect()
+        feedViewModel.requestTopFeedList()
         return binding.root
     }
 
@@ -89,6 +100,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             feedViewModel.toggleCategory.collect { category ->
                 setTvToggleText(category)
+                feedViewModel.requestBottomFeedList(getToggleText(category))
             }
         }
     }
@@ -100,6 +112,22 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             2 -> getString(R.string.feed_category_coming_end)
             3 -> getString(R.string.feed_category_end)
             else -> throw IndexOutOfBoundsException()
+        }
+    }
+
+    private fun getToggleText(category: Int) = when (category) {
+        0 -> getString(R.string.feed_request_new)
+        1 -> getString(R.string.feed_request_popular)
+        2 -> getString(R.string.feed_request_coming_end)
+        3 -> getString(R.string.feed_request_end)
+        else -> throw IndexOutOfBoundsException()
+    }
+
+    private fun setNetworkErrorCollect() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            feedViewModel.networkError.collect {
+                //TODO networkerrorpage
+            }
         }
     }
 
