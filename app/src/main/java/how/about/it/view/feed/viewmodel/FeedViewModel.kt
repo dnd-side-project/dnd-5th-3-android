@@ -1,14 +1,50 @@
 package how.about.it.view.feed.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import how.about.it.view.feed.Feed
+import how.about.it.view.feed.repository.FeedRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
-class FeedViewModel : ViewModel() {
+class FeedViewModel(private val feedRepository: FeedRepository) : ViewModel() {
     private val _toggleCategory = MutableStateFlow(0)
     val toggleCategory: StateFlow<Int> = _toggleCategory
 
+    private val _feedTopList = MutableStateFlow<List<Feed>?>(null)
+    val feedTopList = _feedTopList.asStateFlow()
+
+    private val _feedBottomList = MutableStateFlow<List<Feed>?>(null)
+    val feedBottomList = _feedBottomList.asStateFlow()
+
+    private val _networkError = MutableStateFlow(false)
+    val networkError: StateFlow<Boolean> = _networkError
+
     fun setToggleCategory(category: Int) {
         _toggleCategory.value = category
+    }
+
+    fun requestTopFeedList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val feedList = runCatching { feedRepository.requestTopFeedList() }.getOrNull()
+            Log.d("feedTop", feedList.toString())
+            feedList?.let {
+                _feedTopList.emit(feedList.posts)
+            } ?: _networkError.emit(true)
+        }
+    }
+
+    fun requestBottomFeedList(sorted: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val feedList = runCatching { feedRepository.requestBottomFeedList(sorted) }.getOrNull()
+            Log.d("feedBottom", feedList.toString())
+            feedList?.let {
+                _feedBottomList.emit(feedList.posts)
+            } ?: _networkError.emit(true)
+        }
     }
 }
