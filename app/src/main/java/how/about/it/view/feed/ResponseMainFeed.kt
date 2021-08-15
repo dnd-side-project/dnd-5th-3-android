@@ -21,7 +21,7 @@ data class Feed(
     @SerializedName("permitRatio")
     val permitRatio: Int,
     @SerializedName("rejectRatio")
-    val rejectRation: Int,
+    val rejectRatio: Int,
     @SerializedName("createdDate")
     val createdDate: String
 )

@@ -73,15 +73,18 @@
     <string name="feed_request_new">created_date</string>
     <string name="feed_request_coming_end">almost_done</string>
     <string name="feed_request_end">already_done</string>
-    <string name="feed_item_title1">🔥불타고 있는 글</string>
-    <string name="feed_item_title2">❤사랑듬뿍받은 글</string>
-    <string name="feed_item_title3">😆최고의 반응글</string>
-    <string name="feed_item_title4">⭐무물의 추천글</string>
-    <string name="feed_item_title5">⚔막상막하 투표글</string>
+    <string name="feed_item_title1">⭐무물의 추천글</string>
+    <string name="feed_item_title2">🔥불타고 있는 글</string>
+    <string name="feed_item_title3">❤사랑듬뿍받은 글</string>
+    <string name="feed_item_title4">⚔막상막하 투표글</string>
+    <string name="feed_item_title5">😆최고의 반응글</string>
     <string name="feed_item_not_end">진행중</string>
-    <string name="feed_item_end">끝</string>
+    <string name="feed_item_end">"  끝  "</string>
     <string name="feed_item_nickname_time">%s · %s</string>
-    <string name="feed_item_percent">%d%</string>
+    <string name="feed_item_time">%d시간 남음</string>
+    <string name="feed_item_agree">찬성</string>
+    <string name="feed_item_disagree">반대</string>
+    <string name="feed_item_percent">%d%%</string>
 
     <!-- MyPage -->
     <string name="my_page_profile_update">프로필변경</string>

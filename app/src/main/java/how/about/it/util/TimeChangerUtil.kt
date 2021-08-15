@@ -8,6 +8,8 @@ import java.util.*
 
 object TimeChangerUtil {
     private val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
+    private val currentTime =
+        requireNotNull(format.parse(format.format(System.currentTimeMillis()))).time
 
     fun timeChange(context: Context, time: String): String {
         val longTime = requireNotNull(format.parse(time.replace("T", " "))).time
@@ -39,10 +41,24 @@ object TimeChangerUtil {
         context.getString(id)
     )
 
+    fun getRemainTime(time: String): Long {
+        val longTime = requireNotNull(format.parse(time.replace("T", " "))).time
+        val remainTime = (longTime - currentTime) / 1000
+        return when {
+            remainTime < 0 -> {
+                -1
+            }
+            remainTime < 3600 -> {
+                1
+            }
+            else -> {
+                remainTime / 3600
+            }
+        }
+    }
+
     fun getDeadLine(time: String): Long {
         val longTime = requireNotNull(format.parse(time.replace("T", " "))).time
-        val currentTime =
-            requireNotNull(format.parse(format.format(System.currentTimeMillis()))).time
         return (longTime - currentTime)
     }
 
