@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="vm"
+            name="loginViewModel"
             type="how.about.it.viewmodel.LoginViewModel" />
     </data>
 
@@ -24,7 +24,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:srcCompat="@drawable/ic_logo_moomool"
             />
-
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btn_google_login"

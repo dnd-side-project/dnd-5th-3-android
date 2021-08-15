@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -13,10 +15,14 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import how.about.it.R
 import how.about.it.databinding.ActivityLoginBinding
+import how.about.it.repository.LoginRepository
 import how.about.it.view.ToolbarActivity
+import how.about.it.view.main.MainActivity
 import how.about.it.view.signup.EmailSignupSetIDFragment
 import how.about.it.view.signup.EmailSignupSetNicknameFragment
 import how.about.it.view.signup.EmailSignupSetPasswordFragment
+import how.about.it.viewmodel.LoginViewModel
+import how.about.it.viewmodel.LoginViewModelFactory
 
 
 class LoginActivity : ToolbarActivity() {
@@ -25,12 +31,25 @@ class LoginActivity : ToolbarActivity() {
     private val TAG = "LoginActivity"
 
     private lateinit var loginViewBinding: ActivityLoginBinding
+    private lateinit var loginViewModel : LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(this))).get(LoginViewModel::class.java)
+        loginViewModel.autoLogin()
         super.onCreate(savedInstanceState)
         loginViewBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(loginViewBinding.root)
+
+        loginViewModel.loginSuccess.observe(this, Observer {
+            if(it) {
+                val loginIntent = Intent(this, MainActivity::class.java)
+                startActivity(loginIntent)
+                finish()
+            }
+        })
+        loginViewModel.loginFailedMessage.observe(this, Observer {
+            Log.e("Login Error Activity", it.toString())
+        })
 
         // 앱에 필요한 사용자 데이터를 요청하도록 로그인 옵션을 설정한다.
         // DEFAULT_SIGN_IN parameter는 유저의 ID와 기본적인 프로필 정보를 요청하는데 사용된다.

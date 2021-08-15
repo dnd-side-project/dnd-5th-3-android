@@ -61,20 +61,6 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/tv_message_fail_email_check"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout_login_email_id"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/fail_message_email"
-        android:textColor="@color/moomool_pink_ff227c"
-        android:visibility="invisible"
-        />
-
-    <TextView
         android:id="@+id/tv_message_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -124,20 +110,6 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/tv_message_fail_password_check"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout_login_email_password"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/fail_message_password"
-        android:textColor="@color/moomool_pink_ff227c"
-        android:visibility="invisible"
-        />
-
-    <TextView
         android:id="@+id/tv_message_password_reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -149,7 +121,7 @@
         android:layout_marginBottom="12dp"
         android:text="@string/reset_password_button"
         android:textColor="@color/bluegray300_CBCFD6"
-        android:visibility="invisible"
+        android:visibility="visible"
         />
 
     <androidx.appcompat.widget.AppCompatButton

@@ -4,9 +4,12 @@ import android.content.Context
 import how.about.it.database.SharedManager
 import how.about.it.database.User
 import how.about.it.model.RequestLogin
+import how.about.it.model.RequestTokenRefresh
 import how.about.it.model.ResponseLogin
+import how.about.it.model.ResponseTokenRefresh
 import how.about.it.network.RequestToServer
 import org.json.JSONObject
+import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
@@ -18,10 +21,45 @@ class LoginRepository(private val context: Context) {
         fun onError(message: String?)
     }
 
+    fun autoLogin(loginCallBack: LoginCallBack) {
+        if(sharedManager.getRefreshToken().isNotEmpty()){
+            // refreshToken 정보가 있는 경우
+            val currentUser = sharedManager.getCurrentUser()
+            RequestToServer.service.requestTokenRefresh(
+                RequestTokenRefresh(
+                    currentUser.email.toString(),
+                    currentUser.refreshToken.toString())
+            ).enqueue(object : Callback<ResponseTokenRefresh> {
+                override fun onResponse(
+                    call: Call<ResponseTokenRefresh>,
+                    response: Response<ResponseTokenRefresh>
+                ) {
+                    if (true /** RefreshToken 오류 해결전까지 임시 true처리 response.isSuccessful **/) {
+                        // TokenRefresh 성공 후 AccessToken 저장
+                        // 새로운 AccessToken 저장 임시 주석처리
+                            // sharedManager.saveAccessToken(response.body()!!.accessToken)
+                        loginCallBack.onSuccess()
+                    } else {
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            loginCallBack.onError(jObjError.getString("user_msg"))
+                        } catch (e: Exception) {
+                            loginCallBack.onError(e.message)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseTokenRefresh>, t: Throwable) {
+                    loginCallBack.onError(t.localizedMessage)
+                }
+            })
+        }
+    }
+
     fun loginUser(requestLogin: RequestLogin, loginCallBack: LoginCallBack) {
         RequestToServer.service.requestLogin(
             RequestLogin(
-                requestLogin.userId,
+                requestLogin.email,
                 requestLogin.password
             )   //로그인 정보를 전달
         ).enqueue(object : Callback<ResponseLogin> {
