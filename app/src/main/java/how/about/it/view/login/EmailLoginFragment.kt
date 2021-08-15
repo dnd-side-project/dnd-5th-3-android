@@ -1,5 +1,6 @@
 package how.about.it.view.login
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -9,7 +10,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -34,10 +38,14 @@ class EmailLoginFragment : Fragment() {
         val view = binding.root
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(requireContext()))).get(LoginViewModel::class.java)
 
-        binding.toolbarLoginBoard.tvToolbarTitle.text = "로그인"
+        binding.toolbarLoginBoard.tvToolbarTitle.setText(R.string.login)
         (activity as LoginActivity).setSupportActionBar(binding.toolbarLoginBoard.toolbarBoard)
         (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+        val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
+        val mAlertDialog = mBuilder.create()
 
         binding.btnLoginEmail.setOnClickListener {
             if (binding.etLoginEmailId.text.isNullOrBlank() || binding.etLoginEmailPassword.text.isNullOrBlank()) {
@@ -53,9 +61,19 @@ class EmailLoginFragment : Fragment() {
                 startActivity(loginIntent)
                 (activity as LoginActivity).finish()
             } else {
-                binding.tvMessageFailEmailCheck.visibility = View.VISIBLE
-                binding.tvMessageFailPasswordCheck.visibility = View.VISIBLE
-                binding.tvMessagePasswordReset.visibility = View.VISIBLE
+                // Dialog 중복 실행 방지
+                if(mAlertDialog != null && !mAlertDialog.isShowing){
+                    mAlertDialog.show()
+
+                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.login_fail_dialog_title)
+                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.login_fail_dialog_description)
+
+                    val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
+                    mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
+                    confirmButton.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+                }
             }
         })
         loginViewModel.loginFailedMessage.observe(viewLifecycleOwner, Observer {

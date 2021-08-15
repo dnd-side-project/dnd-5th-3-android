@@ -28,12 +28,13 @@
     <string name="toast_description">Toast Message</string>
 
     <!-- Login -->
+    <string name="login">로그인</string>
     <string name="login_email">이메일로 시작하기</string>
     <string name="signup_guide_message">무물이 처음이신가요? <u>회원가입</u></string>
+    <string name="login_fail_dialog_title">로그인 실패!</string>
+    <string name="login_fail_dialog_description">아이디 혹은 비밀번호가 일치하지 않아요!</string>
 
     <!-- ResetPassword -->
-    <string name="fail_message_email">등록된 이메일이 없어요! 이메일을 확인해주세요</string>
-    <string name="fail_message_password">비밀번호가 올바르지 않아요!</string>
     <string name="reset_password_button">비밀번호를 잊어버리셨나요? <b><font color="#FF227C"><u>비밀번호 재설정</u></font></b></string>
     <string name="reset_password_message">비밀번호 재설정을 위해\n재설정 메일을 이메일로 보내드릴게요.</string>
     <string name="reset_password">비밀번호 초기화</string>

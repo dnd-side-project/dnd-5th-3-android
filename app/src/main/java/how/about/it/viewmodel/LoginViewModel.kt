@@ -28,4 +28,17 @@ class LoginViewModel(private val loginRepository: LoginRepository): ViewModel() 
             }
         })
     }
+
+    fun autoLogin() {
+        loginRepository.autoLogin(object : LoginRepository.LoginCallBack {
+            override fun onSuccess() {
+                loginSuccess.postValue(true)
+            }
+            override fun onError(message: String?) {
+                loginSuccess.postValue(false)
+                loginFailedMessage.postValue(message)
+            }
+        })
+    }
+
 }

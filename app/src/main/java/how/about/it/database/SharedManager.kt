@@ -23,4 +23,9 @@ class SharedManager(context: Context) {
             nickname = prefs["nickname", ""]
         }
     }
+
+    fun saveAccessToken(accessToken : String){
+        prefs["accessToken"] = accessToken
+    }
+    fun getRefreshToken() = prefs["refreshToken", ""]
 }
