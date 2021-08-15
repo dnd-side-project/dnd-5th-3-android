@@ -5,10 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import how.about.it.BR
 import how.about.it.databinding.ItemFeedTopBinding
+import how.about.it.util.TimeChangerUtil
 import how.about.it.view.feed.Feed
 
-class FeedTopAdapter(private val feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
+class FeedTopAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
     ListAdapter<Feed, FeedTopAdapter.FeedTopViewHolder>(feedDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,7 +31,11 @@ class FeedTopAdapter(private val feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
         private val binding: ItemFeedTopBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(feed: Feed) {
-
+            binding.apply {
+                setVariable(BR.feed, feed)
+                setVariable(BR.remainTime, TimeChangerUtil.getRemainTime(feed.createdDate))
+                setVariable(BR.position, adapterPosition)
+            }
         }
     }
 }

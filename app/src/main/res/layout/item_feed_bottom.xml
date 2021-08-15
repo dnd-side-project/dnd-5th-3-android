@@ -1,78 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingVertical="12dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/img_feed_bottom"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.25"
-        tools:ignore="ContentDescription" />
+    <data>
 
-    <TextView
-        android:id="@+id/tv_feed_bottom_is_end"
-        android:layout_width="wrap_content"
+        <variable
+            name="feed"
+            type="how.about.it.view.feed.Feed" />
+
+        <variable
+            name="remainTime"
+            type="long" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:background="@drawable/background_feed_end_round_10"
-        android:backgroundTint="@color/bluegray100_F0F2F5"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="2dp"
-        android:text="@string/feed_item_not_end"
-        android:textColor="@color/bluegray800_303540"
-        android:textSize="12dp"
-        app:layout_constraintStart_toEndOf="@id/img_feed_bottom"
-        app:layout_constraintTop_toTopOf="@id/img_feed_bottom" />
+        android:paddingVertical="12dp">
 
-    <TextView
-        android:id="@+id/tv_feed_bottom_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textColor="@color/bluegray200_E1E3E8"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/tv_feed_bottom_is_end"
-        app:layout_constraintTop_toBottomOf="@id/tv_feed_bottom_is_end"
-        tools:text="애플워치 vs 치킨50마리" />
+        <ImageView
+            android:id="@+id/img_feed_bottom"
+            feedGlide="@{feed.productImageUrl}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:alpha="@{remainTime >= 0 ? 1f : 0.5f}"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.25"
+            tools:ignore="ContentDescription" />
 
-    <TextView
-        android:id="@+id/tv_feed_top_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/bluegray200_E1E3E8"
-        android:textSize="14dp"
-        app:layout_constraintStart_toStartOf="@id/tv_feed_bottom_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_feed_bottom_title"
-        tools:text="갈팡질팡지름신 · 9시간 남음" />
+        <TextView
+            android:id="@+id/tv_feed_bottom_is_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/background_feed_end_round_10"
+            android:backgroundTint="@{remainTime >= 0 ? @color/bluegray100_F0F2F5 : @color/bluegray700_4D535E}"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="@{remainTime >= 0 ? @string/feed_item_not_end : @string/feed_item_end}"
+            android:textColor="@{remainTime >= 0 ? @color/bluegray800_303540 : @color/bluegray50_F9FAFC}"
+            android:textSize="12dp"
+            app:layout_constraintStart_toEndOf="@id/img_feed_bottom"
+            app:layout_constraintTop_toTopOf="@id/img_feed_bottom" />
 
-    <SeekBar
-        android:id="@+id/progress_feed_bottom"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="40dp"
-        android:clickable="false"
-        android:indeterminate="false"
-        android:paddingStart="0dp"
-        android:paddingEnd="0dp"
-        android:progress="50"
-        android:progressDrawable="@drawable/background_progress_round_10"
-        android:thumb="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="@id/img_feed_bottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tv_feed_bottom_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_feed_top_detail" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_feed_bottom_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@{feed.title}"
+            android:textColor="@color/bluegray200_E1E3E8"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tv_feed_bottom_is_end"
+            app:layout_constraintTop_toBottomOf="@id/tv_feed_bottom_is_end" />
+
+        <TextView
+            android:id="@+id/tv_feed_top_detail"
+            feedTimeText="@{remainTime}"
+            feedWriterText="@{feed}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/bluegray200_E1E3E8"
+            android:textSize="14dp"
+            app:layout_constraintStart_toStartOf="@id/tv_feed_bottom_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_feed_bottom_title" />
+
+        <SeekBar
+            android:id="@+id/progress_feed_bottom"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            feedProgressDrawable="@{feed}"
+            feedProgressRemainTime="@{remainTime}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="40dp"
+            android:clickable="false"
+            android:indeterminate="false"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:progress="@{feed.permitRatio}"
+            android:thumb="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="@id/img_feed_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_feed_bottom_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_feed_top_detail" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
