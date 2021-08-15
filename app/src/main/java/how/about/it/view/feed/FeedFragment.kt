@@ -154,7 +154,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             feedViewModel.feedBottomList.collect { feedList ->
                 feedList?.let {
-                    with(binding.rvFeedBottom.adapter as FeedTopAdapter) {
+                    with(binding.rvFeedBottom.adapter as FeedBottomAdapter) {
                         submitList(feedList)
                     }
                 }
