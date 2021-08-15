@@ -8,7 +8,7 @@
     android:layout_marginBottom="20dp">
 
     <TextView
-        android:id="@+id/tv_feed_hot_category"
+        android:id="@+id/tv_feed_top_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/bluegray200_E1E3E8"
@@ -20,7 +20,7 @@
         tools:text="@string/feed_item_title1" />
 
     <ImageView
-        android:id="@+id/img_feed_hot"
+        android:id="@+id/img_feed_top"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginHorizontal="16dp"
@@ -29,11 +29,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_feed_hot_category"
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_top_category"
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/tv_feed_hot_is_end"
+        android:id="@+id/tv_feed_top_is_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -46,10 +46,10 @@
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_feed_hot" />
+        app:layout_constraintTop_toBottomOf="@id/img_feed_top" />
 
     <TextView
-        android:id="@+id/tv_feed_hot_title"
+        android:id="@+id/tv_feed_top_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -59,11 +59,11 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_feed_hot_is_end"
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_top_is_end"
         tools:text="이번주올리브영세일\n폼클렌징살까말까" />
 
     <TextView
-        android:id="@+id/tv_feed_all_detail"
+        android:id="@+id/tv_feed_top_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -71,11 +71,11 @@
         android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_feed_hot_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_top_title"
         tools:text="갈팡질팡지름신 · 9시간 남음" />
 
     <SeekBar
-        android:id="@+id/progress_feed_hot"
+        android:id="@+id/progress_feed_top"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -91,25 +91,25 @@
         android:thumb="@drawable/ic_feed_thumb_agree"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_feed_all_detail" />
+        app:layout_constraintTop_toBottomOf="@id/tv_feed_top_detail" />
 
     <TextView
-        android:id="@+id/tv_feed_agree"
+        android:id="@+id/tv_feed_top_agree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/moomool_blue_0098ff"
         android:textSize="14dp"
-        app:layout_constraintStart_toStartOf="@id/progress_feed_hot"
-        app:layout_constraintTop_toBottomOf="@id/progress_feed_hot"
+        app:layout_constraintStart_toStartOf="@id/progress_feed_top"
+        app:layout_constraintTop_toBottomOf="@id/progress_feed_top"
         tools:text="50%" />
 
     <TextView
-        android:id="@+id/tv_feed_disagree"
+        android:id="@+id/tv_feed_top_disagree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/moomool_pink_ff227c"
         android:textSize="14dp"
-        app:layout_constraintEnd_toEndOf="@id/progress_feed_hot"
-        app:layout_constraintTop_toBottomOf="@id/progress_feed_hot"
+        app:layout_constraintEnd_toEndOf="@id/progress_feed_top"
+        app:layout_constraintTop_toBottomOf="@id/progress_feed_top"
         tools:text="50%" />
 </androidx.constraintlayout.widget.ConstraintLayout>

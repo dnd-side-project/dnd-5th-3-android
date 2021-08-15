@@ -55,7 +55,7 @@
                 tools:ignore="ContentDescription" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_feed_hot"
+                android:id="@+id/rv_feed_top"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -63,7 +63,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_feed_setting"
-                tools:listitem="@layout/item_feed_hot" />
+                tools:listitem="@layout/item_feed_top" />
 
             <TextView
                 android:id="@+id/tv_feed_moo_mool_list"
@@ -76,7 +76,7 @@
                 android:textSize="22dp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_feed_hot" />
+                app:layout_constraintTop_toBottomOf="@id/rv_feed_top" />
 
             <TextView
                 android:id="@+id/tv_feed_toggle"
@@ -93,7 +93,7 @@
                 app:layout_constraintTop_toTopOf="@id/tv_feed_moo_mool_list" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_feed_all"
+                android:id="@+id/rv_feed_bottom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -101,7 +101,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_feed_toggle"
-                tools:listitem="@layout/item_feed_all" />
+                tools:listitem="@layout/item_feed_bottom" />
 
             <TextView
                 android:id="@+id/tv_feed_empty"
@@ -114,7 +114,7 @@
                 android:textSize="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_feed_all" />
+                app:layout_constraintTop_toBottomOf="@id/rv_feed_bottom" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 

@@ -151,7 +151,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_my_page_content_filter"
-        tools:listitem="@layout/item_feed_all" />
+        tools:listitem="@layout/item_feed_bottom" />
 
     <TextView
         android:id="@+id/tv_my_page_content_empty"
