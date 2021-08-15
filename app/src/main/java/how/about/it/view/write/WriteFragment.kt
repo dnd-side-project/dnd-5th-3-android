@@ -2,7 +2,7 @@ package how.about.it.view.write
 
 import android.Manifest
 import android.app.Activity
-import android.app.Application
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -13,11 +13,16 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
@@ -41,7 +46,7 @@ class WriteFragment : Fragment() {
     private val binding get() = requireNotNull(_binding)
     private lateinit var writeViewModel: WriteViewModel
     private lateinit var db : TempPostDatabase
-    private var productImageUpload : String = ""
+    private var productImageUpload = ""
     private val timeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +68,7 @@ class WriteFragment : Fragment() {
         _binding = FragmentWriteBinding.inflate(layoutInflater)
         db = TempPostDatabase.getDatabase(requireContext())!!
 
-        writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(Application())).get(WriteViewModel::class.java)
+        writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(requireActivity().application)).get(WriteViewModel::class.java)
         binding.writeViewModel = writeViewModel
 
         binding.toolbarWriteBoard.tvToolbarTitle.text = "글쓰기"
@@ -71,6 +76,10 @@ class WriteFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         showBackButton()
+
+        val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+        val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
+        val mAlertDialog = mBuilder.create()
 
         // 임시 저장한 게시글을 불러온 경우 채워넣음
         val tempPost = arguments?.getParcelable<TempPost>("currentTempPost")
@@ -115,29 +124,33 @@ class WriteFragment : Fragment() {
 
         // 글 작성 완료 버튼을 눌렀을 때 서버와의 연동 확인 방식으로 변경
         binding.fabWriteToComplete.setOnClickListener {
-            /*
-            if (false/** 서버와 연동에 실패한 경우 **/) {
-                // TODO : Dialog 띄우기 코드 개선 필요
-                val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-                val mBuilder = AlertDialog.Builder(requireContext())
-                    .setView(mDialogView)
-                val mAlertDialog = mBuilder.show()
-
-                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.write_save_fail_server_error_dialog_title)
-                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_save_fail_server_error_dialog_description)
-
-                // Dialog 확인, 취소버튼 설정
-                val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
-                mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
-                // Dialog 확인 버튼을 클릭 한 경우
-                confirmButton.setOnClickListener {
-                    mAlertDialog.dismiss()
-                }
-            } else{ // TODO: 서버에 게시글 등록하는 코드
-
-            } */
-            ToastDefaultBlack.createToast(requireContext(), "저장 버튼 클릭")?.show()
+            writeViewModel.uploadPost(binding.etWriteTitle.text.toString(), binding.etWriteContent.text.toString(), /** productImageURL을 얻어오는 코드 **/productImageUpload ?: "Test.jpg" )
         }
+
+        writeViewModel.writeSuccess.observe(viewLifecycleOwner, Observer {
+            if(it) {
+                val mainIntent = Intent(activity, MainActivity::class.java)
+                startActivity(mainIntent)
+                (activity as MainActivity).finish()
+            } else { /** 서버와 연동에 실패한 경우 **/
+                // Dialog 중복 실행 방지
+                if(mAlertDialog != null && !mAlertDialog.isShowing){
+                    mAlertDialog.show()
+
+                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.write_save_fail_server_error_dialog_title)
+                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_save_fail_server_error_dialog_description)
+
+                    val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
+                    mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
+                    confirmButton.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+                }
+            }
+        })
+        writeViewModel.writeFailedMessage.observe(viewLifecycleOwner, Observer {
+            Log.e("Login Error", it.toString())
+        })
 
         binding.btnWriteTempPostsArchive.setOnClickListener {
             requireView().findNavController().navigate(R.id.action_writeFragment_to_tempListWriteFragment)

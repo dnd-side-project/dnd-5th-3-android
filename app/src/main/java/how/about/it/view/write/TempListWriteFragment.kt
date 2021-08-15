@@ -46,7 +46,7 @@ class TempListWriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTempListWriteBinding.inflate(layoutInflater)
-        writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(Application())).get(WriteViewModel::class.java)
+        writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(requireActivity().application)).get(WriteViewModel::class.java)
         binding.writeViewModel = writeViewModel
         binding.rvWriteTempPostAll.adapter = tempListAdapter
 

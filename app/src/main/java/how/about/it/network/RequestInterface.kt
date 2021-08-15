@@ -15,4 +15,7 @@ interface RequestInterface {
 
     @PUT("/api/v1/member/token")
     fun requestTokenRefresh(@Body body : RequestTokenRefresh) : Call<ResponseTokenRefresh>
+
+    @POST("/api/v1/posts")
+    fun requestUploadPost(@Body body : RequestUploadPost) : Call<ResponseUploadPost>
 }
