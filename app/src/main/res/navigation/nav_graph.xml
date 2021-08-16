@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_feedFragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_voteFragment"
+            app:destination="@id/voteFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
@@ -51,16 +54,16 @@
             app:destination="@id/tempSavedWriteFragment">
             <argument
                 android:name="tempPostTitle"
-                app:argType="string"
-                android:defaultValue="" />
+                android:defaultValue=""
+                app:argType="string" />
             <argument
                 android:name="tempPostContent"
-                app:argType="string"
-                android:defaultValue="" />
+                android:defaultValue=""
+                app:argType="string" />
             <argument
                 android:name="tempPostImage"
-                app:argType="string"
-                android:defaultValue="" />
+                android:defaultValue=""
+                app:argType="string" />
         </action>
     </fragment>
     <fragment
@@ -75,16 +78,16 @@
             app:popUpToInclusive="true">
             <argument
                 android:name="tempPostTitle"
-                app:argType="string"
-                android:defaultValue="" />
+                android:defaultValue=""
+                app:argType="string" />
             <argument
                 android:name="tempPostContent"
-                app:argType="string"
-                android:defaultValue="" />
+                android:defaultValue=""
+                app:argType="string" />
             <argument
                 android:name="tempPostImage"
-                app:argType="string"
-                android:defaultValue="" />
+                android:defaultValue=""
+                app:argType="string" />
         </action>
     </fragment>
     <fragment
@@ -115,8 +118,15 @@
         android:label="fragment_comment"
         tools:layout="@layout/fragment_comment" />
     <fragment
-        android:id="@+id/detailPostFragment"
-        android:name="how.about.it.view.detailPost.DetailPostFragment"
-        android:label="fragment_detail_post"
-        tools:layout="@layout/fragment_detail_post" />
+        android:id="@+id/voteFragment"
+        android:name="how.about.it.view.vote.VoteFragment"
+        android:label="fragment_vote"
+        tools:layout="@layout/fragment_vote">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_voteFragment_to_commentFragment"
+            app:destination="@id/commentFragment" />
+    </fragment>
 </navigation>
