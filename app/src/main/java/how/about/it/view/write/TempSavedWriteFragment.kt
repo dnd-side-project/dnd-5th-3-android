@@ -45,7 +45,7 @@ class TempSavedWriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTempSavedWriteBinding.inflate(layoutInflater)
-        writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(Application())).get(WriteViewModel::class.java)
+        writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(requireActivity().application)).get(WriteViewModel::class.java)
         binding.writeViewModel = writeViewModel
 
         binding.toolbarWriteTempSavedBoard.tvToolbarTitle.text = "저장된 글"
