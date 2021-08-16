@@ -97,10 +97,18 @@ class VoteFragment : Fragment() {
                         with(binding.rvVoteComment.adapter as VoteCommentAdapter) {
                             submitList(commentList)
                         }
+                        setTvVoteCommentCountText(commentList.size)
                     }
                 }
             }
         }
+    }
+
+    private fun setTvVoteCommentCountText(size: Int) {
+        binding.tvVoteCommentCount.text = String.format(
+            getString(R.string.detail_post_comments_count),
+            size
+        )
     }
 
     private fun setCountDownTimer(deadLine: String) =

@@ -141,6 +141,7 @@
     <string name="comment_time_year_ago">년 전</string>
     <string name="comment_update">수정하기</string>
     <string name="comment_delete">삭제하기</string>
+    <string name="comment_replay_count">+ 대댓글 %d개</string>
 
     <!-- Post -->
     <string name="post_description">글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.</string>
