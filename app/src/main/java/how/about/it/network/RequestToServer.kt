@@ -2,20 +2,21 @@ package how.about.it.network
 
 import android.content.Context
 import how.about.it.database.SharedManager
+import how.about.it.network.feed.FeedInterface
+import how.about.it.network.vote.VoteInterface
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import how.about.it.network.feed.FeedInterface
-import okhttp3.Interceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RequestToServer {
     private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-    private lateinit var sharedManager : SharedManager
-    private lateinit var accessToken : String
+    private lateinit var sharedManager: SharedManager
+    private lateinit var accessToken: String
 
-    fun initAccessToken(context: Context){
+    fun initAccessToken(context: Context) {
         sharedManager = SharedManager(context)
         accessToken = sharedManager.getCurrentUser().accessToken.toString()
     }
@@ -26,7 +27,8 @@ object RequestToServer {
             // Header에 AccessToken을 삽입하지 않는 대상
             if (request.url.encodedPath.equals("/api/v1/login", true)
                 || request.url.encodedPath.equals("/api/v1/member", true)
-                || request.url.encodedPath.equals("/api/v1/member/token", true)) {
+                || request.url.encodedPath.equals("/api/v1/member/token", true)
+            ) {
                 chain.proceed(request)
             } else {
                 chain.proceed(request.newBuilder().apply {
@@ -48,4 +50,5 @@ object RequestToServer {
         RequestInterface::class.java
     )
     val feedInterface: FeedInterface = retrofit.create(FeedInterface::class.java)
+    val voteInterface: VoteInterface = retrofit.create(VoteInterface::class.java)
 }

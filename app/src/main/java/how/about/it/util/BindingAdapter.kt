@@ -13,6 +13,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import how.about.it.R
 import how.about.it.view.feed.Feed
+import how.about.it.view.vote.ResponseFeedDetail
 
 object BindingAdapter {
     @BindingAdapter("feedTopTitleText")
@@ -30,13 +31,15 @@ object BindingAdapter {
 
     @BindingAdapter("feedGlide")
     @JvmStatic
-    fun feedGlide(imageView: ImageView, imageUrl: String) {
-        when (imageUrl) {
-            "" -> imageView.setImageResource(R.drawable.ic_feed_image_empty)
-            else -> {
-                Glide.with(imageView.context)
-                    .load(imageUrl)
-                    .into(imageView)
+    fun feedGlide(imageView: ImageView, imageUrl: String?) {
+        imageUrl?.let {
+            when (imageUrl) {
+                "" -> imageView.setImageResource(R.drawable.ic_feed_image_empty)
+                else -> {
+                    Glide.with(imageView.context)
+                        .load(imageUrl)
+                        .into(imageView)
+                }
             }
         }
     }
@@ -104,27 +107,86 @@ object BindingAdapter {
         }
     }
 
-    @BindingAdapter("feedProgressDrawable", "feedProgressRemainTime")
+    @BindingAdapter(
+        "feedProgressPermitDrawable",
+        "feedProgressRejectDrawable",
+        "feedProgressRemainTime"
+    )
     @JvmStatic
-    fun feedProgressDrawable(seekBar: SeekBar, feed: Feed, time: Long) {
-        val context = seekBar.context
-        seekBar.progressDrawable = when (time) {
-            (-1).toLong() -> {
-                if (feed.permitRatio >= feed.rejectRatio) {
-                    AppCompatResources.getDrawable(
-                        context,
-                        R.drawable.background_progress_permit_round_10
-                    )
-                } else {
-                    AppCompatResources.getDrawable(
-                        context,
-                        R.drawable.background_progress_reject_round_10
-                    )
+    fun feedProgressPermitDrawable(
+        seekBar: SeekBar,
+        permitRatio: Int?,
+        rejectRatio: Int?,
+        time: Long?
+    ) {
+        permitRatio?.let {
+            rejectRatio?.let {
+                time?.let {
+                    val context = seekBar.context
+                    seekBar.progressDrawable = when (time) {
+                        (-1).toLong() -> {
+                            if (permitRatio >= rejectRatio) {
+                                AppCompatResources.getDrawable(
+                                    context,
+                                    R.drawable.background_progress_permit_round_10
+                                )
+                            } else {
+                                AppCompatResources.getDrawable(
+                                    context,
+                                    R.drawable.background_progress_reject_round_10
+                                )
+                            }
+                        }
+                        else -> {
+                            if (permitRatio != 0 && rejectRatio != 0) {
+                                AppCompatResources.getDrawable(
+                                    context,
+                                    R.drawable.background_progress_round_10
+                                )
+                            } else {
+                                AppCompatResources.getDrawable(
+                                    context,
+                                    R.drawable.background_progress_empty_round_10
+                                )
+                            }
+                        }
+                    }
                 }
             }
-            else -> {
-                AppCompatResources.getDrawable(context, R.drawable.background_progress_round_10)
+        }
+    }
+
+    @BindingAdapter("feedThumbPermit", "feedThumbReject")
+    @JvmStatic
+    fun feedThumbPermit(seekBar: SeekBar, permitRatio: Int?, rejectRatio: Int) {
+        permitRatio?.let {
+            if (permitRatio != 0 && rejectRatio != 0) {
+                if (permitRatio >= rejectRatio) {
+                    seekBar.thumb = AppCompatResources.getDrawable(
+                        seekBar.context,
+                        R.drawable.ic_feed_thumb_agree
+                    )
+                } else {
+                    seekBar.thumb = AppCompatResources.getDrawable(
+                        seekBar.context,
+                        R.drawable.ic_feed_thumb_disagree
+                    )
+                }
+            } else {
+                seekBar.thumb.mutate().alpha = 0
             }
+        }
+    }
+
+    @BindingAdapter("feedVoteWriterCreatedText")
+    @JvmStatic
+    fun feedVoteWriterCreatedText(textView: TextView, feed: ResponseFeedDetail?) {
+        feed?.let {
+            textView.text = String.format(
+                textView.context.getString(R.string.feed_item_nickname_time),
+                feed.name,
+                TimeChangerUtil.timeChange(textView.context, feed.createdDate)
+            )
         }
     }
 }

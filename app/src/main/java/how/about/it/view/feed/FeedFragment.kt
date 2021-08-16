@@ -40,6 +40,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFeedBinding.inflate(inflater, container, false)
+        RequestToServer.initAccessToken(requireContext())
         setNotificationClickListener()
         setFabWriteClickListener()
         setTvFeedToggleClickListener()

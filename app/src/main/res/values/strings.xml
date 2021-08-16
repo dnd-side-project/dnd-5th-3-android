@@ -113,7 +113,7 @@
     <!-- DetailPost -->
     <string name="detail_post_vote">투표하기</string>
     <string name="detail_post_item_title">👀 비트코인 지금 들어갈까?</string>
-    <string name="detail_post_comments_count">28개의 댓글</string>
+    <string name="detail_post_comments_count">%d개의 댓글</string>
     <string name="detail_post_vote_agree">대찬성</string>
     <string name="detail_post_vote_disagree">이건좀...</string>
     <string name="detail_post_vote_complete">투표 완료!</string>
