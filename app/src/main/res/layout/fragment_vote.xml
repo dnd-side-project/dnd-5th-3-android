@@ -198,11 +198,12 @@
                         android:id="@+id/rv_vote_comment"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:background="@color/black"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_vote_comment_count"
-                        tools:listitem="@layout/item_comments" />
+                        tools:listitem="@layout/item_comment" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.core.widget.NestedScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
