@@ -143,8 +143,8 @@
         android:hint="@string/hint_password"
         android:textColorHint="@color/bluegray600_626670"
         android:textColor="@color/bluegray200_E1E3E8"
-        android:inputType="textPassword"
-        android:text="* * * *"
+        android:text="· · · · · · ·"
+        android:focusableInTouchMode="false"
         android:backgroundTint="@color/bluegray300_CBCFD6"
         />
 
