@@ -194,48 +194,54 @@ object BindingAdapter {
 
     @BindingAdapter("commentVoteType")
     @JvmStatic
-    fun commentVoteType(imageView: ImageView, voteType: String) {
-        when (voteType) {
-            "PERMIT" -> {
-                imageView.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        imageView.context,
-                        R.drawable.ic_comments_agree
+    fun commentVoteType(imageView: ImageView, voteType: String?) {
+        voteType?.let {
+            when (voteType) {
+                "PERMIT" -> {
+                    imageView.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            imageView.context,
+                            R.drawable.ic_comments_agree
+                        )
                     )
-                )
-            }
-            "REJECT" -> {
-                imageView.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        imageView.context,
-                        R.drawable.ic_comments_disagree
+                }
+                "REJECT" -> {
+                    imageView.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            imageView.context,
+                            R.drawable.ic_comments_disagree
+                        )
                     )
-                )
-            }
-            else -> {
-                imageView.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        imageView.context,
-                        R.drawable.ic_comments_none
+                }
+                else -> {
+                    imageView.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            imageView.context,
+                            R.drawable.ic_comments_none
+                        )
                     )
-                )
+                }
             }
         }
     }
 
     @BindingAdapter("commentCreateTime")
     @JvmStatic
-    fun commentCreateTime(textView: TextView, createdAt: String) {
-        textView.text =
-            TimeChangerUtil.timeChange(textView.context, createdAt)
+    fun commentCreateTime(textView: TextView, createdAt: String?) {
+        createdAt?.let {
+            textView.text =
+                TimeChangerUtil.timeChange(textView.context, createdAt)
+        }
     }
 
     @BindingAdapter("isMineVisibility")
     @JvmStatic
-    fun isMineVisibility(view: View, name: String) {
-        view.visibility = when (name == SharedManager(view.context).getCurrentUser().nickname) {
-            true -> View.VISIBLE
-            false -> View.INVISIBLE
+    fun isMineVisibility(view: View, name: String?) {
+        name?.let {
+            view.visibility = when (name == SharedManager(view.context).getCurrentUser().nickname) {
+                true -> View.VISIBLE
+                false -> View.INVISIBLE
+            }
         }
     }
 }
