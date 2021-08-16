@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import how.about.it.view.comment.Comment
+import how.about.it.view.vote.RequestVote
 import how.about.it.view.vote.ResponseFeedDetail
 import how.about.it.view.vote.repository.VoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,9 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
 
     private val _feedDetailComment = MutableStateFlow<List<Comment>?>(null)
     val feedDetailComment = _feedDetailComment.asStateFlow()
+
+    private val _requestVote = MutableStateFlow<Int?>(null)
+    val requestVote = _requestVote.asStateFlow()
 
     private val _networkError = MutableStateFlow(false)
     val networkError: StateFlow<Boolean> = _networkError
@@ -50,7 +54,7 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
                     rejectRatio = 20,
                     createdDate = "2021-08-16T13:34:00",
                     voteDeadline = "2021-08-17T13:34:00",
-                    currentMemberVoteResult = "PERMIT"
+                    currentMemberVoteResult = "NO_RESULT"
                 )
             )
         }
@@ -65,6 +69,17 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
             feedDetailComment?.let {
                 _feedDetailComment.emit(feedDetailComment.commentList)
             } ?: _networkError.emit(true)
+        }
+    }
+
+    fun requestVote(index: Int, id: Int, vote: String) {
+        viewModelScope.launch {
+            val requestVote =
+                runCatching { voteRepository.requestVote(id, RequestVote(vote)) }.getOrNull()
+            Log.d("requestVote", requestVote.toString())
+            requestVote?.let {
+                _requestVote.emit(index)
+            } ?: _requestVote.emit(index)
         }
     }
 }
