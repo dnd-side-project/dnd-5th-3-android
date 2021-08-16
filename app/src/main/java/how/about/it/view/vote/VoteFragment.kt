@@ -53,6 +53,7 @@ class VoteFragment : Fragment() {
         setFabVoteClickListener()
         setOpenVoteCollect()
         setLayoutVoteClickListener(getLayoutVoteList())
+        setRequestVoteCollect()
         voteViewModel.requestVoteFeedDetail(args.id)
         voteViewModel.requestVoteFeedComment(args.id)
         return binding.root
@@ -191,7 +192,23 @@ class VoteFragment : Fragment() {
     private fun setLayoutVoteClickListener(list: List<ConstraintLayout>) {
         list.indices.forEach { index ->
             list[index].setOnClickListener {
-                setLayoutCommentSelectClose(index, list)
+                voteViewModel.requestVote(index, args.id, getVoteResponse(index))
+            }
+        }
+    }
+
+    private fun getVoteResponse(index: Int) = when (index) {
+        0 -> "REJECT"
+        1 -> "PERMIT"
+        else -> throw IndexOutOfBoundsException()
+    }
+
+    private fun setRequestVoteCollect() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            voteViewModel.requestVote.collect { index ->
+                index?.let {
+                    setLayoutCommentSelectClose(index, getLayoutVoteList())
+                }
             }
         }
     }
@@ -202,6 +219,7 @@ class VoteFragment : Fragment() {
                 FloatingAnimationUtil.setAnimation(list[index], 0f)
                 list[index].visibility = View.INVISIBLE
                 setVoteCompleteAction(selected)
+
             }
         }
     }
