@@ -11,11 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import how.about.it.R
 import how.about.it.databinding.FragmentVoteBinding
+import how.about.it.network.RequestToServer
+import how.about.it.network.vote.VoteServiceImpl
 import how.about.it.util.FloatingAnimationUtil
 import how.about.it.util.TimeChangerUtil
+import how.about.it.view.vote.adapter.VoteCommentAdapter
+import how.about.it.view.vote.repository.VoteRepository
 import how.about.it.view.vote.viewmodel.VoteViewModel
+import how.about.it.view.vote.viewmodel.VoteViewModelFactory
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -23,10 +29,15 @@ import kotlinx.coroutines.flow.collect
 class VoteFragment : Fragment() {
     private var _binding: FragmentVoteBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private val voteViewModel by viewModels<VoteViewModel>()
-    private val timer by lazy {
-        setCountDownTimer()
+    private val voteViewModel by viewModels<VoteViewModel> {
+        VoteViewModelFactory(
+            VoteRepository(
+                VoteServiceImpl(RequestToServer.voteInterface)
+            )
+        )
     }
+    private val args by navArgs<VoteFragmentArgs>()
+    private var timer: CountDownTimer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,12 +45,16 @@ class VoteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentVoteBinding.inflate(inflater, container, false)
+        RequestToServer.initAccessToken(requireContext())
         setVoteBackClickListener()
-        setCountDownTimer()
-        startCountDownTimer()
+        setFeedDetailCollect()
+        setVoteCommentAdapter()
+        setFeedDetailCommentCollect()
         setFabVoteClickListener()
         setOpenVoteCollect()
         setLayoutVoteClickListener(getLayoutVoteList())
+        voteViewModel.requestVoteFeedDetail(args.id)
+        voteViewModel.requestVoteFeedComment(args.id)
         return binding.root
     }
 
@@ -50,9 +65,39 @@ class VoteFragment : Fragment() {
         }
     }
 
-    private fun setCountDownTimer() =
+    private fun setFeedDetailCollect() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            voteViewModel.feedDetail.collect { feedDetail ->
+                feedDetail?.let {
+                    timer = setCountDownTimer(feedDetail.voteDeadline).start()
+                    binding.apply {
+                        feed = feedDetail
+                        remainTime = TimeChangerUtil.getRemainTime(feedDetail.voteDeadline)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setVoteCommentAdapter() {
+        binding.rvVoteComment.adapter = VoteCommentAdapter()
+    }
+
+    private fun setFeedDetailCommentCollect() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            voteViewModel.feedDetailComment.collect { commentList ->
+                commentList?.let {
+                    with(binding.rvVoteComment.adapter as VoteCommentAdapter) {
+                        submitList(commentList)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setCountDownTimer(deadLine: String) =
         object : CountDownTimer(
-            (TimeChangerUtil.getDeadLine(("2021-08-13T19:00:00"))),
+            (TimeChangerUtil.getDeadLine(deadLine)),
             1000
         ) {
             override fun onTick(millisUntilFinished: Long) {
@@ -65,12 +110,9 @@ class VoteFragment : Fragment() {
             }
         }
 
-    private fun startCountDownTimer() {
-        timer.start()
-    }
-
     private fun cancelCountDownTimer() {
-        timer.cancel()
+        requireNotNull(timer).cancel()
+        timer = null
     }
 
     private fun setFabVoteClickListener() {

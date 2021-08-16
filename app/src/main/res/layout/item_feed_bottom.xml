@@ -77,7 +77,8 @@
         <SeekBar
             android:id="@+id/progress_feed_bottom"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            feedProgressDrawable="@{feed}"
+            feedProgressPermitDrawable="@{feed.permitRatio}"
+            feedProgressRejectDrawable="@{feed.rejectRatio}"
             feedProgressRemainTime="@{remainTime}"
             android:layout_width="0dp"
             android:layout_height="0dp"

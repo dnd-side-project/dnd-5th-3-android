@@ -97,6 +97,8 @@
         <SeekBar
             android:id="@+id/progress_feed_top"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            feedThumbPermit="@{feed.permitRatio}"
+            feedThumbReject="@{feed.rejectRatio}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
@@ -108,7 +110,6 @@
             android:progress="@{feed.permitRatio}"
             android:progressDrawable="@drawable/background_progress_round_10"
             android:splitTrack="false"
-            android:thumb="@{feed.permitRatio >= feed.rejectRatio ? @drawable/ic_feed_thumb_agree : @drawable/ic_feed_thumb_disagree}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_feed_top_detail" />

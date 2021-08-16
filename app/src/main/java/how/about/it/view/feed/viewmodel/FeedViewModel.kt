@@ -7,13 +7,12 @@ import how.about.it.view.feed.Feed
 import how.about.it.view.feed.repository.FeedRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class FeedViewModel(private val feedRepository: FeedRepository) : ViewModel() {
     private val _toggleCategory = MutableStateFlow(0)
-    val toggleCategory: StateFlow<Int> = _toggleCategory
+    val toggleCategory = _toggleCategory.asStateFlow()
 
     private val _feedTopList = MutableStateFlow<List<Feed>?>(null)
     val feedTopList = _feedTopList.asStateFlow()
@@ -22,7 +21,7 @@ class FeedViewModel(private val feedRepository: FeedRepository) : ViewModel() {
     val feedBottomList = _feedBottomList.asStateFlow()
 
     private val _networkError = MutableStateFlow(false)
-    val networkError: StateFlow<Boolean> = _networkError
+    val networkError = _networkError.asStateFlow()
 
     fun setToggleCategory(category: Int) {
         _toggleCategory.value = category
