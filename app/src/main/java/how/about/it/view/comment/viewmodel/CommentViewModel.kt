@@ -1,18 +1,28 @@
 package how.about.it.view.comment.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import how.about.it.view.comment.Comment
 import how.about.it.view.comment.Emoji
+import how.about.it.view.comment.repository.CommentRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CommentViewModel : ViewModel() {
+class CommentViewModel(private val commentRepository: CommentRepository) : ViewModel() {
     private val _openReact = MutableStateFlow(0)
     val openReact: StateFlow<Int> = _openReact
 
     private val _emptyReact = MutableStateFlow(false)
     val emptyReact: StateFlow<Boolean> = _emptyReact
+
+    private val _reComment = MutableStateFlow<List<Comment>?>(null)
+    val reComment = _reComment.asStateFlow()
+
+    private val _networkError = MutableStateFlow(false)
+    val networkError: StateFlow<Boolean> = _networkError
 
     private val _commentEmoji =
         MutableStateFlow(
@@ -31,6 +41,16 @@ class CommentViewModel : ViewModel() {
             0 -> 1
             1 -> 0
             else -> throw IllegalAccessException()
+        }
+    }
+
+    fun requestCommentReply(id: Int) {
+        viewModelScope.launch {
+            val commentReply = runCatching { commentRepository.requestCommentReply(id) }.getOrNull()
+            Log.d("commentReply", commentReply.toString())
+            commentReply?.let {
+                _reComment.emit(commentReply.commentList)
+            } ?: _networkError.emit(true)
         }
     }
 

@@ -2,6 +2,7 @@ package how.about.it.network
 
 import android.content.Context
 import how.about.it.database.SharedManager
+import how.about.it.network.comment.CommentInterface
 import how.about.it.network.feed.FeedInterface
 import how.about.it.network.vote.VoteInterface
 import okhttp3.Interceptor
@@ -51,4 +52,5 @@ object RequestToServer {
     )
     val feedInterface: FeedInterface = retrofit.create(FeedInterface::class.java)
     val voteInterface: VoteInterface = retrofit.create(VoteInterface::class.java)
+    val commentInterface: CommentInterface = retrofit.create(CommentInterface::class.java)
 }

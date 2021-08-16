@@ -13,20 +13,36 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import how.about.it.R
 import how.about.it.databinding.FragmentCommentBinding
+import how.about.it.network.RequestToServer
+import how.about.it.network.comment.CommentServiceImpl
 import how.about.it.util.FloatingAnimationUtil
-import how.about.it.util.TimeChangerUtil
+import how.about.it.view.comment.adapter.ReCommentAdapter
+import how.about.it.view.comment.repository.CommentRepository
 import how.about.it.view.comment.viewmodel.CommentViewModel
+import how.about.it.view.comment.viewmodel.CommentViewModelFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private var _binding: FragmentCommentBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private val commentViewModel by viewModels<CommentViewModel>()
+    private val commentViewModel by viewModels<CommentViewModel>() {
+        CommentViewModelFactory(
+            CommentRepository(
+                CommentServiceImpl(RequestToServer.commentInterface)
+            )
+        )
+    }
+    private val args by navArgs<CommentFragmentArgs>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,8 +50,9 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     ): View {
         _binding = FragmentCommentBinding.inflate(inflater, container, false)
         setCommentBackClickListener()
-        setTvCommentTimeText()
         setBtnEmptyEmojiClickListener()
+        setRvReCommentAdapter()
+        setReCommentCollect()
         setEmptyReactCollect()
         setCommentEmojiCollect()
         setBtnCommentMoreClickListener()
@@ -44,6 +61,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setLayoutCommentClickListener(getLayoutReactionList())
         setLottieAnimationListener()
         commentViewModel.initEmojiList()
+        commentViewModel.requestCommentReply(args.id)
         return binding.root
     }
 
@@ -54,39 +72,57 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setTvCommentTimeText() {
-        binding.layoutComment.tvCommentTime.text =
-            TimeChangerUtil.timeChange(requireContext(), "2021-08-09T15:35:00")
-    }
-
     private fun setBtnEmptyEmojiClickListener() {
         binding.layoutComment.btnReactionEmpty.setOnClickListener {
             commentViewModel.setOpenReact()
         }
     }
 
+    private fun setRvReCommentAdapter() {
+        binding.rvReComment.adapter = ReCommentAdapter()
+    }
+
+    private fun setReCommentCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                commentViewModel.reComment.collect { reComment ->
+                    reComment?.let {
+                        with(binding.rvReComment.adapter as ReCommentAdapter) {
+                            submitList(reComment.subList(1, reComment.size))
+                        }
+                        binding.layoutComment.comment = reComment[0]
+                    }
+                }
+            }
+        }
+    }
+
     private fun setEmptyReactCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            commentViewModel.emptyReact.collect { isEmpty ->
-                binding.layoutComment.btnReactionEmpty.visibility = when (isEmpty) {
-                    true -> View.VISIBLE
-                    false -> View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                commentViewModel.emptyReact.collect { isEmpty ->
+                    binding.layoutComment.btnReactionEmpty.visibility = when (isEmpty) {
+                        true -> View.VISIBLE
+                        false -> View.GONE
+                    }
                 }
             }
         }
     }
 
     private fun setCommentEmojiCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            commentViewModel.commentEmoji.collect { emojiList ->
-                commentViewModel.setEmptyCommentReactVisibility()
-                emojiList.indices.forEach { index ->
-                    with(emojiList[index]) {
-                        getLayoutEmoji(emojiId).apply {
-                            setTvCommentReactVisibility(emojiCount)
-                            setTvCommentReactCount(emojiCount)
-                            setTvCommentReactClickListener(index)
-                            setTvCommentReactionBackground(checked)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                commentViewModel.commentEmoji.collect { emojiList ->
+                    commentViewModel.setEmptyCommentReactVisibility()
+                    emojiList.indices.forEach { index ->
+                        with(emojiList[index]) {
+                            getLayoutEmoji(emojiId).apply {
+                                setTvCommentReactVisibility(emojiCount)
+                                setTvCommentReactCount(emojiCount)
+                                setTvCommentReactClickListener(index)
+                                setTvCommentReactionBackground(checked)
+                            }
                         }
                     }
                 }
@@ -165,21 +201,23 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setOpenReactCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            commentViewModel.openReact.collect { isOpen ->
-                when (isOpen) {
-                    0 -> {
-                        setLottieCancelAnimation()
-                        setLayoutAlpha(1f)
-                        setFabCommentReactionCloseBackground()
-                        setLayoutCommentCloseAnimation(getLayoutReactionList())
-                        delay(300)
-                        setLayoutCommentCloseInvisible(getLayoutReactionList())
-                    }
-                    1 -> {
-                        setLayoutAlpha(0.2f)
-                        setFabCommentReactionOpenBackground()
-                        setLayoutCommentColorVisible(getLayoutReactionList())
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                commentViewModel.openReact.collect { isOpen ->
+                    when (isOpen) {
+                        0 -> {
+                            setLottieCancelAnimation()
+                            setLayoutAlpha(1f)
+                            setFabCommentReactionCloseBackground()
+                            setLayoutCommentCloseAnimation(getLayoutReactionList())
+                            delay(300)
+                            setLayoutCommentCloseInvisible(getLayoutReactionList())
+                        }
+                        1 -> {
+                            setLayoutAlpha(0.2f)
+                            setFabCommentReactionOpenBackground()
+                            setLayoutCommentColorVisible(getLayoutReactionList())
+                        }
                     }
                 }
             }
