@@ -9,7 +9,9 @@ import android.widget.PopupMenu
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import how.about.it.R
@@ -22,6 +24,7 @@ import how.about.it.view.feed.repository.FeedRepository
 import how.about.it.view.feed.viewmodel.FeedViewModel
 import how.about.it.view.feed.viewmodel.FeedViewModelFactory
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private var _binding: FragmentFeedBinding? = null
@@ -105,10 +108,12 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setToggleCategoryCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            feedViewModel.toggleCategory.collect { category ->
-                setTvToggleText(category)
-                feedViewModel.requestBottomFeedList(getToggleText(category))
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                feedViewModel.toggleCategory.collect { category ->
+                    setTvToggleText(category)
+                    feedViewModel.requestBottomFeedList(getToggleText(category))
+                }
             }
         }
     }
@@ -140,11 +145,13 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setFeedTopListCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            feedViewModel.feedTopList.collect { feedList ->
-                feedList?.let {
-                    with(binding.rvFeedTop.adapter as FeedTopAdapter) {
-                        submitList(feedList)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                feedViewModel.feedTopList.collect { feedList ->
+                    feedList?.let {
+                        with(binding.rvFeedTop.adapter as FeedTopAdapter) {
+                            submitList(feedList)
+                        }
                     }
                 }
             }
@@ -152,11 +159,13 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setFeedBottomListCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            feedViewModel.feedBottomList.collect { feedList ->
-                feedList?.let {
-                    with(binding.rvFeedBottom.adapter as FeedBottomAdapter) {
-                        submitList(feedList)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                feedViewModel.feedBottomList.collect { feedList ->
+                    feedList?.let {
+                        with(binding.rvFeedBottom.adapter as FeedBottomAdapter) {
+                            submitList(feedList)
+                        }
                     }
                 }
             }
@@ -164,9 +173,11 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setNetworkErrorCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            feedViewModel.networkError.collect {
-                //TODO networkerrorpage
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                feedViewModel.networkError.collect {
+                    //TODO networkerrorpage
+                }
             }
         }
     }

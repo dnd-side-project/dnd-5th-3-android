@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import how.about.it.R
@@ -25,6 +27,7 @@ import how.about.it.view.vote.viewmodel.VoteViewModelFactory
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class VoteFragment : Fragment() {
     private var _binding: FragmentVoteBinding? = null
@@ -67,13 +70,15 @@ class VoteFragment : Fragment() {
     }
 
     private fun setFeedDetailCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            voteViewModel.feedDetail.collect { feedDetail ->
-                feedDetail?.let {
-                    timer = setCountDownTimer(feedDetail.voteDeadline).start()
-                    binding.apply {
-                        feed = feedDetail
-                        remainTime = TimeChangerUtil.getRemainTime(feedDetail.voteDeadline)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                voteViewModel.feedDetail.collect { feedDetail ->
+                    feedDetail?.let {
+                        timer = setCountDownTimer(feedDetail.voteDeadline).start()
+                        binding.apply {
+                            feed = feedDetail
+                            remainTime = TimeChangerUtil.getRemainTime(feedDetail.voteDeadline)
+                        }
                     }
                 }
             }
@@ -85,11 +90,13 @@ class VoteFragment : Fragment() {
     }
 
     private fun setFeedDetailCommentCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            voteViewModel.feedDetailComment.collect { commentList ->
-                commentList?.let {
-                    with(binding.rvVoteComment.adapter as VoteCommentAdapter) {
-                        submitList(commentList)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                voteViewModel.feedDetailComment.collect { commentList ->
+                    commentList?.let {
+                        with(binding.rvVoteComment.adapter as VoteCommentAdapter) {
+                            submitList(commentList)
+                        }
                     }
                 }
             }
@@ -123,20 +130,22 @@ class VoteFragment : Fragment() {
     }
 
     private fun setOpenVoteCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            voteViewModel.openVote.collect { isOpen ->
-                when (isOpen) {
-                    0 -> {
-                        setLayoutAlpha(1f)
-                        setFabVoteCloseBackground()
-                        setLayoutVoteCloseAnimation(getLayoutVoteList())
-                        delay(300)
-                        setLayoutVoteCloseInvisible(getLayoutVoteList())
-                    }
-                    1 -> {
-                        setLayoutAlpha(0.2f)
-                        setFabVoteOpenBackground()
-                        setLayoutVoteColorVisible(getLayoutVoteList())
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                voteViewModel.openVote.collect { isOpen ->
+                    when (isOpen) {
+                        0 -> {
+                            setLayoutAlpha(1f)
+                            setFabVoteCloseBackground()
+                            setLayoutVoteCloseAnimation(getLayoutVoteList())
+                            delay(300)
+                            setLayoutVoteCloseInvisible(getLayoutVoteList())
+                        }
+                        1 -> {
+                            setLayoutAlpha(0.2f)
+                            setFabVoteOpenBackground()
+                            setLayoutVoteColorVisible(getLayoutVoteList())
+                        }
                     }
                 }
             }
@@ -204,10 +213,12 @@ class VoteFragment : Fragment() {
     }
 
     private fun setRequestVoteCollect() {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            voteViewModel.requestVote.collect { index ->
-                index?.let {
-                    setLayoutCommentSelectClose(index, getLayoutVoteList())
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                voteViewModel.requestVote.collect { index ->
+                    index?.let {
+                        setLayoutCommentSelectClose(index, getLayoutVoteList())
+                    }
                 }
             }
         }
@@ -219,7 +230,6 @@ class VoteFragment : Fragment() {
                 FloatingAnimationUtil.setAnimation(list[index], 0f)
                 list[index].visibility = View.INVISIBLE
                 setVoteCompleteAction(selected)
-
             }
         }
     }
