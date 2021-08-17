@@ -8,6 +8,7 @@ import how.about.it.repository.WriteRepository
 import how.about.it.repository.TempPostRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 class WriteViewModel(application: Application): AndroidViewModel(application) {
 
@@ -40,8 +41,8 @@ class WriteViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun uploadPost(title: String, content: String, productImageUrl: String?) {
-        writeRepository.uploadPost(title, content, productImageUrl, object : WriteRepository.WriteCallBack {
+    fun uploadPost(title: String, content: String, file: File?) {
+        writeRepository.uploadPost(title, content, file, object : WriteRepository.WriteCallBack {
             override fun onSuccess() {
                 writeSuccess.postValue(true)
             }
