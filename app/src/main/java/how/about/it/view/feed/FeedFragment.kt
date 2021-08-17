@@ -44,6 +44,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     ): View {
         _binding = FragmentFeedBinding.inflate(inflater, container, false)
         RequestToServer.initAccessToken(requireContext())
+        setSettingClickListener()
         setNotificationClickListener()
         setFabWriteClickListener()
         setTvFeedToggleClickListener()
@@ -54,6 +55,13 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setFeedBottomListCollect()
         feedViewModel.requestTopFeedList()
         return binding.root
+    }
+
+    private fun setSettingClickListener() {
+        binding.btnFeedSetting.setOnClickListener {
+            requireView().findNavController()
+                .navigate(R.id.action_feedFragment_to_settingFragment)
+        }
     }
 
     private fun setNotificationClickListener() {

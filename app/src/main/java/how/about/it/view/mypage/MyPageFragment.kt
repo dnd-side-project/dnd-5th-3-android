@@ -25,11 +25,18 @@ class MyPageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMyPageBinding.inflate(inflater, container, false)
+        setSettingClickListener()
         setTvProfileUpdateClickListener()
         setBtnMyWriteClickListener()
         setBtnMyParticipateClickListener()
         setCategoryCollect()
         return binding.root
+    }
+    private fun setSettingClickListener() {
+        binding.btnMyPageSetting.setOnClickListener {
+            requireView().findNavController()
+                .navigate(R.id.action_myPageFragment_to_settingFragment)
+        }
     }
 
     private fun setTvProfileUpdateClickListener() {
