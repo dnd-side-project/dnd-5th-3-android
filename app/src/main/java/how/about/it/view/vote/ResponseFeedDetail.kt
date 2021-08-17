@@ -15,10 +15,10 @@ data class ResponseFeedDetail(
     val productImageUrl: String,
     @SerializedName("isVoted")
     val isVoted: Boolean,
-    @SerializedName("permitRatio")
-    val permitRatio: Int,
-    @SerializedName("rejectRatio")
-    val rejectRatio: Int,
+    @SerializedName("permitCount")
+    val permitCount: Int,
+    @SerializedName("rejectCount")
+    val rejectCount: Int,
     @SerializedName("createdDate")
     val createdDate: String,
     @SerializedName("voteDeadline")
