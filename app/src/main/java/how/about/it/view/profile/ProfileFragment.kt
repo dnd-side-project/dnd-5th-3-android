@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import how.about.it.R
 import how.about.it.database.SharedManager
 import how.about.it.databinding.FragmentProfileBinding
@@ -33,6 +34,8 @@ class ProfileFragment : Fragment() {
         (activity as MainActivity).setSupportActionBar(binding.toolbarProfileBoard.toolbarBoard)
         (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
+
+        setEtChangePasswordClickListener()
 
         binding.etProfileNickname.setText(sharedManager.getCurrentUser().nickname.toString())
         binding.etProfileEmail.setText(sharedManager.getCurrentUser().email.toString())
@@ -92,11 +95,6 @@ class ProfileFragment : Fragment() {
         }
         // TODO : 현재 닉네임 텍스트와 기존 닉네임이 다를때 뒤로가기누르면 경고 Dialog 띄우기
 
-
-        binding.etProfilePassword.setOnClickListener {
-            // TODO : 비밀번호 변경 화면 띄우기
-        }
-
         binding.btnSave.setOnClickListener {
             // TODO : Dialog 띄우기 코드 개선 필요
             val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
@@ -155,6 +153,13 @@ class ProfileFragment : Fragment() {
         binding.btnSave.isEnabled = false
         binding.btnSave.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
         binding.btnSave.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
+    }
+
+    private fun setEtChangePasswordClickListener() {
+        binding.etProfilePassword.setOnClickListener {
+            requireView().findNavController()
+                .navigate(R.id.action_profileFragment_to_changePasswordFragment)
+        }
     }
 
     override fun onDestroyView() {

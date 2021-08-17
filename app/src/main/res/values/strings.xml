@@ -19,6 +19,7 @@
     <string name="title">제목</string>
     <string name="delete">삭제</string>
     <string name="recall">불러오기</string>
+    <string name="change">변경하기</string>
 
     <!-- Dialog -->
     <string name="dialog_title">다이얼로그 타이틀입니다.</string>
@@ -110,6 +111,19 @@
     <string name="profile_change_all_success_dialog_title">프로필 변경 성공!</string>
     <string name="profile_change_all_success_dialog_description">보다 멋진 프로필로 변경되었어요!\n이제 다시 활동을 시작해볼까요?</string>
 
+    <!-- ChangePassword -->
+    <string name="current_password">현재 비밀번호</string>
+    <string name="new_password">새 비밀번호</string>
+    <string name="hint_old_password">현재 비밀번호를 입력해주세요</string>
+    <string name="hint_new_password">5자 이상으로 입력해주세요</string>
+    <string name="hint_new_password_check">비밀번호 확인할게요 :)</string>
+    <string name="change_password_fail_old_password">비밀번호가 올바르지 않아요!</string>
+    <string name="change_password_fail_new_password_format">5자리를 넘겨주세요!</string>
+    <string name="change_password_fail_new_password_same">현재 비밀번호와 똑같아요</string>
+    <string name="change_password_fail_new_password_check">헉! 비밀번호가 다른데요? 확인해 주시겠어요?</string>
+    <string name="change_password_fail_new_password_empty">앗! 위에 비밀번호를 먼저 입력해주세요</string>
+    <string name="change_password_success">비밀번호가 변경되었어요</string>
+    
     <!-- DetailPost -->
     <string name="detail_post_vote">투표하기</string>
     <string name="detail_post_item_title">👀 비트코인 지금 들어갈까?</string>
@@ -180,4 +194,6 @@
     <string name="on_boarding_third_content">주제에 대한 나의 생각을\n댓글로 남겨 의견을 나누어보고</string>
     <string name="on_boarding_fourth_title">이모지를 통해\n반응 남기기</string>
     <string name="on_boarding_fourth_content">다양한 이모지를 통해서\n댓글에 대한 나의 반응을 남겨봐요!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
