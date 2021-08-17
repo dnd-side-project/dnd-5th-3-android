@@ -23,5 +23,7 @@ data class Feed(
     @SerializedName("rejectRatio")
     val rejectRatio: Int,
     @SerializedName("createdDate")
-    val createdDate: String
+    val createdDate: String,
+    @SerializedName("voteDeadline")
+    val voteDeadline: String
 )

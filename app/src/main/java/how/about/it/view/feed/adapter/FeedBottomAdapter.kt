@@ -38,7 +38,7 @@ class FeedBottomAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
         fun bind(feed: Feed) {
             binding.apply {
                 setVariable(BR.feed, feed)
-                setVariable(BR.remainTime, TimeChangerUtil.getRemainTime(feed.createdDate))
+                setVariable(BR.remainTime, TimeChangerUtil.getRemainTime(feed.voteDeadline))
                 root.setOnClickListener { view ->
                     Navigation.findNavController(view).navigate(
                         FeedFragmentDirections.actionFeedFragmentToVoteFragment(
