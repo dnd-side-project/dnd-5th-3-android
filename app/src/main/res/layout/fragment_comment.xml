@@ -267,8 +267,29 @@
         android:layout_marginBottom="20dp"
         app:borderWidth="0dp"
         app:elevation="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_reply"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@null"
         tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:id="@+id/layout_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bluegray800_303540"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/et_reply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:hint="@string/hint_reply_write"
+            android:inputType="textMultiLine"
+            android:paddingVertical="15dp"
+            android:textColor="@color/bluegray50_F9FAFC"
+            android:textColorHint="@color/bluegray600_626670"
+            tools:ignore="Autofill" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

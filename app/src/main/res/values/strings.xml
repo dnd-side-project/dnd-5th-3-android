@@ -132,6 +132,7 @@
     <string name="detail_post_vote_disagree">이건좀...</string>
     <string name="detail_post_vote_complete">투표 완료!</string>
     <string name="hint_comments_write">댓글을 남겨주세요.</string>
+    <string name="hint_reply_write">대댓글을 남겨주세요.</string>
     <string name="detail_post_message__delete_my_post">정말 삭제하시겠어요?\n삭제한 글은 되돌릴 수 없어요.</string>
 
     <!-- Comment -->
