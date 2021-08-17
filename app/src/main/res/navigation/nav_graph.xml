@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_feedFragment_to_voteFragment"
             app:destination="@id/voteFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"

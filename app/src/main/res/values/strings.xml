@@ -194,6 +194,17 @@
     <string name="on_boarding_third_content">주제에 대한 나의 생각을\n댓글로 남겨 의견을 나누어보고</string>
     <string name="on_boarding_fourth_title">이모지를 통해\n반응 남기기</string>
     <string name="on_boarding_fourth_content">다양한 이모지를 통해서\n댓글에 대한 나의 반응을 남겨봐요!</string>
+
+    <!-- Setting -->
+    <string name="setting">설정</string>
+    <string name="setting_alert">알림설정</string>
+    <string name="setting_motion">모션설정</string>
+    <string name="setting_information_use">이용정보</string>
+    <string name="setting_information_notice">공지사항</string>
+    <string name="setting_information_inquiry">문의하기</string>
+    <string name="setting_logout">로그아웃</string>
+    <string name="setting_delete_account">탈퇴하기</string>
+    <string name="setting_logout_dialog_description">정말 로그아웃 하시겠어요?</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
