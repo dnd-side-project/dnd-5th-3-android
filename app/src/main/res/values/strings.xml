@@ -70,10 +70,10 @@
     <string name="feed_category_popular">인기순</string>
     <string name="feed_category_coming_end">마감임박순</string>
     <string name="feed_category_end">최근마감순</string>
-    <string name="feed_request_popular">rank_count</string>
-    <string name="feed_request_new">created_date</string>
-    <string name="feed_request_coming_end">almost_done</string>
-    <string name="feed_request_end">already_done</string>
+    <string name="feed_request_popular">rank-count</string>
+    <string name="feed_request_new">created-date</string>
+    <string name="feed_request_coming_end">almost-done</string>
+    <string name="feed_request_end">already-done</string>
     <string name="feed_item_title1">⭐무물의 추천글</string>
     <string name="feed_item_title2">🔥불타고 있는 글</string>
     <string name="feed_item_title3">❤사랑듬뿍받은 글</string>
@@ -206,6 +206,4 @@
     <string name="setting_logout">로그아웃</string>
     <string name="setting_delete_account">탈퇴하기</string>
     <string name="setting_logout_dialog_description">정말 로그아웃 하시겠어요?</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
