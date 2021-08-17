@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -29,7 +32,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class VoteFragment : Fragment() {
+class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private var _binding: FragmentVoteBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val voteViewModel by viewModels<VoteViewModel> {
@@ -50,6 +53,7 @@ class VoteFragment : Fragment() {
         _binding = FragmentVoteBinding.inflate(inflater, container, false)
         RequestToServer.initAccessToken(requireContext())
         setVoteBackClickListener()
+        setBtnVoteMoreClickListener()
         setFeedDetailCollect()
         setVoteCommentAdapter()
         setFeedDetailCommentCollect()
@@ -66,6 +70,32 @@ class VoteFragment : Fragment() {
         binding.btnVoteBack.setOnClickListener {
             requireView().findNavController()
                 .popBackStack()
+        }
+    }
+
+    private fun setBtnVoteMoreClickListener() {
+        binding.btnVoteMore.setOnClickListener {
+            PopupMenu(
+                ContextThemeWrapper(
+                    requireContext(),
+                    R.style.feed_toggle_popup_menu
+                ),
+                binding.btnVoteMore
+            ).apply {
+                setOnMenuItemClickListener(this@VoteFragment)
+                inflate(R.menu.menu_feed_delete)
+                show()
+            }
+        }
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.feed_delete -> {
+                // TODO FEED DELETE
+                true
+            }
+            else -> false
         }
     }
 
