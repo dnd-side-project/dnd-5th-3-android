@@ -8,7 +8,6 @@ import how.about.it.view.vote.RequestVote
 import how.about.it.view.vote.ResponseFeedDetail
 import how.about.it.view.vote.repository.VoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -26,7 +25,7 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
     val requestVote = _requestVote.asStateFlow()
 
     private val _networkError = MutableStateFlow(false)
-    val networkError: StateFlow<Boolean> = _networkError
+    val networkError = _networkError.asStateFlow()
 
     fun setOpenVote() {
         _openVote.value = when (_openVote.value) {
@@ -42,24 +41,9 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
             Log.d("feedDetail", feedDetail.toString())
             feedDetail?.let {
                 _feedDetail.emit(feedDetail)
-            } ?: _feedDetail.emit(
-                ResponseFeedDetail(
-                    id = 0,
-                    name = "kimym",
-                    title = "testttt",
-                    content = "content",
-                    productImageUrl = "https://user-images.githubusercontent.com/63637706/129483564-5a341dff-6eb7-412a-b375-c59e8c491876.png",
-                    isVoted = false,
-                    permitRatio = 80,
-                    rejectRatio = 20,
-                    createdDate = "2021-08-16T13:34:00",
-                    voteDeadline = "2021-08-17T13:34:00",
-                    currentMemberVoteResult = "NO_RESULT"
-                )
-            )
+            } ?: _networkError.emit(true)
         }
     }
-
 
     fun requestVoteFeedComment(id: Int) {
         viewModelScope.launch {
@@ -79,7 +63,33 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
             Log.d("requestVote", requestVote.toString())
             requestVote?.let {
                 _requestVote.emit(index)
+                _feedDetail.emit(
+                    with(requireNotNull(_feedDetail.value)) {
+                        ResponseFeedDetail(
+                            id = this.id,
+                            name = this.name,
+                            title = this.title,
+                            content = this.content,
+                            productImageUrl = this.productImageUrl,
+                            isVoted = this.isVoted,
+                            permitCount = responsePermitVote(vote, this.permitCount),
+                            rejectCount = responseRejectVote(vote, this.rejectCount),
+                            createdDate = this.createdDate,
+                            voteDeadline = this.voteDeadline,
+                            currentMemberVoteResult = vote
+                        )
+                    })
             } ?: _requestVote.emit(index)
         }
+    }
+
+    private fun responsePermitVote(vote: String, count: Int) = when (vote) {
+        "PERMIT" -> count + 1
+        else -> count
+    }
+
+    private fun responseRejectVote(vote: String, count: Int) = when (vote) {
+        "REJECT" -> count + 1
+        else -> count
     }
 }

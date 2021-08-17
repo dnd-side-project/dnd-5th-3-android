@@ -78,10 +78,40 @@ class VoteFragment : Fragment() {
                         binding.apply {
                             feed = feedDetail
                             remainTime = TimeChangerUtil.getRemainTime(feedDetail.voteDeadline)
+                            setTvFeedAgreeText(feedDetail)
+                            setTvFeedDisAgreeText(feedDetail)
+                            setSeekBarProgress(feedDetail)
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun setTvFeedAgreeText(feed: ResponseFeedDetail) {
+        binding.tvFeedAgree.text = when (feed.permitCount + feed.rejectCount) {
+            0 -> String.format(getString(R.string.feed_item_percent), 0)
+            else -> String.format(
+                getString(R.string.feed_item_percent),
+                feed.permitCount / (feed.permitCount + feed.rejectCount) * 100
+            )
+        }
+    }
+
+    private fun setTvFeedDisAgreeText(feed: ResponseFeedDetail) {
+        binding.tvFeedDisagree.text = when (feed.permitCount + feed.rejectCount) {
+            0 -> String.format(getString(R.string.feed_item_percent), 0)
+            else -> String.format(
+                getString(R.string.feed_item_percent),
+                feed.rejectCount / (feed.permitCount + feed.rejectCount) * 100
+            )
+        }
+    }
+
+    private fun setSeekBarProgress(feed: ResponseFeedDetail) {
+        binding.progressVoteItem.progress = when (feed.permitCount + feed.rejectCount) {
+            0 -> 0
+            else -> feed.permitCount / (feed.permitCount + feed.rejectCount) * 100
         }
     }
 
