@@ -1,6 +1,7 @@
 package how.about.it.view.vote
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.TypedValue
@@ -8,7 +9,9 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -56,6 +59,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setVoteBackClickListener()
         setBtnVoteMoreClickListener()
         setProgressTouchListener()
+        setRequestDeleteCollect()
         setFeedDetailCollect()
         setVoteCommentAdapter()
         setFeedDetailCommentCollect()
@@ -99,10 +103,42 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     override fun onMenuItemClick(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.feed_delete -> {
-                // TODO FEED DELETE
+                requestFeedDeleteDialog()
                 true
             }
             else -> false
+        }
+    }
+
+    private fun requestFeedDeleteDialog() {
+        val mDialogView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+        val mBuilder = AlertDialog.Builder(requireContext())
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.show()
+
+        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.delete)
+        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
+            .setText(R.string.detail_post_message__delete_my_post)
+
+        mDialogView.findViewById<Button>(R.id.btn_dialog_confirm).setOnClickListener {
+            voteViewModel.requestVoteDelete(args.id)
+            mAlertDialog.dismiss()
+        }
+        mDialogView.findViewById<Button>(R.id.btn_dialog_cancel).setOnClickListener {
+            mAlertDialog.dismiss()
+        }
+    }
+
+    private fun setRequestDeleteCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                voteViewModel.requestDelete.collect { requestDelete ->
+                    if (requestDelete) {
+                        requireView().findNavController().popBackStack()
+                    }
+                }
+            }
         }
     }
 
