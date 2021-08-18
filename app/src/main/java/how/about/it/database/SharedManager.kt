@@ -28,4 +28,9 @@ class SharedManager(context: Context) {
         prefs["accessToken"] = accessToken
     }
     fun getRefreshToken() = prefs["refreshToken", ""]
+
+    fun setSkipOnBoardingFragment() {
+        prefs["skipOnBoarding"] = "true"
+    }
+    fun isSkipOnBoardingFragment() = prefs["skipOnBoarding", ""]
 }

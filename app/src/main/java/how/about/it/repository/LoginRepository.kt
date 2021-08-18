@@ -23,6 +23,7 @@ class LoginRepository(private val context: Context) {
 
     fun autoLogin(loginCallBack: LoginCallBack) {
         if(sharedManager.getRefreshToken().isNotEmpty()){
+            sharedManager.setSkipOnBoardingFragment() // 자동 로그인시 온보딩페이지 SKIP할수 있도록 설정
             // refreshToken 정보가 있는 경우
             val currentUser = sharedManager.getCurrentUser()
             RequestToServer.service.requestTokenRefresh(

@@ -10,11 +10,19 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import how.about.it.R
+import how.about.it.database.SharedManager
 import how.about.it.databinding.FragmentOnBoardingBinding
 
 class   OnBoardingFragment : Fragment() {
     private var _binding: FragmentOnBoardingBinding? = null
     private val binding get() = requireNotNull(_binding)
+    private val sharedManager : SharedManager by lazy { SharedManager(requireContext()) }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        skipOnBoarding()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -26,6 +34,11 @@ class   OnBoardingFragment : Fragment() {
         setTabOnBoardingMediator()
         setTvOnBoardingSkipClickListener()
         return binding.root
+    }
+
+    private fun skipOnBoarding() {
+        if(sharedManager.isSkipOnBoardingFragment() == "true")
+            requireView().findNavController().navigate(R.id.action_onBoardingFragment_to_feedFragment)
     }
 
     private fun setVpOnBoardingAdapter() {
