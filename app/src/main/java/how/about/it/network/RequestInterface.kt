@@ -1,10 +1,9 @@
 package how.about.it.network
 
 import how.about.it.model.*
+import okhttp3.MultipartBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 interface RequestInterface {
     @POST("/api/v1/login")
@@ -16,6 +15,7 @@ interface RequestInterface {
     @PUT("/api/v1/member/token")
     fun requestTokenRefresh(@Body body : RequestTokenRefresh) : Call<ResponseTokenRefresh>
 
+    @Multipart
     @POST("/api/v1/posts")
-    fun requestUploadPost(@Body body : RequestUploadPost) : Call<ResponseUploadPost>
+    fun requestUploadPost(@Part("title") title: String, @Part("content") content: String, @Part file: MultipartBody.Part?) : Call<ResponseUploadPost>
 }

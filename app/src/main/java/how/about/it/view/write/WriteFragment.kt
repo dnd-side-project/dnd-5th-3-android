@@ -3,11 +3,13 @@ package how.about.it.view.write
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -38,6 +40,9 @@ import how.about.it.view.ToastDefaultBlack
 import how.about.it.view.main.MainActivity
 import how.about.it.viewmodel.WriteViewModel
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,6 +52,7 @@ class WriteFragment : Fragment() {
     private lateinit var writeViewModel: WriteViewModel
     private lateinit var db : TempPostDatabase
     private var productImageUpload = ""
+    private var imagePath : String? = null
     private val timeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +67,7 @@ class WriteFragment : Fragment() {
 
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -124,7 +131,10 @@ class WriteFragment : Fragment() {
 
         // 글 작성 완료 버튼을 눌렀을 때 서버와의 연동 확인 방식으로 변경
         binding.fabWriteToComplete.setOnClickListener {
-            writeViewModel.uploadPost(binding.etWriteTitle.text.toString(), binding.etWriteContent.text.toString(), /** productImageURL을 얻어오는 코드 **/productImageUpload ?: "Test.jpg" )
+            writeViewModel.uploadPost(
+                binding.etWriteTitle.text.toString(),
+                binding.etWriteContent.text.toString(),
+                bitmapToFile(productImageUpload.toBitmap(), imagePath) )
         }
 
         writeViewModel.writeSuccess.observe(viewLifecycleOwner, Observer {
@@ -149,7 +159,7 @@ class WriteFragment : Fragment() {
             }
         })
         writeViewModel.writeFailedMessage.observe(viewLifecycleOwner, Observer {
-            Log.e("Login Error", it.toString())
+            Log.e("Write Error", it.toString())
         })
 
         binding.btnWriteTempPostsArchive.setOnClickListener {
@@ -202,6 +212,7 @@ class WriteFragment : Fragment() {
             val uri = data?.data!!
             // Glide를 사용하여 uri을 전달하여 보여준 뒤, Glide를 사용해 Uri -> Bitmap 변환
             // BitmapToString 확장함수를 사용하여 Bitmap -> String으로 변환하여 product_image_upload에 저장
+            imagePath = getFullPathFromUri(requireContext(), uri)!!
             Glide.with(requireContext())
                 .load(uri)
                 .listener(setBitmapListener())
@@ -236,6 +247,60 @@ class WriteFragment : Fragment() {
                 return false
             }
         }
+    }
+
+    private fun getFullPathFromUri(ctx: Context, fileUri: Uri?): String? {
+        var fullPath: String? = null
+        val column = "_data"
+        var cursor = ctx.contentResolver.query(fileUri!!, null, null, null, null)
+        if (cursor != null) {
+            cursor.moveToFirst()
+            var document_id = cursor.getString(0)
+            if (document_id == null) {
+                for (i in 0 until cursor.columnCount) {
+                    if (column.equals(cursor.getColumnName(i), ignoreCase = true)) {
+                        fullPath = cursor.getString(i)
+                        break
+                    }
+                }
+            } else {
+                document_id = document_id.substring(document_id.lastIndexOf(":") + 1)
+                cursor.close()
+                val projection = arrayOf(column)
+                try {
+                    cursor = ctx.contentResolver.query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection,
+                        MediaStore.Images.Media._ID + " = ? ",
+                        arrayOf(document_id),
+                        null
+                    )
+                    if (cursor != null) {
+                        cursor.moveToFirst()
+                        fullPath = cursor.getString(cursor.getColumnIndexOrThrow(column))
+                    }
+                } finally {
+                    if (cursor != null) cursor.close()
+                }
+            }
+        }
+        return fullPath
+    }
+
+    fun bitmapToFile(bitmap: Bitmap?, path: String?): File? {
+        if(bitmap == null || path == null){
+            return null
+        }
+        var file = File(path)
+        var out : OutputStream?= null
+        try {
+            file.createNewFile()
+            out = FileOutputStream(file)
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, out)
+        } finally {
+            out?.close()
+        }
+        return file
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
