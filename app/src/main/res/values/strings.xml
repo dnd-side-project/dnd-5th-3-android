@@ -169,7 +169,7 @@
     <string name="hint_wirte_description">내용을 작성해주세요</string>
     <string name="write_save_fail_format_dialog_title">올바르지 않은 형식</string>
     <string name="write_save_fail_format_dialog_description">jpg, png, gif 형식의 이미지 파일만 업로드 가능합니다.</string>
-    <string name="write_save_fail_server_error_dialog_title">이미지 등록 실패</string>
+    <string name="write_save_fail_server_error_dialog_title">등록 실패</string>
     <string name="write_save_fail_server_error_dialog_description">서버 상의 오류가 발생했습니다.\n다시 시도해주세요.</string>
 
     <string name="write_temp_save">임시저장</string>
