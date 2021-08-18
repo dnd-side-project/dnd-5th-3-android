@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.PagerSnapHelper
 import how.about.it.R
 import how.about.it.databinding.FragmentFeedBinding
 import how.about.it.network.RequestToServer
@@ -50,6 +51,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setTvFeedToggleClickListener()
         setToggleCategoryCollect()
         setRvFeedTopAdapter()
+        setRvFeedTopSnapHelper()
         setRvFeedBottomAdapter()
         setFeedTopListCollect()
         setFeedBottomListCollect()
@@ -146,6 +148,10 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun setRvFeedTopAdapter() {
         binding.rvFeedTop.adapter = FeedTopAdapter(FeedDiffUtil())
+    }
+
+    private fun setRvFeedTopSnapHelper() {
+        PagerSnapHelper().attachToRecyclerView(binding.rvFeedTop)
     }
 
     private fun setRvFeedBottomAdapter() {
