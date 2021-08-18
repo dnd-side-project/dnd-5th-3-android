@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import how.about.it.view.comment.Comment
+import how.about.it.view.vote.RequestPostComment
 import how.about.it.view.vote.RequestVote
 import how.about.it.view.vote.ResponseFeedDetail
 import how.about.it.view.vote.repository.VoteRepository
@@ -27,6 +28,9 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
     private val _requestDelete = MutableStateFlow(false)
     val requestDelete = _requestDelete.asStateFlow()
 
+    private val _requestPostComment = MutableStateFlow(false)
+    val requestPostComment = _requestPostComment.asStateFlow()
+
     private val _networkError = MutableStateFlow(false)
     val networkError = _networkError.asStateFlow()
 
@@ -35,6 +39,14 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
             0 -> 1
             1 -> 0
             else -> throw IllegalAccessException()
+        }
+    }
+
+    fun openVote() {
+        _feedDetail.value?.let {
+            if (requireNotNull(_feedDetail.value).currentMemberVoteResult == "NO_RESULT") {
+                _openVote.value = 1
+            }
         }
     }
 
@@ -93,6 +105,19 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
             Log.d("requestVoteDelete", requestVoteDelete.toString())
             requestVoteDelete?.let {
                 _requestDelete.emit(true)
+            } ?: _networkError.emit(true)
+        }
+    }
+
+    fun requestPostComment(id: Int, content: String) {
+        viewModelScope.launch {
+            val requestPostComment = runCatching {
+                voteRepository.requestVotePostComment(
+                    RequestPostComment(postId = id, content = content)
+                )
+            }.getOrNull()
+            requestPostComment?.let {
+                _requestPostComment.emit(true)
             } ?: _networkError.emit(true)
         }
     }

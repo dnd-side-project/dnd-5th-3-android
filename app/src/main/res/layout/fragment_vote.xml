@@ -24,7 +24,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_vote"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/layout_vote_comment"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
                 android:id="@+id/btn_vote_back"
@@ -365,7 +367,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:hint="@string/hint_comments_write"
-                android:inputType="textMultiLine"
+                android:imeOptions="actionDone"
+                android:inputType="text"
                 android:paddingVertical="15dp"
                 android:textColor="@color/bluegray50_F9FAFC"
                 android:textColorHint="@color/bluegray600_626670"

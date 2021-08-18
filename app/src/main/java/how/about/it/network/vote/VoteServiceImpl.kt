@@ -1,5 +1,6 @@
 package how.about.it.network.vote
 
+import how.about.it.view.vote.RequestPostComment
 import how.about.it.view.vote.RequestVote
 
 class VoteServiceImpl(private val voteInterface: VoteInterface) : VoteService {
@@ -11,4 +12,7 @@ class VoteServiceImpl(private val voteInterface: VoteInterface) : VoteService {
         voteInterface.requestVote(id, body)
 
     override suspend fun requestVoteDelete(id: Int) = voteInterface.requestVoteDelete(id)
+
+    override suspend fun requestVotePostComment(body: RequestPostComment) =
+        voteInterface.requestVotePostComment(body)
 }
