@@ -24,6 +24,9 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
     private val _requestVote = MutableStateFlow<Int?>(null)
     val requestVote = _requestVote.asStateFlow()
 
+    private val _requestDelete = MutableStateFlow(false)
+    val requestDelete = _requestDelete.asStateFlow()
+
     private val _networkError = MutableStateFlow(false)
     val networkError = _networkError.asStateFlow()
 
@@ -80,6 +83,17 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
                         )
                     })
             } ?: _requestVote.emit(index)
+        }
+    }
+
+    fun requestVoteDelete(id: Int) {
+        viewModelScope.launch {
+            val requestVoteDelete =
+                runCatching { voteRepository.requestVoteDelete(id) }.getOrNull()
+            Log.d("requestVoteDelete", requestVoteDelete.toString())
+            requestVoteDelete?.let {
+                _requestDelete.emit(true)
+            } ?: _networkError.emit(true)
         }
     }
 
