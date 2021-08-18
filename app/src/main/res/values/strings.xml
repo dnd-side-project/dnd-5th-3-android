@@ -74,11 +74,11 @@
     <string name="feed_request_new">created-date</string>
     <string name="feed_request_coming_end">almost-done</string>
     <string name="feed_request_end">already-done</string>
-    <string name="feed_item_title1">⭐무물의 추천글</string>
-    <string name="feed_item_title2">🔥불타고 있는 글</string>
-    <string name="feed_item_title3">❤사랑듬뿍받은 글</string>
-    <string name="feed_item_title4">⚔막상막하 투표글</string>
-    <string name="feed_item_title5">😆최고의 반응글</string>
+    <string name="feed_item_title1">⭐ 무물의 추천글</string>
+    <string name="feed_item_title2">🔥 불타고 있는 글</string>
+    <string name="feed_item_title3">❤ 사랑듬뿍받은 글</string>
+    <string name="feed_item_title4">⚔ 막상막하 투표글</string>
+    <string name="feed_item_title5">😆 최고의 반응글</string>
     <string name="feed_item_not_end">진행중</string>
     <string name="feed_item_end">끝</string>
     <string name="feed_item_nickname_time">%s · %s</string>
