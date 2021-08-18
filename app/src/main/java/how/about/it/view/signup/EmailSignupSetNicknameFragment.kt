@@ -76,19 +76,21 @@ class EmailSignupSetNicknameFragment : Fragment() {
 
                 // TODO : 닉네임 형식 확인 코드 작성
                 if(s.toString().trim().length <= 8 && !s.toString().trim().isNullOrBlank()) {
-                    // TODO : 서버 연동 처리
-                    // 서버 연동 부분 임시 통과처리
-                    if(true /** 중복계정 확인 구문 **/) {
-                        // 중복 계정 검사 성공시
-                        binding.tvMessageEmailNicknameCheck.setText(getString(R.string.success_message_email_signup_nickname))
-                        binding.tvMessageEmailNicknameCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
-                        activeButtonNext()
-                    } else {
-                        // 중복 계정 검사 실패시
-                        binding.tvMessageEmailNicknameCheck.setText(getString(R.string.fail_message_email_signup_nickname_duplicate))
-                        binding.tvMessageEmailNicknameCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
-                        deactiveButtonNext()
-                    }
+                    signupViewModel.duplicateCheckNickname(s.toString().trim())
+                    signupViewModel.duplicateCheckNicknameSuccess.observe(viewLifecycleOwner, Observer {
+                        if(it) { /** 중복계정 확인 구문 **/
+                            binding.tvMessageEmailNicknameCheck.setText(getString(R.string.success_message_email_signup_nickname))
+                            binding.tvMessageEmailNicknameCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
+                            activeButtonNext()
+                        } else {
+                            binding.tvMessageEmailNicknameCheck.setText(getString(R.string.fail_message_email_signup_nickname_duplicate))
+                            binding.tvMessageEmailNicknameCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                            deactiveButtonNext()
+                        }
+                    })
+                    signupViewModel.signupFailedMessage.observe(viewLifecycleOwner, Observer {
+                        Log.e("Duplicate Check Error", it.toString())
+                    })
                 } else {
                     // 형식 검사 실패시
                     binding.tvMessageEmailNicknameCheck.setText(getString(R.string.fail_message_email_signup_nickname_format))

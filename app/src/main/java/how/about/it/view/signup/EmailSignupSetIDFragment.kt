@@ -3,6 +3,7 @@ package how.about.it.view.signup
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import how.about.it.R
 import how.about.it.databinding.FragmentEmailSignupSetIdBinding
 import how.about.it.view.login.LoginActivity
@@ -62,18 +64,21 @@ class EmailSignupSetIDFragment : Fragment() {
 
                 // 안드로이드에서 제공하는 이메일 양식 검사 사용
                 if(android.util.Patterns.EMAIL_ADDRESS.matcher(s.toString().trim()).matches()) {
-                    // TODO : 서버 연동 임시 허용 처리
-                        if(true /** 중복계정 확인 구문 **/) {
-                            // 중복 계정 검사 성공시
+                    signupViewModel.duplicateCheckEmail(s.toString().trim())
+                    signupViewModel.duplicateCheckEmailSuccess.observe(viewLifecycleOwner, Observer {
+                        if(it) { /** 중복계정 확인 구문 **/
                             binding.tvMessageEmailIdCheck.setText(getString(R.string.success_message_email_signup_id))
                             binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
                             activeButtonNext()
                         } else {
-                            // 중복 계정 검사 실패시
                             binding.tvMessageEmailIdCheck.setText(getString(R.string.fail_message_email_signup_id_duplicate))
                             binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
                             deactiveButtonNext()
                         }
+                    })
+                    signupViewModel.signupFailedMessage.observe(viewLifecycleOwner, Observer {
+                        Log.e("Duplicate Check Error", it.toString())
+                    })
                 } else {
                     // 형식 검사 실패시
                     binding.tvMessageEmailIdCheck.setText(getString(R.string.fail_message_email_signup_id_format))
