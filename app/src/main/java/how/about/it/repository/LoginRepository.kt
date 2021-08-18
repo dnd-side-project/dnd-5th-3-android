@@ -1,6 +1,7 @@
 package how.about.it.repository
 
 import android.content.Context
+import android.util.Log
 import how.about.it.database.SharedManager
 import how.about.it.database.User
 import how.about.it.model.RequestLogin
@@ -35,10 +36,9 @@ class LoginRepository(private val context: Context) {
                     call: Call<ResponseTokenRefresh>,
                     response: Response<ResponseTokenRefresh>
                 ) {
-                    if (true /** RefreshToken 오류 해결전까지 임시 true처리 response.isSuccessful **/) {
-                        // TokenRefresh 성공 후 AccessToken 저장
-                        // 새로운 AccessToken 저장 임시 주석처리
-                            // sharedManager.saveAccessToken(response.body()!!.accessToken)
+                    if (response.isSuccessful) {
+                        // TokenRefresh 성공 후 새로운 AccessToken 저장
+                        sharedManager.saveAccessToken(response.body()!!.accessToken)
                         loginCallBack.onSuccess()
                     } else {
                         try {
