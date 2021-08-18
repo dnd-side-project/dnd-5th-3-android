@@ -1,5 +1,6 @@
 package how.about.it.view.feed.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -22,8 +23,7 @@ class FeedTopAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
             LayoutInflater.from(parent.context),
             parent,
             false
-        ),
-        currentList
+        )
     )
 
     override fun onBindViewHolder(holder: FeedTopViewHolder, position: Int) {
@@ -32,8 +32,8 @@ class FeedTopAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
 
     class FeedTopViewHolder(
         private val binding: ItemFeedTopBinding,
-        private val list: List<Feed>
     ) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("ClickableViewAccessibility")
         fun bind(feed: Feed) {
             binding.apply {
                 setVariable(BR.feed, feed)
@@ -42,10 +42,11 @@ class FeedTopAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
                 root.setOnClickListener { view ->
                     Navigation.findNavController(view).navigate(
                         FeedFragmentDirections.actionFeedFragmentToVoteFragment(
-                            list[adapterPosition].id,
+                            feed.id,
                         )
                     )
                 }
+                progressFeedTop.setOnTouchListener { _, _ -> true }
             }
         }
     }

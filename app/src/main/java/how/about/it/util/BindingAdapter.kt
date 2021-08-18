@@ -163,9 +163,34 @@ object BindingAdapter {
     fun feedThumbPermit(seekBar: SeekBar, permitCount: Int?, rejectCount: Int) {
         permitCount?.let {
             if (permitCount == 0 && rejectCount == 0) {
-                seekBar.thumb.mutate().alpha = 0
+                seekBar.thumb = AppCompatResources.getDrawable(
+                    seekBar.context,
+                    R.drawable.background_progress_empty_thumb
+                )
             } else {
                 if (permitCount >= rejectCount) {
+                    seekBar.thumb = AppCompatResources.getDrawable(
+                        seekBar.context,
+                        R.drawable.ic_feed_thumb_agree
+                    )
+                } else {
+                    seekBar.thumb = AppCompatResources.getDrawable(
+                        seekBar.context,
+                        R.drawable.ic_feed_thumb_disagree
+                    )
+                }
+            }
+        }
+    }
+
+    @BindingAdapter("voteThumbPermit", "voteThumbReject")
+    @JvmStatic
+    fun voteThumbPermit(seekBar: SeekBar, permitRatio: Int?, rejectRatio: Int) {
+        permitRatio?.let {
+            if (permitRatio == 0 && rejectRatio == 0) {
+                seekBar.thumb.mutate().alpha = 0
+            } else {
+                if (permitRatio >= rejectRatio) {
                     seekBar.thumb = AppCompatResources.getDrawable(
                         seekBar.context,
                         R.drawable.ic_feed_thumb_agree
