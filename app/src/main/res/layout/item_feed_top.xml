@@ -53,19 +53,20 @@
 
         <TextView
             android:id="@+id/tv_feed_top_is_end"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/background_feed_end_round_10"
             android:backgroundTint="@{remainTime >= 0 ? @color/bluegray100_F0F2F5 : @color/bluegray700_4D535E}"
-            android:paddingHorizontal="8dp"
+            android:gravity="center"
             android:paddingVertical="2dp"
             android:text="@{remainTime >= 0 ? @string/feed_item_not_end : @string/feed_item_end}"
             android:textColor="@{remainTime >= 0 ? @color/bluegray800_303540 : @color/bluegray50_F9FAFC}"
             android:textSize="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/img_feed_top" />
+            app:layout_constraintTop_toBottomOf="@id/img_feed_top"
+            app:layout_constraintWidth_percent="0.2" />
 
         <TextView
             android:id="@+id/tv_feed_top_title"
@@ -97,18 +98,19 @@
         <SeekBar
             android:id="@+id/progress_feed_top"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            feedProgressPermitDrawable="@{feed.permitRatio}"
+            feedProgressRejectDrawable="@{feed.rejectRatio}"
+            feedProgressRemainTime="@{remainTime}"
             feedThumbPermit="@{feed.permitRatio}"
             feedThumbReject="@{feed.rejectRatio}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="16dp"
-            android:clickable="false"
             android:indeterminate="false"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
             android:progress="@{feed.permitRatio}"
-            android:progressDrawable="@drawable/background_progress_round_10"
             android:splitTrack="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -121,6 +123,7 @@
             android:text="@{@string/feed_item_percent(feed.permitRatio)}"
             android:textColor="@color/moomool_blue_0098ff"
             android:textSize="14dp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/progress_feed_top"
             app:layout_constraintTop_toBottomOf="@id/progress_feed_top" />
 
@@ -131,6 +134,7 @@
             android:text="@{@string/feed_item_percent(feed.rejectRatio)}"
             android:textColor="@color/moomool_pink_ff227c"
             android:textSize="14dp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/progress_feed_top"
             app:layout_constraintTop_toBottomOf="@id/progress_feed_top" />
     </androidx.constraintlayout.widget.ConstraintLayout>

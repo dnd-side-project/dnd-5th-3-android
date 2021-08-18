@@ -80,7 +80,7 @@
     <string name="feed_item_title4">⚔막상막하 투표글</string>
     <string name="feed_item_title5">😆최고의 반응글</string>
     <string name="feed_item_not_end">진행중</string>
-    <string name="feed_item_end">"  끝  "</string>
+    <string name="feed_item_end">끝</string>
     <string name="feed_item_nickname_time">%s · %s</string>
     <string name="feed_item_time">%d시간 남음</string>
     <string name="feed_item_agree">찬성</string>

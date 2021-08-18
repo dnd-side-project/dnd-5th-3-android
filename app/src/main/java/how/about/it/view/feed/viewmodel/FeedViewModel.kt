@@ -32,7 +32,9 @@ class FeedViewModel(private val feedRepository: FeedRepository) : ViewModel() {
             val feedList = runCatching { feedRepository.requestTopFeedList() }.getOrNull()
             Log.d("feedTop", feedList.toString())
             feedList?.let {
-                _feedTopList.emit(feedList.posts)
+                _feedTopList.emit(feedList.posts.filter { feed ->
+                    (feed.id != -1)
+                })
             } ?: _networkError.emit(true)
         }
     }

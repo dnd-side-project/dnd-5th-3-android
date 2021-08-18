@@ -1,5 +1,6 @@
 package how.about.it.view.vote
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.TypedValue
@@ -54,6 +55,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         RequestToServer.initAccessToken(requireContext())
         setVoteBackClickListener()
         setBtnVoteMoreClickListener()
+        setProgressTouchListener()
         setFeedDetailCollect()
         setVoteCommentAdapter()
         setFeedDetailCommentCollect()
@@ -87,6 +89,11 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 show()
             }
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setProgressTouchListener() {
+        binding.progressVoteItem.setOnTouchListener { _, _ -> true }
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -123,7 +130,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             0 -> String.format(getString(R.string.feed_item_percent), 0)
             else -> String.format(
                 getString(R.string.feed_item_percent),
-                feed.permitCount / (feed.permitCount + feed.rejectCount) * 100
+                feed.permitCount * 100 / (feed.permitCount + feed.rejectCount)
             )
         }
     }
@@ -133,7 +140,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             0 -> String.format(getString(R.string.feed_item_percent), 0)
             else -> String.format(
                 getString(R.string.feed_item_percent),
-                feed.rejectCount / (feed.permitCount + feed.rejectCount) * 100
+                feed.rejectCount * 100 / (feed.permitCount + feed.rejectCount)
             )
         }
     }
@@ -141,7 +148,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun setSeekBarProgress(feed: ResponseFeedDetail) {
         binding.progressVoteItem.progress = when (feed.permitCount + feed.rejectCount) {
             0 -> 0
-            else -> feed.permitCount / (feed.permitCount + feed.rejectCount) * 100
+            else -> feed.permitCount * 100 / (feed.permitCount + feed.rejectCount)
         }
     }
 

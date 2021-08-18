@@ -35,18 +35,19 @@
 
         <TextView
             android:id="@+id/tv_feed_bottom_is_end"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:background="@drawable/background_feed_end_round_10"
             android:backgroundTint="@{remainTime >= 0 ? @color/bluegray100_F0F2F5 : @color/bluegray700_4D535E}"
-            android:paddingHorizontal="8dp"
+            android:gravity="center"
             android:paddingVertical="2dp"
             android:text="@{remainTime >= 0 ? @string/feed_item_not_end : @string/feed_item_end}"
             android:textColor="@{remainTime >= 0 ? @color/bluegray800_303540 : @color/bluegray50_F9FAFC}"
             android:textSize="12dp"
             app:layout_constraintStart_toEndOf="@id/img_feed_bottom"
-            app:layout_constraintTop_toTopOf="@id/img_feed_bottom" />
+            app:layout_constraintTop_toTopOf="@id/img_feed_bottom"
+            app:layout_constraintWidth_percent="0.15" />
 
         <TextView
             android:id="@+id/tv_feed_bottom_title"
@@ -84,7 +85,6 @@
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="40dp"
-            android:clickable="false"
             android:indeterminate="false"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"

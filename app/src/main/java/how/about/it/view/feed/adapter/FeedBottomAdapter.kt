@@ -1,5 +1,6 @@
 package how.about.it.view.feed.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -14,7 +15,6 @@ import how.about.it.view.feed.FeedFragmentDirections
 
 class FeedBottomAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
     ListAdapter<Feed, FeedBottomAdapter.FeedBottomViewHolder>(feedDiffUtil) {
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -23,8 +23,7 @@ class FeedBottomAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
             LayoutInflater.from(parent.context),
             parent,
             false
-        ),
-        currentList
+        )
     )
 
     override fun onBindViewHolder(holder: FeedBottomViewHolder, position: Int) {
@@ -33,8 +32,8 @@ class FeedBottomAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
 
     class FeedBottomViewHolder(
         private val binding: ItemFeedBottomBinding,
-        private val list: List<Feed>
     ) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("ClickableViewAccessibility")
         fun bind(feed: Feed) {
             binding.apply {
                 setVariable(BR.feed, feed)
@@ -42,10 +41,11 @@ class FeedBottomAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
                 root.setOnClickListener { view ->
                     Navigation.findNavController(view).navigate(
                         FeedFragmentDirections.actionFeedFragmentToVoteFragment(
-                            list[adapterPosition].id,
+                            feed.id,
                         )
                     )
                 }
+                progressFeedBottom.setOnTouchListener { _, _ -> true }
             }
         }
     }
