@@ -20,6 +20,7 @@
     <string name="delete">삭제</string>
     <string name="recall">불러오기</string>
     <string name="change">변경하기</string>
+    <string name="back">뒤로가기</string>
 
     <!-- Dialog -->
     <string name="dialog_title">다이얼로그 타이틀입니다.</string>
