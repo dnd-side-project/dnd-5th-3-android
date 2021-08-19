@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
@@ -53,6 +54,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setBtnEmptyEmojiClickListener()
         setRvReCommentAdapter()
         setReCommentCollect()
+        setIsPostedCollect()
         setEmptyReactCollect()
         setCommentEmojiCollect()
         setBtnCommentMoreClickListener()
@@ -60,6 +62,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setOpenReactCollect()
         setLayoutCommentClickListener(getLayoutReactionList())
         setLottieAnimationListener()
+        setEtReplyEditorActionListener()
         commentViewModel.initEmojiList()
         commentViewModel.requestCommentReply(args.id)
         return binding.root
@@ -91,6 +94,18 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                             submitList(reComment.subList(1, reComment.size))
                         }
                         binding.layoutComment.comment = reComment[0]
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setIsPostedCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                commentViewModel.isPosted.collect { isPosted ->
+                    if (isPosted) {
+                        commentViewModel.requestCommentReply(args.id)
                     }
                 }
             }
@@ -347,6 +362,22 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 layoutCommentYellow,
             )
         }
+
+    private fun setEtReplyEditorActionListener() {
+        binding.etReply.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    if (binding.etReply.text.toString().isNotEmpty())
+                        commentViewModel.requestPostReply(
+                            args.id,
+                            binding.etReply.text.toString()
+                        )
+                    true
+                }
+                else -> false
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
