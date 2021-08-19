@@ -12,6 +12,12 @@ class SignupViewModel() : ViewModel() {
 
     val signupSuccess = MutableLiveData<Boolean>()
     val signupFailedMessage = MutableLiveData<String?>()
+
+    val duplicateCheckEmailSuccess = MutableLiveData<Boolean>()
+    val duplicateCheckEmailFailedMessage = MutableLiveData<String?>()
+    val duplicateCheckNicknameSuccess = MutableLiveData<Boolean>()
+    val duplicateCheckNicknameFailedMessage = MutableLiveData<String?>()
+
     private val signupRepository = SignupRepository()
 
     fun setEmail(email : String) {
@@ -29,6 +35,29 @@ class SignupViewModel() : ViewModel() {
     }
     fun getNickname() = nickname
 
+    fun duplicateCheckEmail(email : String) {
+        signupRepository.duplicateCheckEmail(email, object : SignupRepository.SignupCallBack {
+            override fun onSuccess() {
+                duplicateCheckEmailSuccess.postValue(true)
+            }
+            override fun onError(message: String?) {
+                duplicateCheckEmailSuccess.postValue(false)
+                duplicateCheckEmailFailedMessage.postValue(message)
+            }
+        })
+    }
+
+    fun duplicateCheckNickname(nickname: String) {
+        signupRepository.duplicateCheckNickname(nickname, object : SignupRepository.SignupCallBack {
+            override fun onSuccess() {
+                duplicateCheckNicknameSuccess.postValue(true)
+            }
+            override fun onError(message: String?) {
+                duplicateCheckNicknameSuccess.postValue(false)
+                duplicateCheckNicknameFailedMessage.postValue(message)
+            }
+        })
+    }
 
     fun signup() {
         signupRepository.signupUser(RequestMember(getEmail(), getPassword(), getNickname()), object : SignupRepository.SignupCallBack {

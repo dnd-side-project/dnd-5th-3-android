@@ -27,8 +27,7 @@ object RequestToServer {
             val request = chain.request()
             // Header에 AccessToken을 삽입하지 않는 대상
             if (request.url.encodedPath.equals("/api/v1/login", true)
-                || request.url.encodedPath.equals("/api/v1/member", true)
-                || request.url.encodedPath.equals("/api/v1/member/token", true)
+                || request.url.encodedPath.startsWith("/api/v1/member", true)
             ) {
                 chain.proceed(request)
             } else {
