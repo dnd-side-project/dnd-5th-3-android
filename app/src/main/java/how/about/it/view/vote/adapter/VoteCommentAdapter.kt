@@ -2,12 +2,14 @@ package how.about.it.view.vote.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import how.about.it.BR
 import how.about.it.databinding.ItemCommentBinding
 import how.about.it.view.comment.Comment
+import how.about.it.view.vote.VoteFragmentDirections
 
 class VoteCommentAdapter :
     ListAdapter<Comment, VoteCommentAdapter.VoteCommentViewHolder>(VoteCommentDiffUtil()) {
@@ -34,6 +36,13 @@ class VoteCommentAdapter :
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(comment: Comment) {
             binding.setVariable(BR.comment, comment)
+            binding.root.setOnClickListener { view ->
+                Navigation.findNavController(view).navigate(
+                    VoteFragmentDirections.actionVoteFragmentToCommentFragment(
+                        comment.commentId,
+                    )
+                )
+            }
         }
     }
 

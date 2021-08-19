@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/onBoardingFragment">
+
     <fragment
         android:id="@+id/onBoardingFragment"
         android:name="how.about.it.view.onboarding.OnBoardingFragment"
@@ -15,6 +16,7 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
         android:id="@+id/feedFragment"
         android:name="how.about.it.view.feed.FeedFragment"
@@ -33,11 +35,30 @@
             android:id="@+id/action_feedFragment_to_settingFragment"
             app:destination="@id/settingFragment" />
     </fragment>
+
     <fragment
-        android:id="@+id/notificationFragment"
-        android:name="how.about.it.view.notification.NotificationFragment"
-        android:label="fragment_notification"
-        tools:layout="@layout/fragment_notification" />
+        android:id="@+id/voteFragment"
+        android:name="how.about.it.view.vote.VoteFragment"
+        android:label="fragment_vote"
+        tools:layout="@layout/fragment_vote">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_voteFragment_to_commentFragment"
+            app:destination="@id/commentFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/commentFragment"
+        android:name="how.about.it.view.comment.CommentFragment"
+        android:label="fragment_comment"
+        tools:layout="@layout/fragment_comment">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
+    
     <fragment
         android:id="@+id/writeFragment"
         android:name="how.about.it.view.write.WriteFragment"
@@ -47,6 +68,7 @@
             android:id="@+id/action_writeFragment_to_tempListWriteFragment"
             app:destination="@id/tempListWriteFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/tempListWriteFragment"
         android:name="how.about.it.view.write.TempListWriteFragment"
@@ -69,6 +91,7 @@
                 app:argType="string" />
         </action>
     </fragment>
+
     <fragment
         android:id="@+id/tempSavedWriteFragment"
         android:name="how.about.it.view.write.TempSavedWriteFragment"
@@ -93,6 +116,13 @@
                 app:argType="string" />
         </action>
     </fragment>
+
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="how.about.it.view.notification.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
+
     <fragment
         android:id="@+id/myPageFragment"
         android:name="how.about.it.view.mypage.MyPageFragment"
@@ -105,6 +135,7 @@
             android:id="@+id/action_myPageFragment_to_settingFragment"
             app:destination="@id/settingFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/profileFragment"
         android:name="how.about.it.view.profile.ProfileFragment"
@@ -115,6 +146,7 @@
             android:id="@+id/action_profileFragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/changePasswordFragment"
         android:name="how.about.it.view.profile.ChangePasswordFragment"
@@ -126,21 +158,4 @@
         android:name="how.about.it.view.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
-    <fragment
-        android:id="@+id/commentFragment"
-        android:name="how.about.it.view.comment.CommentFragment"
-        android:label="fragment_comment"
-        tools:layout="@layout/fragment_comment" />
-    <fragment
-        android:id="@+id/voteFragment"
-        android:name="how.about.it.view.vote.VoteFragment"
-        android:label="fragment_vote"
-        tools:layout="@layout/fragment_vote">
-        <argument
-            android:name="id"
-            app:argType="integer" />
-        <action
-            android:id="@+id/action_voteFragment_to_commentFragment"
-            app:destination="@id/commentFragment" />
-    </fragment>
 </navigation>
