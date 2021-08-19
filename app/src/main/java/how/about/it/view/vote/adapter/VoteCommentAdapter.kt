@@ -44,31 +44,44 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
         private val voteViewModel: VoteViewModel
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(comment: Comment) {
-            with(binding) {
-                setVariable(BR.comment, comment)
-                root.setOnClickListener { view ->
-                    Navigation.findNavController(view).navigate(
-                        VoteFragmentDirections.actionVoteFragmentToCommentFragment(
-                            comment.commentId,
-                        )
+            binding.setVariable(BR.comment, comment)
+            setRootClickListener(comment.commentId)
+            setBtnMoreClickListener(comment)
+        }
+
+        private fun setRootClickListener(commentId: Int) {
+            binding.root.setOnClickListener { view ->
+                Navigation.findNavController(view).navigate(
+                    VoteFragmentDirections.actionVoteFragmentToCommentFragment(
+                        commentId,
                     )
-                }
-                btnCommentMore.setOnClickListener {
+                )
+            }
+        }
+
+        private fun setBtnMoreClickListener(comment: Comment) {
+            with(binding.btnCommentMore) {
+                setOnClickListener {
                     PopupMenu(
                         ContextThemeWrapper(
-                            btnCommentMore.context,
+                            this.context,
                             R.style.feed_toggle_popup_menu
                         ),
-                        btnCommentMore
+                        this
                     ).apply {
                         setOnMenuItemClickListener { item ->
                             when (item.itemId) {
                                 R.id.menu_comment_update -> {
+                                    Navigation.findNavController(binding.btnCommentMore).navigate(
+                                        VoteFragmentDirections.actionVoteFragmentToCommentUpdateFragment(
+                                            comment.commentId, comment.content
+                                        )
+                                    )
                                     true
                                 }
                                 R.id.menu_comment_delete -> {
                                     requestCommentDeleteDialog(
-                                        btnCommentMore.context,
+                                        context,
                                         comment.commentId
                                     )
                                     true
