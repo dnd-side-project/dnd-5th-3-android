@@ -5,10 +5,8 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -59,6 +57,9 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setVoteBackClickListener()
         setBtnVoteMoreClickListener()
         setProgressTouchListener()
+        setEtVoteCommentFocusListener()
+        setEtVoteCommentEditorActionListener()
+        setRequestPostCommentCollect()
         setRequestDeleteCollect()
         setFeedDetailCollect()
         setVoteCommentAdapter()
@@ -232,6 +233,42 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun cancelCountDownTimer() {
         requireNotNull(timer).cancel()
         timer = null
+    }
+
+    private fun setEtVoteCommentFocusListener() {
+        binding.etVoteComment.setOnFocusChangeListener { _, isFocused ->
+            if (isFocused) {
+                voteViewModel.openVote()
+            }
+        }
+    }
+
+    private fun setEtVoteCommentEditorActionListener() {
+        binding.etVoteComment.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    if (binding.etVoteComment.text.toString().isNotEmpty())
+                        voteViewModel.requestPostComment(
+                            args.id,
+                            binding.etVoteComment.text.toString()
+                        )
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun setRequestPostCommentCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                voteViewModel.requestPostComment.collect { isPosted ->
+                    if (isPosted) {
+                        voteViewModel.requestVoteFeedComment(args.id)
+                    }
+                }
+            }
+        }
     }
 
     private fun setFabVoteClickListener() {

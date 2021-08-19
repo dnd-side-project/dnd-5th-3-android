@@ -1,9 +1,7 @@
 package how.about.it.network.vote
 
 import how.about.it.view.comment.ResponseComment
-import how.about.it.view.vote.RequestVote
-import how.about.it.view.vote.ResponseFeedDetail
-import how.about.it.view.vote.ResponseId
+import how.about.it.view.vote.*
 import retrofit2.http.*
 
 interface VoteInterface {
@@ -28,4 +26,9 @@ interface VoteInterface {
     suspend fun requestVoteDelete(
         @Path("id") id: Int,
     ): ResponseId
+
+    @POST("/api/v1/comment")
+    suspend fun requestVotePostComment(
+        @Body body: RequestPostComment
+    ): ResponsePostComment
 }

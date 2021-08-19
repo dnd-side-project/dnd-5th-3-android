@@ -1,6 +1,7 @@
 package how.about.it.view.vote.repository
 
 import how.about.it.network.vote.VoteServiceImpl
+import how.about.it.view.vote.RequestPostComment
 import how.about.it.view.vote.RequestVote
 
 class VoteRepository(private val voteServiceImpl: VoteServiceImpl) {
@@ -11,4 +12,7 @@ class VoteRepository(private val voteServiceImpl: VoteServiceImpl) {
     suspend fun requestVote(id: Int, body: RequestVote) = voteServiceImpl.requestVote(id, body)
 
     suspend fun requestVoteDelete(id: Int) = voteServiceImpl.requestVoteDelete(id)
+
+    suspend fun requestVotePostComment(body: RequestPostComment) =
+        voteServiceImpl.requestVotePostComment(body)
 }
