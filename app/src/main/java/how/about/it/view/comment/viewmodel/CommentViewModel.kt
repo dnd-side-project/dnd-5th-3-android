@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import how.about.it.view.comment.Comment
 import how.about.it.view.comment.Emoji
 import how.about.it.view.comment.repository.CommentRepository
+import how.about.it.view.commentupdate.RequestPutComment
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,9 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
 
     private val _reComment = MutableStateFlow<List<Comment>?>(null)
     val reComment = _reComment.asStateFlow()
+
+    private val _isUpdated = MutableStateFlow(false)
+    val isUpdated = _isUpdated.asStateFlow()
 
     private val _networkError = MutableStateFlow(false)
     val networkError: StateFlow<Boolean> = _networkError
@@ -50,6 +54,19 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
             Log.d("commentReply", commentReply.toString())
             commentReply?.let {
                 _reComment.emit(commentReply.commentList)
+            } ?: _networkError.emit(true)
+        }
+    }
+
+    fun requestCommentUpdate(id: Int, content: String) {
+        viewModelScope.launch {
+            val requestUpdate = runCatching {
+                commentRepository.requestCommentUpdate(
+                    RequestPutComment(commentId = id, content = content)
+                )
+            }.getOrNull()
+            requestUpdate?.let {
+                _isUpdated.emit(true)
             } ?: _networkError.emit(true)
         }
     }
