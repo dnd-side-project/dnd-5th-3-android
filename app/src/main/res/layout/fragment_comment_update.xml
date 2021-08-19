@@ -52,6 +52,7 @@
         android:hint="댓글을 남겨주세요."
         android:inputType="textMultiLine"
         android:textColor="@color/bluegray100_F0F2F5"
+        android:textColorHint="@color/bluegray600_626670"
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
