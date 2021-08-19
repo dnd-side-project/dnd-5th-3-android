@@ -23,6 +23,9 @@ class WriteRepository(private val context: Context) {
             val fileNameDivideList: List<String> = file.toString().split("/")
             var requestBodyFile : RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file!!)
             uploadFile = MultipartBody.Part.createFormData("file",fileNameDivideList[fileNameDivideList.size - 1], requestBodyFile)
+        } else if(file == null){
+            var requestBodyEmpty : RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), "")
+            uploadFile = MultipartBody.Part.createFormData("file", "", requestBodyEmpty)
         }
         RequestToServer.initAccessToken(context)
         RequestToServer.service.requestUploadPost(
