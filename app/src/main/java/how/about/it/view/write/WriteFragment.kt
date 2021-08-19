@@ -88,6 +88,15 @@ class WriteFragment : Fragment() {
         val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
         val mAlertDialog = mBuilder.create()
 
+        // 임시 저장 게시글 유무 판단
+        writeViewModel.getAllTempList.observe(viewLifecycleOwner, Observer {
+            if(it.isNullOrEmpty()){
+                binding.imgWrtieTempPostsArchiveNew.visibility = View.INVISIBLE
+            } else {
+                binding.imgWrtieTempPostsArchiveNew.visibility = View.VISIBLE
+            }
+        })
+
         // 임시 저장한 게시글을 불러온 경우 채워넣음
         val tempPost = arguments?.getParcelable<TempPost>("currentTempPost")
         binding.etWriteTitle.setText(tempPost?.title)
