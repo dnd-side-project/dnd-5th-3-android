@@ -190,7 +190,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setVoteCommentAdapter() {
-        binding.rvVoteComment.adapter = VoteCommentAdapter()
+        binding.rvVoteComment.adapter = VoteCommentAdapter(voteViewModel)
     }
 
     private fun setFeedDetailCommentCollect() {
@@ -199,7 +199,9 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 voteViewModel.feedDetailComment.collect { commentList ->
                     commentList?.let {
                         with(binding.rvVoteComment.adapter as VoteCommentAdapter) {
-                            submitList(commentList)
+                            submitList(commentList) {
+                                binding.rvVoteComment.scrollToPosition(0)
+                            }
                         }
                         setTvVoteCommentCountText(commentList.size)
                     }

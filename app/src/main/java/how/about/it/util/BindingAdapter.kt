@@ -6,6 +6,7 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -266,6 +267,24 @@ object BindingAdapter {
             view.visibility = when (name == SharedManager(view.context).getCurrentUser().nickname) {
                 true -> View.VISIBLE
                 false -> View.INVISIBLE
+            }
+        }
+    }
+
+    @BindingAdapter("isDeletedVisibility", "isNotDeletedVisibility")
+    @JvmStatic
+    fun isDeletedVisibility(imageButton: ImageButton, isDeleted: Boolean?, name: String?) {
+        name?.let {
+            isDeleted?.let {
+                imageButton.visibility = when (isDeleted) {
+                    true -> View.INVISIBLE
+                    false -> {
+                        when (name == SharedManager(imageButton.context).getCurrentUser().nickname) {
+                            true -> View.VISIBLE
+                            false -> View.INVISIBLE
+                        }
+                    }
+                }
             }
         }
     }

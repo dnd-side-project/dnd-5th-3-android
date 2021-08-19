@@ -73,7 +73,8 @@
 
         <ImageButton
             android:id="@+id/btn_re_comment_more"
-            isMineVisibility="@{comment.writerName}"
+            isDeletedVisibility="@{comment.deleted}"
+            isNotDeletedVisibility="@{comment.writerName}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
