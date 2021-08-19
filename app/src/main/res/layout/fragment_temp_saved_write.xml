@@ -25,7 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_write_temp_saved_board"
         android:layout_margin="20dp"
-        android:text="자고싶은데 잘까?"
         android:textSize="20dp"
         android:textColor="@color/bluegray100_F0F2F5"
         android:textColorHint="@color/bluegray500_878C96"
@@ -33,31 +32,40 @@
         android:textStyle="bold"
         />
 
-    <TextView
-        android:id="@+id/tv_temp_saved_write_detail"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/layout_scroll_temp_saved_write"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_temp_saved_write_title"
-        android:layout_margin="20dp"
-        android:text="글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다.글에 대한 내용이 적힐 부분입니다."
-        android:textSize="14dp"
-        android:textColor="@color/bluegray300_CBCFD6"
-        />
-
-    <ImageView
-        android:id="@+id/img_temp_saved_write"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_temp_saved_write_detail"
-        android:layout_marginTop="16dp"
-        android:layout_marginHorizontal="20dp"
-        app:layout_constraintDimensionRatio="16:11"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="ContentDescription" />
-
-
+        app:layout_constraintTop_toBottomOf="@id/tv_temp_saved_write_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginVertical="20dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+            <TextView
+                android:id="@+id/tv_temp_saved_write_detail"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginHorizontal="20dp"
+                android:textSize="14dp"
+                android:textColor="@color/bluegray300_CBCFD6" />
+            <ImageView
+                android:id="@+id/img_temp_saved_write"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintHeight_percent="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_temp_saved_write_detail"
+                android:layout_marginVertical="16dp"
+                android:layout_marginHorizontal="20dp"
+                app:layout_constraintDimensionRatio="16:11"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

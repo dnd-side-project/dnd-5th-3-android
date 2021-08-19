@@ -15,8 +15,7 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.24"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintWidth_percent="0.24"/>
 
     <TextView
         android:id="@+id/tv_write_save_temp_title"
@@ -30,8 +29,7 @@
         android:singleLine="true"
         android:textColor="@color/bluegray200_E1E3E8"
         android:textSize="18dp"
-        android:textStyle="bold"
-        tools:text="@string/title" />
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/tv_write_save_temp_detail"
@@ -42,9 +40,10 @@
         app:layout_constraintTop_toBottomOf="@id/tv_write_save_temp_title"
         android:layout_marginTop="4dp"
         android:layout_marginRight="20dp"
-        tools:text="@string/post_description"
         android:textSize="14dp"
-        android:textColor="@color/bluegray200_E1E3E8" />
+        android:textColor="@color/bluegray200_E1E3E8"
+        android:maxLines="5"
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/tv_write_save_temp_savetime"
@@ -54,7 +53,6 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_write_save_temp_detail"
         app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="bottom"
-        android:text="2시간 전"
         android:textSize="10dp"
         android:textColor="@color/bluegray200_E1E3E8"
         />
