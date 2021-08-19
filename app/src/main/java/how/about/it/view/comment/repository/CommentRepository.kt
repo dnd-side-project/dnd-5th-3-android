@@ -3,6 +3,7 @@ package how.about.it.view.comment.repository
 import how.about.it.network.comment.CommentServiceImpl
 import how.about.it.view.comment.RequestPostReComment
 import how.about.it.view.commentupdate.RequestPutComment
+import how.about.it.view.vote.RequestCommentId
 
 class CommentRepository(private val commentServiceImpl: CommentServiceImpl) {
     suspend fun requestCommentReply(id: Int) = commentServiceImpl.requestCommentReply(id)
@@ -12,4 +13,7 @@ class CommentRepository(private val commentServiceImpl: CommentServiceImpl) {
 
     suspend fun requestCommentUpdate(body: RequestPutComment) =
         commentServiceImpl.requestCommentUpdate(body)
+
+    suspend fun requestCommentDelete(body: RequestCommentId) =
+        commentServiceImpl.requestCommentDelete(body)
 }

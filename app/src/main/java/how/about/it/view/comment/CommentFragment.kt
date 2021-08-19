@@ -1,13 +1,16 @@
 package how.about.it.view.comment
 
 import android.animation.Animator
+import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
@@ -82,7 +85,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setRvReCommentAdapter() {
-        binding.rvReComment.adapter = ReCommentAdapter()
+        binding.rvReComment.adapter = ReCommentAdapter(commentViewModel)
     }
 
     private fun setReCommentCollect() {
@@ -90,10 +93,16 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 commentViewModel.reComment.collect { reComment ->
                     reComment?.let {
-                        with(binding.rvReComment.adapter as ReCommentAdapter) {
-                            submitList(reComment.subList(1, reComment.size))
+                        Log.d("reComment", reComment.toString())
+                        if (reComment.size < 1) {
+                            requireView().findNavController()
+                                .popBackStack()
+                        } else {
+                            with(binding.rvReComment.adapter as ReCommentAdapter) {
+                                submitList(reComment.subList(1, reComment.size))
+                            }
+                            binding.layoutComment.comment = reComment[0]
                         }
-                        binding.layoutComment.comment = reComment[0]
                     }
                 }
             }
@@ -201,13 +210,41 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     override fun onMenuItemClick(item: MenuItem) =
         when (item.itemId) {
             R.id.menu_comment_update -> {
+                requireView().findNavController()
+                    .navigate(
+                        CommentFragmentDirections.actionCommentFragmentToCommentUpdateFragment(
+                            args.id, binding.layoutComment.tvCommentContent.text.toString()
+                        )
+                    )
                 true
             }
             R.id.menu_comment_delete -> {
+                requestCommentDeleteDialog()
                 true
             }
             else -> false
         }
+
+    private fun requestCommentDeleteDialog() {
+        val mDialogView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+        val mBuilder = AlertDialog.Builder(requireContext())
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.show()
+
+        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
+            .setText(R.string.delete)
+        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
+            .setText(R.string.comment_delete_dialog)
+
+        mDialogView.findViewById<Button>(R.id.btn_dialog_confirm).setOnClickListener {
+            commentViewModel.requestDeleteComment(args.id)
+            mAlertDialog.dismiss()
+        }
+        mDialogView.findViewById<Button>(R.id.btn_dialog_cancel).setOnClickListener {
+            mAlertDialog.dismiss()
+        }
+    }
 
     private fun setFabCommentReactClickListener() {
         binding.fabCommentReaction.setOnClickListener {
