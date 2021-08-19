@@ -18,8 +18,10 @@ data class Comment(
     val voteType: String,
     @SerializedName("replyCount")
     val replyCount: Int,
-    @SerializedName("createDate")
+    @SerializedName("createdDate")
     val createdDate: String,
+    @SerializedName("deleted")
+    val deleted: Boolean,
     @SerializedName("emojiList")
     val emojiList: List<Emoji>
 )

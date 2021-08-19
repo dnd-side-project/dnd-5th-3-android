@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_voteFragment_to_commentFragment"
             app:destination="@id/commentFragment" />
+        <action
+            android:id="@+id/action_voteFragment_to_commentUpdateFragment"
+            app:destination="@id/commentUpdateFragment" />
     </fragment>
 
     <fragment
@@ -57,8 +60,24 @@
         <argument
             android:name="id"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_commentFragment_to_commentUpdateFragment"
+            app:destination="@id/commentUpdateFragment" />
     </fragment>
-    
+
+    <fragment
+        android:id="@+id/commentUpdateFragment"
+        android:name="how.about.it.view.commentupdate.CommentUpdateFragment"
+        android:label="fragment_comment_update"
+        tools:layout="@layout/fragment_comment_update">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <argument
+            android:name="content"
+            app:argType="string" />
+    </fragment>
+
     <fragment
         android:id="@+id/writeFragment"
         android:name="how.about.it.view.write.WriteFragment"

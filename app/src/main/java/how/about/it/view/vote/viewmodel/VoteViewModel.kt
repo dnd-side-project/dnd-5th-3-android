@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import how.about.it.view.comment.Comment
+import how.about.it.view.vote.RequestCommentId
 import how.about.it.view.vote.RequestPostComment
 import how.about.it.view.vote.RequestVote
 import how.about.it.view.vote.ResponseFeedDetail
@@ -66,7 +67,9 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
                 runCatching { voteRepository.requestVoteFeedComment(id) }.getOrNull()
             Log.d("feedDetailComment", feedDetailComment.toString())
             feedDetailComment?.let {
-                _feedDetailComment.emit(feedDetailComment.commentList)
+                _feedDetailComment.emit(feedDetailComment.commentList.filterNot { comment ->
+                    (comment.deleted && comment.replyCount == 0)
+                })
             } ?: _networkError.emit(true)
         }
     }
@@ -80,18 +83,9 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
                 _requestVote.emit(index)
                 _feedDetail.emit(
                     with(requireNotNull(_feedDetail.value)) {
-                        ResponseFeedDetail(
-                            id = this.id,
-                            name = this.name,
-                            title = this.title,
-                            content = this.content,
-                            productImageUrl = this.productImageUrl,
-                            isVoted = this.isVoted,
+                        copy(
                             permitCount = responsePermitVote(vote, this.permitCount),
                             rejectCount = responseRejectVote(vote, this.rejectCount),
-                            createdDate = this.createdDate,
-                            voteDeadline = this.voteDeadline,
-                            currentMemberVoteResult = vote
                         )
                     })
             } ?: _requestVote.emit(index)
@@ -118,6 +112,24 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
             }.getOrNull()
             requestPostComment?.let {
                 _requestPostComment.emit(true)
+            } ?: _networkError.emit(true)
+        }
+    }
+
+    fun requestDeleteComment(id: Int) {
+        viewModelScope.launch {
+            val requestDeleteComment = runCatching {
+                voteRepository.requestCommentDelete(RequestCommentId(commentId = id))
+            }.getOrNull()
+            Log.d("delete", requestDeleteComment.toString())
+            requestDeleteComment?.let {
+                _feedDetailComment.emit((requireNotNull(_feedDetailComment.value).map { comment ->
+                    if (comment.commentId == id) {
+                        comment.copy(deleted = true)
+                    } else comment
+                }).filterNot { comment ->
+                    (comment.deleted && comment.replyCount == 0)
+                })
             } ?: _networkError.emit(true)
         }
     }

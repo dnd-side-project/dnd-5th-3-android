@@ -80,7 +80,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
                 android:lineSpacingExtra="4dp"
-                android:text="@{comment.content}"
+                android:text="@{comment.deleted? @string/comment_deleted_content : comment.content}"
                 android:textColor="@color/bluegray100_F0F2F5"
                 android:textSize="14dp"
                 app:layout_constraintEnd_toEndOf="@id/tv_comment_time"
@@ -108,6 +108,7 @@
                     android:layout_marginEnd="6dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_comment_reaction_empty"
+                    android:visibility="@{comment.deleted ? View.GONE : View.VISIBLE}"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -199,7 +200,8 @@
 
             <ImageButton
                 android:id="@+id/btn_comment_more"
-                isMineVisibility="@{comment.writerName}"
+                isDeletedVisibility="@{comment.deleted}"
+                isNotDeletedVisibility="@{comment.writerName}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"

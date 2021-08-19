@@ -13,4 +13,6 @@ interface VoteService {
     suspend fun requestVoteDelete(id: Int): ResponseId
 
     suspend fun requestVotePostComment(body: RequestPostComment): ResponsePostComment
+
+    suspend fun requestCommentDelete(body: RequestCommentId): ResponsePostComment
 }

@@ -31,4 +31,9 @@ interface VoteInterface {
     suspend fun requestVotePostComment(
         @Body body: RequestPostComment
     ): ResponsePostComment
+
+    @HTTP(method = "DELETE", path = "/api/v1/comment", hasBody = true)
+    suspend fun requestCommentDelete(
+        @Body body: RequestCommentId
+    ): ResponsePostComment
 }
