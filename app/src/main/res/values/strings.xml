@@ -208,4 +208,6 @@
     <string name="setting_logout">로그아웃</string>
     <string name="setting_delete_account">탈퇴하기</string>
     <string name="setting_logout_dialog_description">정말 로그아웃 하시겠어요?</string>
+    <string name="comment_update_title">수정하기</string>
+    <string name="comment_update_confirm">등록</string>
 </resources>
