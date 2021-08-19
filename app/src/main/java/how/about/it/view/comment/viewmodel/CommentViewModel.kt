@@ -8,6 +8,7 @@ import how.about.it.view.comment.Emoji
 import how.about.it.view.comment.RequestPostReComment
 import how.about.it.view.comment.repository.CommentRepository
 import how.about.it.view.commentupdate.RequestPutComment
+import how.about.it.view.vote.RequestCommentId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,7 +58,9 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
             val commentReply = runCatching { commentRepository.requestCommentReply(id) }.getOrNull()
             Log.d("commentReply", commentReply.toString())
             commentReply?.let {
-                _reComment.emit(commentReply.commentList)
+                _reComment.emit(commentReply.commentList.filterIndexed { index, comment ->
+                    (index == 0 || !comment.deleted)
+                })
             } ?: _networkError.emit(true)
         }
     }
@@ -85,6 +88,24 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
             }.getOrNull()
             requestUpdate?.let {
                 _isUpdated.emit(true)
+            } ?: _networkError.emit(true)
+        }
+    }
+
+    fun requestDeleteComment(id: Int) {
+        viewModelScope.launch {
+            val requestDeleteComment = runCatching {
+                commentRepository.requestCommentDelete(RequestCommentId(commentId = id))
+            }.getOrNull()
+            Log.d("delete", requestDeleteComment.toString())
+            requestDeleteComment?.let {
+                _reComment.emit((requireNotNull(_reComment.value).map { comment ->
+                    if (comment.commentId == id) {
+                        comment.copy(deleted = true)
+                    } else comment
+                }).filterIndexed { index, comment ->
+                    (index == 0 || !comment.deleted)
+                })
             } ?: _networkError.emit(true)
         }
     }

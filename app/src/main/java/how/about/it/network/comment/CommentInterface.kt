@@ -3,6 +3,7 @@ package how.about.it.network.comment
 import how.about.it.view.comment.RequestPostReComment
 import how.about.it.view.comment.ResponseComment
 import how.about.it.view.commentupdate.RequestPutComment
+import how.about.it.view.vote.RequestCommentId
 import how.about.it.view.vote.ResponsePostComment
 import retrofit2.http.*
 
@@ -21,5 +22,10 @@ interface CommentInterface {
     @PUT("/api/v1/comment")
     suspend fun requestCommentUpdate(
         @Body body: RequestPutComment,
+    ): ResponsePostComment
+
+    @HTTP(method = "DELETE", path = "/api/v1/comment", hasBody = true)
+    suspend fun requestCommentDelete(
+        @Body body: RequestCommentId
     ): ResponsePostComment
 }
