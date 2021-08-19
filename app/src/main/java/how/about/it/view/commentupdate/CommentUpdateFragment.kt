@@ -41,8 +41,8 @@ class CommentUpdateFragment : Fragment() {
     ): View {
         _binding = FragmentCommentUpdateBinding.inflate(inflater, container, false)
         setCommentUpdateBackClickListener()
-        setEtCommentUpdateText()
         setEtTextChangedListener()
+        setEtCommentUpdateText()
         setTvUpdateRequestClickListener()
         setIsUpdatedCollect()
         return binding.root
