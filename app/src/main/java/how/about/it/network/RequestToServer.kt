@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RequestToServer {
@@ -42,6 +43,7 @@ object RequestToServer {
 
     private var retrofit = Retrofit.Builder()
         .baseUrl("http://ec2-3-34-111-109.ap-northeast-2.compute.amazonaws.com/")
+        .addConverterFactory(ScalarsConverterFactory.create()) // this line
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()
