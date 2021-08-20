@@ -1,7 +1,6 @@
 package how.about.it.network.comment
 
-import how.about.it.view.comment.RequestPostReComment
-import how.about.it.view.comment.ResponseComment
+import how.about.it.view.comment.*
 import how.about.it.view.commentupdate.RequestPutComment
 import how.about.it.view.vote.RequestCommentId
 import how.about.it.view.vote.ResponsePostComment
@@ -28,4 +27,14 @@ interface CommentInterface {
     suspend fun requestCommentDelete(
         @Body body: RequestCommentId
     ): ResponsePostComment
+
+    @POST("/api/v1/emoji")
+    suspend fun requestPostEmoji(
+        @Body body: RequestPostEmoji
+    ): ResponseEmoji
+
+    @PUT("/api/v1/emoji")
+    suspend fun requestPutEmoji(
+        @Body body: RequestPutEmoji
+    ): ResponseEmoji
 }

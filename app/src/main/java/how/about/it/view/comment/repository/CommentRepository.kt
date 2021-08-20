@@ -1,7 +1,9 @@
 package how.about.it.view.comment.repository
 
 import how.about.it.network.comment.CommentServiceImpl
+import how.about.it.view.comment.RequestPostEmoji
 import how.about.it.view.comment.RequestPostReComment
+import how.about.it.view.comment.RequestPutEmoji
 import how.about.it.view.commentupdate.RequestPutComment
 import how.about.it.view.vote.RequestCommentId
 
@@ -16,4 +18,10 @@ class CommentRepository(private val commentServiceImpl: CommentServiceImpl) {
 
     suspend fun requestCommentDelete(body: RequestCommentId) =
         commentServiceImpl.requestCommentDelete(body)
+
+    suspend fun requestPostEmoji(body: RequestPostEmoji) =
+        commentServiceImpl.requestPostEmoji(body)
+
+    suspend fun requestPutEmoji(body: RequestPutEmoji) =
+        commentServiceImpl.requestPutEmoji(body)
 }
