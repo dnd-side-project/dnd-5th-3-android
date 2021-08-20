@@ -28,7 +28,7 @@
         />
 
     <Button
-        android:id="@+id/btn_setting_alert"
+        android:id="@+id/btn_setting_notification"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
@@ -36,7 +36,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:paddingHorizontal="20dp"
-        android:text="@string/setting_alert"
+        android:text="@string/setting_notification"
         android:textSize="18dp"
         android:textColor="@color/bluegray300_CBCFD6"
         android:drawableEnd="@drawable/ic_next"/>
@@ -45,7 +45,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/btn_setting_alert"
+        app:layout_constraintTop_toBottomOf="@+id/btn_setting_notification"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:paddingHorizontal="20dp"

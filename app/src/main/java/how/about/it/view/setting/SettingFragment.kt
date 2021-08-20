@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import how.about.it.R
 import how.about.it.databinding.FragmentSettingBinding
@@ -29,6 +30,8 @@ class SettingFragment : Fragment() {
         setToolbarDetail()
         setLogoutClickListener()
         setDeleteAccountClickListener()
+        setNotificationSettingClickListener()
+        setMotionSettingClickListener()
 
         return binding.root
     }
@@ -121,6 +124,17 @@ class SettingFragment : Fragment() {
                 }
             }
             deleteSharedPreferencesInfo()
+        }
+    }
+
+    private fun setNotificationSettingClickListener() {
+        binding.btnSettingNotification.setOnClickListener {
+            requireView().findNavController().navigate(R.id.action_settingFragment_to_settingNotificationFragment)
+        }
+    }
+    private fun setMotionSettingClickListener() {
+        binding.btnSettingMotion.setOnClickListener {
+            requireView().findNavController().navigate(R.id.action_settingFragment_to_settingMotionFragment)
         }
     }
 

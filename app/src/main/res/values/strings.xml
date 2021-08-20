@@ -188,7 +188,7 @@
 
     <!-- Setting -->
     <string name="setting">설정</string>
-    <string name="setting_alert">알림설정</string>
+    <string name="setting_notification">알림설정</string>
     <string name="setting_motion">모션설정</string>
     <string name="setting_information_use">이용정보</string>
     <string name="setting_information_notice">공지사항</string>
@@ -201,4 +201,13 @@
     <string name="setting_delete_account_complete_dialog_description">아직 무물은 당신에게 보여드리고 싶은 수많은 이야기들이 있습니다. 다시 돌아오길 기다리고 있을게요!</string>
     <string name="comment_update_title">수정하기</string>
     <string name="comment_update_confirm">등록</string>
+
+    <!-- SettingNotification -->
+    <string name="setting_notification_reaction_title">활동알림</string>
+    <string name="setting_notification_reaction_description">댓글과 반응, 투표 마감등에 관한 알림</string>
+    <string name="setting_notification_notice_title">이벤트 알림</string>
+    <string name="setting_notification_notice_description">무물 내 공지사항 및 서비스에 관한 알림</string>
+
+    <!-- SettingMotion -->
+    <string name="setting_motion_description">반응남기기와 투표에 사용되는 모션</string>
 </resources>

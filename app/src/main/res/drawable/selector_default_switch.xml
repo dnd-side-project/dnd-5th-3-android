@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/background_switch_track_off_round_35"
+        android:state_checked="false"/>
+    <item
+        android:drawable="@drawable/background_switch_track_on_round_35"
+        android:state_checked="true"/>
+</selector>
