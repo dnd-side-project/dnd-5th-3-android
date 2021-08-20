@@ -1,5 +1,6 @@
 package how.about.it.view.vote
 
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
@@ -29,7 +30,6 @@ import how.about.it.view.vote.adapter.VoteCommentAdapter
 import how.about.it.view.vote.repository.VoteRepository
 import how.about.it.view.vote.viewmodel.VoteViewModel
 import how.about.it.view.vote.viewmodel.VoteViewModelFactory
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -57,6 +57,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setVoteBackClickListener()
         setBtnVoteMoreClickListener()
         setProgressTouchListener()
+        setLottieAnimationListener()
         setImageVoteItemClipToOutLine()
         setEtVoteCommentFocusListener()
         setEtVoteCommentEditorActionListener()
@@ -160,9 +161,19 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                             setTvFeedAgreeText(feedDetail)
                             setTvFeedDisAgreeText(feedDetail)
                             setSeekBarProgress(feedDetail)
+                            setImageVoteCompleteImage(feedDetail.currentMemberVoteResult)
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun setImageVoteCompleteImage(currentMemberVoteResult: String) {
+        with(binding.imgVoteComplete) {
+            when (currentMemberVoteResult) {
+                "PERMIT" -> setImageResource(R.drawable.ic_vote_complete_agree)
+                "REJECT" -> setImageResource(R.drawable.ic_vote_complete_disagree)
             }
         }
     }
@@ -390,30 +401,51 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setVoteCompleteAction(selected: Int) {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            with(binding) {
-                with(imgVoteComplete) {
-                    setImageResource(getCompleteImage(selected))
-                    visibility = View.VISIBLE
-                    delay(1500)
-                    visibility = View.INVISIBLE
-                }
-                fabVote.visibility = View.INVISIBLE
-                setVoteSelectedVisibility(selected)
-                setLayoutAlpha(1f)
-            }
-            this.cancel()
+        binding.imgVoteComplete.apply {
+            setAnimation(getLottieRaw(selected))
+            visibility = View.VISIBLE
+            playAnimation()
+            setImgVoteSelectedImage(selected)
         }
     }
 
-    private fun setVoteSelectedVisibility(selected: Int) {
+    private fun setLottieAnimationListener() {
+        binding.imgVoteComplete.apply {
+            addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationRepeat(p0: Animator?) {
+                }
+
+                override fun onAnimationEnd(p0: Animator?) {
+                    visibility = View.INVISIBLE
+                    binding.fabVote.visibility = View.INVISIBLE
+                    setVoteSelectedVisibility()
+                    setLayoutAlpha(1f)
+                }
+
+                override fun onAnimationCancel(p0: Animator?) {
+                }
+
+                override fun onAnimationStart(p0: Animator?) {
+                }
+            })
+        }
+    }
+
+    private fun setImgVoteSelectedImage(selected: Int) {
+        binding.imgVoteSelected.setImageResource(getCompleteImage(selected))
+    }
+
+    private fun setVoteSelectedVisibility() {
         with(binding) {
             tvVoteSelected.visibility = View.VISIBLE
-            with(imgVoteSelected) {
-                visibility = View.VISIBLE
-                setImageResource(getCompleteImage(selected))
-            }
+            imgVoteSelected.visibility = View.VISIBLE
         }
+    }
+
+    private fun getLottieRaw(selected: Int) = when (selected) {
+        0 -> R.raw.lottie_disagree
+        1 -> R.raw.lottie_agree
+        else -> throw IndexOutOfBoundsException()
     }
 
     private fun getCompleteImage(selected: Int) = when (selected) {
