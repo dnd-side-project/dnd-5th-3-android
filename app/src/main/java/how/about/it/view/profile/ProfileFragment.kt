@@ -40,18 +40,36 @@ class ProfileFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
 
+        // TODO : Dialog 띄우기 코드 개선 필요
+        val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+        val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
+        val mAlertDialog = mBuilder.create()
+        mAlertDialog.setCancelable(false)
+        // Dialog 확인, 취소버튼 설정
+        val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
+        val cancelButton = mDialogView.findViewById<Button>(R.id.btn_dialog_cancel)
+        cancelButton.text = resources.getText(R.string.back)
+
         setEtChangePasswordClickListener()
 
         binding.etProfileNickname.setText(sharedManager.getCurrentUser().nickname.toString())
         binding.etProfileEmail.setText(sharedManager.getCurrentUser().email.toString())
         val originalNickname = sharedManager.getCurrentUser().nickname.toString()
 
-        // 닉네임 TEXT가 바뀌면 중복확인 버튼 + 아래에 메시지 나타나기
         binding.etProfileNickname.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if(s.toString() != originalNickname) {
-                    activeDuplicateCheck()
+                if(s.toString() != originalNickname && s.toString().trim().isNotEmpty()) {
+                    if(s.toString().trim().length >= 8){
+                        binding.btnDuplicateCheckEtNickname.isEnabled = false
+                        binding.btnDuplicateCheckEtNickname.visibility = View.INVISIBLE
+
+                        binding.tvMessageChangeCheckNickname.setText(R.string.fail_message_email_signup_nickname_format)
+                        binding.tvMessageChangeCheckNickname.visibility = View.VISIBLE
+                    } else {
+                        binding.tvMessageChangeCheckNickname.setText(R.string.message_profile_change_nickname)
+                        activeDuplicateCheck()
+                    }
                 } else {
                     deactiveDuplicateCheck()
                 }
@@ -60,57 +78,62 @@ class ProfileFragment : Fragment() {
         })
 
         binding.btnDuplicateCheckEtNickname.setOnClickListener {
-            // TODO : Dialog 띄우기 코드 개선 필요
-            val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-            val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
-            val mAlertDialog = mBuilder.create()
-            // Dialog 확인, 취소버튼 설정
-            val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
-            val cancelButton = mDialogView.findViewById<Button>(R.id.btn_dialog_cancel)
-            cancelButton.text = resources.getText(R.string.back)
-            mAlertDialog.show()
-
             profileViewModel.duplicateCheckNickname(binding.etProfileNickname.text.toString().trim())
-            profileViewModel.duplicateCheckNicknameSuccess.observe(viewLifecycleOwner, Observer {
-                if(it) {
-                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.profile_change_nickname_success_dialog_title)
-                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.profile_change_nickname_success_dialog_description)
+        }
 
-                    mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
+        profileViewModel.duplicateCheckNicknameSuccess.observe(viewLifecycleOwner, Observer {
+            if(it == true) {
+                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
+                    .setText(R.string.profile_change_nickname_success_dialog_title)
+                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
+                    .setText(R.string.profile_change_nickname_success_dialog_description)
+
+                mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_confirm).visibility = View.VISIBLE
+                mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
+                // Dialog 중복 실행 방지
+                if(mAlertDialog != null && !mAlertDialog.isShowing) {
+                    mAlertDialog.show()
                     confirmButton.setOnClickListener {
                         deactiveDuplicateCheck()
                         binding.tvMessageChangeCheckNickname.visibility = View.VISIBLE
                         binding.tvMessageChangeCheckNickname.setText(R.string.success_message_profile_change_nickname)
-                        binding.tvMessageChangeCheckNickname.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
+                        binding.tvMessageChangeCheckNickname.setTextColor(
+                            resources.getColorStateList(
+                                R.color.moomool_blue_0098ff,
+                                context?.theme
+                            )
+                        )
                         binding.etProfileNickname.isEnabled = false
                         activeButtonSave()
                         mAlertDialog.dismiss()
                     }
-                } else {
-                    // Dialog 제목 및 내용 설정
-                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.profile_change_nickname_fail_dialog_title)
-                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.profile_change_nickname_fail_dialog_description)
+                }
+            } else if(it == false) {
+                // Dialog 제목 및 내용 설정
+                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
+                    .setText(R.string.profile_change_nickname_fail_dialog_title)
+                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
+                    .setText(R.string.profile_change_nickname_fail_dialog_description)
 
-                    mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_confirm).visibility = View.GONE
-
+                mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_confirm).visibility = View.GONE
+                mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.VISIBLE
+                // Dialog 중복 실행 방지
+                if(mAlertDialog != null && !mAlertDialog.isShowing) {
+                    mAlertDialog.show()
                     cancelButton.setOnClickListener {
                         mAlertDialog.dismiss()
                     }
                 }
-            })
-            profileViewModel.duplicateCheckNicknameFailedMessage.observe(viewLifecycleOwner, Observer {
-                Log.e("Duplicate Check Error", it.toString())
-            })
-        }
+            }
+
+        })
+        profileViewModel.duplicateCheckNicknameFailedMessage.observe(viewLifecycleOwner, Observer {
+            Log.e("Duplicate Check Error", it.toString())
+        })
+
         // TODO : 현재 닉네임 텍스트와 기존 닉네임이 다를때 뒤로가기누르면 경고 Dialog 띄우기
 
         binding.btnSave.setOnClickListener {
-            // TODO : Dialog 띄우기 코드 개선 필요
-            val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-            val mBuilder = AlertDialog.Builder(requireContext())
-                .setView(mDialogView)
-            val mAlertDialog = mBuilder.show()
-
             // Dialog 제목 및 내용 설정
             mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.profile_change_all_success_dialog_title)
             mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.profile_change_all_success_dialog_description)
@@ -118,6 +141,7 @@ class ProfileFragment : Fragment() {
 
             // Dialog 확인, 취소버튼 설정
             val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
+            mAlertDialog.show()
 
             // Dialog 확인 버튼을 클릭 한 경우
             confirmButton.setOnClickListener {
@@ -173,6 +197,7 @@ class ProfileFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        profileViewModel.duplicateCheckNicknameSuccess.value = null // 이전 화면과 같은 Dialog 실행 방지
         _binding = null
     }
 }

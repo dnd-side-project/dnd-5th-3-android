@@ -6,7 +6,7 @@ import how.about.it.repository.ProfileRepository
 
 class ProfileViewModel() : ViewModel() {
 
-    val duplicateCheckNicknameSuccess = MutableLiveData<Boolean>()
+    val duplicateCheckNicknameSuccess = MutableLiveData<Boolean?>()
     val duplicateCheckNicknameFailedMessage = MutableLiveData<String?>()
 
     private val profileRepository = ProfileRepository()
