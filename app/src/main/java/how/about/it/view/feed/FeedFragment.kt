@@ -48,6 +48,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setSettingClickListener()
         setNotificationClickListener()
         setFabWriteClickListener()
+        setSwipeRefreshListener()
         setTvFeedToggleClickListener()
         setToggleCategoryCollect()
         setRvFeedTopAdapter()
@@ -76,6 +77,15 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun setFabWriteClickListener() {
         binding.fabFeedToWrite.setOnClickListener {
             requireView().findNavController().navigate(R.id.action_feedFragment_to_writeFragment)
+        }
+    }
+
+    private fun setSwipeRefreshListener() {
+        with(binding.layoutSwipeFeed) {
+            setOnRefreshListener {
+                feedViewModel.requestTopFeedList()
+                isRefreshing = false
+            }
         }
     }
 
