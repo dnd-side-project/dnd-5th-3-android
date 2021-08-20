@@ -26,6 +26,8 @@
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
             android:alpha="@{remainTime >= 0 ? 1f : 0.5f}"
+            android:background="@drawable/background_small_emoji_round_20"
+            android:backgroundTint="@android:color/transparent"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"

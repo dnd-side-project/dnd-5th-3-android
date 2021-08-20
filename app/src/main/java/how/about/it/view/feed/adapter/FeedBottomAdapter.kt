@@ -33,20 +33,38 @@ class FeedBottomAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
     class FeedBottomViewHolder(
         private val binding: ItemFeedBottomBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("ClickableViewAccessibility")
         fun bind(feed: Feed) {
-            binding.apply {
+            setBindingSetVariable(feed)
+            setRootClickListener(feed.id)
+            setProgressTouchListener()
+            setImageClipToOutLine()
+        }
+
+        private fun setBindingSetVariable(feed: Feed) {
+            with(binding) {
                 setVariable(BR.feed, feed)
                 setVariable(BR.remainTime, TimeChangerUtil.getRemainTime(feed.voteDeadline))
-                root.setOnClickListener { view ->
-                    Navigation.findNavController(view).navigate(
-                        FeedFragmentDirections.actionFeedFragmentToVoteFragment(
-                            feed.id,
-                        )
-                    )
-                }
-                progressFeedBottom.setOnTouchListener { _, _ -> true }
             }
+        }
+
+        private fun setRootClickListener(feedId: Int) {
+            binding.root.setOnClickListener { view ->
+                Navigation.findNavController(view).navigate(
+                    FeedFragmentDirections.actionFeedFragmentToVoteFragment(
+                        feedId,
+                    )
+                )
+            }
+        }
+
+        @SuppressLint("ClickableViewAccessibility")
+        private fun setProgressTouchListener() {
+            binding.progressFeedBottom.setOnTouchListener { _, _ -> true }
+
+        }
+
+        private fun setImageClipToOutLine() {
+            binding.imgFeedBottom.clipToOutline = true
         }
     }
 }
