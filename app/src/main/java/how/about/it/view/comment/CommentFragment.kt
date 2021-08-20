@@ -66,7 +66,6 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setLayoutCommentClickListener(getLayoutReactionList())
         setLottieAnimationListener()
         setEtReplyEditorActionListener()
-        commentViewModel.initEmojiList()
         commentViewModel.requestCommentReply(args.id)
         return binding.root
     }
@@ -93,15 +92,12 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 commentViewModel.reComment.collect { reComment ->
                     reComment?.let {
-                        Log.d("reComment", reComment.toString())
-                        if (reComment.size < 1) {
-                            requireView().findNavController()
-                                .popBackStack()
-                        } else {
+                        if (reComment.isNotEmpty()) {
                             with(binding.rvReComment.adapter as ReCommentAdapter) {
                                 submitList(reComment.subList(1, reComment.size))
                             }
                             binding.layoutComment.comment = reComment[0]
+                            commentViewModel.initEmojiList(reComment[0].emojiList)
                         }
                     }
                 }
@@ -126,8 +122,8 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 commentViewModel.emptyReact.collect { isEmpty ->
                     binding.layoutComment.btnReactionEmpty.visibility = when (isEmpty) {
-                        true -> View.VISIBLE
-                        false -> View.GONE
+                        0 -> View.VISIBLE
+                        else -> View.GONE
                     }
                 }
             }
@@ -138,6 +134,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 commentViewModel.commentEmoji.collect { emojiList ->
+                    Log.d("emojiIndex", emojiList.toString())
                     commentViewModel.setEmptyCommentReactVisibility()
                     emojiList.indices.forEach { index ->
                         with(emojiList[index]) {
@@ -167,7 +164,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun TextView.setTvCommentReactClickListener(index: Int) {
         this.setOnClickListener {
-            commentViewModel.setCommentEmojiCount(index)
+            commentViewModel.requestEmoji(index, args.id)
         }
     }
 
@@ -325,6 +322,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun setLayoutCommentClickListener(list: List<ConstraintLayout>) {
         list.indices.forEach { index ->
             list[index].setOnClickListener {
+                commentViewModel.requestEmoji(index, args.id)
                 setLayoutCommentSelectClose(index, list)
             }
         }
@@ -365,7 +363,6 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setLottiePlayAnimation(selected: Int) {
-        commentViewModel.setFloatingCommentEmojiCount(selected)
         binding.imgReactionLottie.apply {
             setAnimation(getLottieRaw(selected))
             visibility = View.VISIBLE
