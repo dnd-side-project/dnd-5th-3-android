@@ -125,7 +125,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
         mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.delete)
         mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
-            .setText(R.string.detail_post_message__delete_my_post)
+            .setText(R.string.vote_delete_check)
 
         mDialogView.findViewById<Button>(R.id.btn_dialog_confirm).setOnClickListener {
             voteViewModel.requestVoteDelete(args.id)
@@ -217,7 +217,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun setTvVoteCommentCountText(size: Int) {
         binding.tvVoteCommentCount.text = String.format(
-            getString(R.string.detail_post_comments_count),
+            getString(R.string.vote_comments_count),
             size
         )
     }
