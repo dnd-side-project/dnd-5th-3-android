@@ -107,13 +107,13 @@
             feedThumbReject="@{feed.rejectRatio}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
             android:layout_marginTop="16dp"
             android:indeterminate="false"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:progress="@{feed.permitRatio}"
             android:splitTrack="false"
+            android:thumbOffset="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_feed_top_detail" />
@@ -126,6 +126,7 @@
             android:textColor="@color/moomool_blue_0098ff"
             android:textSize="14dp"
             android:textStyle="bold"
+            android:layout_marginStart="20dp"
             app:layout_constraintStart_toStartOf="@id/progress_feed_top"
             app:layout_constraintTop_toBottomOf="@id/progress_feed_top" />
 
@@ -137,6 +138,7 @@
             android:textColor="@color/moomool_pink_ff227c"
             android:textSize="14dp"
             android:textStyle="bold"
+            android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="@id/progress_feed_top"
             app:layout_constraintTop_toBottomOf="@id/progress_feed_top" />
     </androidx.constraintlayout.widget.ConstraintLayout>
