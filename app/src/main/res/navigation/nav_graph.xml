@@ -176,5 +176,24 @@
         android:id="@+id/settingFragment"
         android:name="how.about.it.view.setting.SettingFragment"
         android:label="fragment_setting"
-        tools:layout="@layout/fragment_setting" />
+        tools:layout="@layout/fragment_setting">
+        <action
+            android:id="@+id/action_settingFragment_to_settingNotificationFragment"
+            app:destination="@id/settingNotificationFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_settingMotionFragment"
+            app:destination="@id/settingMotionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingNotificationFragment"
+        android:name="how.about.it.view.setting.SettingNotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_setting_notification"/>
+    <fragment
+        android:id="@+id/settingMotionFragment"
+        android:name="how.about.it.view.setting.SettingMotionFragment"
+        android:label="fragment_motion"
+        tools:layout="@layout/fragment_setting_motion"/>
+
 </navigation>

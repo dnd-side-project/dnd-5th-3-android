@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.setting.SettingMotionFragment">
+
+    <include layout="@layout/activity_toolbar"
+        android:id="@+id/toolbar_setting_motion_board"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_setting_notification_reaction"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_setting_motion_board"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp">
+
+        <TextView
+            android:id="@+id/tv_setting_motion_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="13dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/setting_motion"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="@color/bluegray300_CBCFD6"/>
+        <TextView
+            android:id="@+id/tv_setting_motion_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_setting_motion_title"
+            app:layout_constraintStart_toStartOf="@id/tv_setting_motion_title"
+            android:layout_marginTop="10dp"
+            android:text="@string/setting_motion_description"
+            android:textSize="12dp"
+            android:textColor="@color/bluegray500_878C96"/>
+        <Switch
+            android:id="@+id/switch_setting_motion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:track="@drawable/selector_default_switch"
+            android:thumb="@drawable/background_switch_thumb"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
