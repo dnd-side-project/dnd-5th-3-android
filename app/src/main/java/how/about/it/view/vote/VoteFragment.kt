@@ -57,6 +57,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setVoteBackClickListener()
         setBtnVoteMoreClickListener()
         setProgressTouchListener()
+        setImageVoteItemClipToOutLine()
         setEtVoteCommentFocusListener()
         setEtVoteCommentEditorActionListener()
         setRequestPostCommentCollect()
@@ -94,6 +95,10 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 show()
             }
         }
+    }
+
+    private fun setImageVoteItemClipToOutLine() {
+        binding.imgVoteItem.clipToOutline = true
     }
 
     @SuppressLint("ClickableViewAccessibility")
