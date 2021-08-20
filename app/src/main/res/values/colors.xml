@@ -2,8 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="balck_transparency80_2C2C2C">#FF2C2C2C</color>
-
     <color name="bluegray900_13161f">#13161F</color>
     <color name="bluegray800_303540">#303540</color>
     <color name="bluegray700_4D535E">#4D535E</color>
@@ -14,13 +12,6 @@
     <color name="bluegray200_E1E3E8">#E1E3E8</color>
     <color name="bluegray100_F0F2F5">#F0F2F5</color>
     <color name="bluegray50_F9FAFC">#F9FAFC</color>
-
     <color name="moomool_pink_ff227c">#FF227c</color>
     <color name="moomool_blue_0098ff">#0098ff</color>
-
-    <color name="yellow_FFD31A">#FFD31A</color>
-    <color name="red_FF4848">#FF4848</color>
-    <color name="green_00EA6C">#00EA6C</color>
-    <color name="blue_50B0FF">#50B0FF</color>
-    <color name="brown_AA9683">#AA9683</color>
 </resources>
