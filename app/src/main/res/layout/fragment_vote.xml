@@ -332,7 +332,6 @@
             android:id="@+id/img_vote_selected"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:clickable="false"
             android:visibility="@{feed.currentMemberVoteResult.equals(`NO_RESULT`) ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/fab_vote"
             app:layout_constraintEnd_toEndOf="@id/fab_vote"
