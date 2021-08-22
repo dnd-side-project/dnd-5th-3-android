@@ -170,7 +170,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setImageVoteCompleteImage(currentMemberVoteResult: String) {
-        with(binding.imgVoteComplete) {
+        with(binding.imgVoteSelected) {
             when (currentMemberVoteResult) {
                 "PERMIT" -> setImageResource(R.drawable.ic_vote_complete_agree)
                 "REJECT" -> setImageResource(R.drawable.ic_vote_complete_disagree)
