@@ -23,17 +23,14 @@
         android:label="fragment_feed"
         tools:layout="@layout/fragment_feed">
         <action
-            android:id="@+id/action_feedFragment_to_writeFragment"
-            app:destination="@id/writeFragment" />
-        <action
-            android:id="@+id/action_feedFragment_to_notificationFragment"
-            app:destination="@id/notificationFragment" />
-        <action
             android:id="@+id/action_feedFragment_to_voteFragment"
             app:destination="@id/voteFragment" />
         <action
-            android:id="@+id/action_feedFragment_to_settingFragment"
-            app:destination="@id/settingFragment" />
+            android:id="@+id/action_feedFragment_to_writeFragment"
+            app:destination="@id/writeFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_networkErrorFragment"
+            app:destination="@id/networkErrorFragment" />
     </fragment>
 
     <fragment
@@ -192,12 +189,12 @@
         android:id="@+id/settingNotificationFragment"
         android:name="how.about.it.view.setting.SettingNotificationFragment"
         android:label="fragment_notification"
-        tools:layout="@layout/fragment_setting_notification"/>
+        tools:layout="@layout/fragment_setting_notification" />
     <fragment
         android:id="@+id/settingMotionFragment"
         android:name="how.about.it.view.setting.SettingMotionFragment"
         android:label="fragment_motion"
-        tools:layout="@layout/fragment_setting_motion"/>
+        tools:layout="@layout/fragment_setting_motion" />
     <fragment
         android:id="@+id/noticeListFragment"
         android:name="how.about.it.view.notice.NoticeListFragment"
@@ -211,6 +208,12 @@
         android:id="@+id/noticePostFragment"
         android:name="how.about.it.view.notice.NoticePostFragment"
         android:label="fragment_notice_post"
-        tools:layout="@layout/fragment_notice_post"/>
+        tools:layout="@layout/fragment_notice_post" />
+
+    <fragment
+        android:id="@+id/networkErrorFragment"
+        android:name="how.about.it.view.networkerror.NetworkErrorFragment"
+        android:label="fragment_network_error"
+        tools:layout="@layout/fragment_network_error" />
 
 </navigation>

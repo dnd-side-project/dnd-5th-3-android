@@ -28,46 +28,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageButton
-                    android:id="@+id/btn_feed_setting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="14dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_feed_setting"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription" />
-
-                <ImageView
-                    android:id="@+id/img_feed_logo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_feed_logo"
-                    app:layout_constraintBottom_toBottomOf="@id/btn_feed_setting"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_feed_logo"
+                    android:layout_width="0dp"
+                    android:layout_height="?actionBarSize"
+                    android:elevation="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/btn_feed_setting"
-                    tools:ignore="ContentDescription" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageButton
-                    android:id="@+id/btn_feed_notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_feed_notification"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription" />
+                    <ImageView
+                        android:id="@+id/img_feed_logo"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginVertical="16dp"
+                        android:src="@drawable/ic_logo_moomool"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="6:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="ContentDescription" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_feed_top"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:clipToPadding="false"
                     android:orientation="horizontal"
                     android:overScrollMode="never"
@@ -75,7 +62,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/btn_feed_setting"
+                    app:layout_constraintTop_toBottomOf="@id/layout_feed_logo"
                     tools:listitem="@layout/item_feed_top" />
 
                 <TextView
