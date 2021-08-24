@@ -13,8 +13,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import how.about.it.R
 import how.about.it.databinding.FragmentFeedBinding
 import how.about.it.network.RequestToServer
@@ -76,7 +76,8 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun setFabWriteClickListener() {
         binding.fabFeedToWrite.setOnClickListener {
-            requireView().findNavController().navigate(R.id.action_feedFragment_to_writeFragment)
+            requireView().findNavController()
+                .navigate(R.id.action_feedFragment_to_writeFragment)
         }
     }
 
@@ -157,15 +158,31 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setRvFeedTopAdapter() {
-        binding.rvFeedTop.adapter = FeedTopAdapter(FeedDiffUtil())
+        binding.rvFeedTop.adapter = FeedTopAdapter()
     }
 
     private fun setRvFeedTopSnapHelper() {
-        PagerSnapHelper().attachToRecyclerView(binding.rvFeedTop)
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(binding.rvFeedTop)
+
+        binding.rvFeedTop.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            val layoutManager = requireNotNull(binding.rvFeedTop.layoutManager)
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val view = requireNotNull(snapHelper.findSnapView(layoutManager)).apply {
+                    alpha = 1f
+                }
+                with(layoutManager) {
+                    val position = getPosition(view)
+                    findViewByPosition(position - 1)?.alpha = 0.5f
+                    findViewByPosition(position + 1)?.alpha = 0.5f
+                }
+            }
+        })
     }
 
     private fun setRvFeedBottomAdapter() {
-        binding.rvFeedBottom.adapter = FeedBottomAdapter(FeedDiffUtil())
+        binding.rvFeedBottom.adapter = FeedBottomAdapter()
     }
 
     private fun setFeedTopListCollect() {
@@ -174,7 +191,9 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 feedViewModel.feedTopList.collect { feedList ->
                     feedList?.let {
                         with(binding.rvFeedTop.adapter as FeedTopAdapter) {
-                            submitList(feedList)
+                            submitList(feedList) {
+                                binding.rvFeedTop.scrollToPosition(0)
+                            }
                         }
                     }
                 }
@@ -204,14 +223,6 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 }
             }
         }
-    }
-
-    private class FeedDiffUtil : DiffUtil.ItemCallback<Feed>() {
-        override fun areItemsTheSame(oldItem: Feed, newItem: Feed) =
-            oldItem.id == newItem.id
-
-        override fun areContentsTheSame(oldItem: Feed, newItem: Feed): Boolean =
-            oldItem == newItem
     }
 
     override fun onDestroyView() {

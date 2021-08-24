@@ -1,6 +1,5 @@
 package how.about.it.view.feed.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import how.about.it.view.feed.Feed
@@ -29,9 +28,9 @@ class FeedViewModel(private val feedRepository: FeedRepository) : ViewModel() {
 
     fun requestTopFeedList() {
         viewModelScope.launch(Dispatchers.IO) {
-            val feedList = runCatching { feedRepository.requestTopFeedList() }.getOrNull()
-            Log.d("feedTop", feedList.toString())
-            feedList?.let {
+            runCatching {
+                feedRepository.requestTopFeedList()
+            }.getOrNull()?.let { feedList ->
                 _feedTopList.emit(feedList.posts.filter { feed ->
                     (feed.id != -1)
                 })
@@ -41,9 +40,9 @@ class FeedViewModel(private val feedRepository: FeedRepository) : ViewModel() {
 
     fun requestBottomFeedList(sorted: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val feedList = runCatching { feedRepository.requestBottomFeedList(sorted) }.getOrNull()
-            Log.d("feedBottom", feedList.toString())
-            feedList?.let {
+            runCatching {
+                feedRepository.requestBottomFeedList(sorted)
+            }.getOrNull()?.let { feedList ->
                 _feedBottomList.emit(feedList.posts)
             } ?: _networkError.emit(true)
         }
