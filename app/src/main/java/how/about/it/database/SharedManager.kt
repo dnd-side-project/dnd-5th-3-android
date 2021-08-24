@@ -24,10 +24,14 @@ class SharedManager(context: Context) {
         }
     }
 
-    fun saveAccessToken(accessToken : String){
+    fun updateAccessToken(accessToken : String){
         prefs["accessToken"] = accessToken
     }
     fun getRefreshToken() = prefs["refreshToken", ""]
+
+    fun updateNickname(nickname: String){
+        prefs["nickname"] = nickname
+    }
 
     fun setSkipOnBoardingFragment() {
         prefs["skipOnBoarding"] = "true"

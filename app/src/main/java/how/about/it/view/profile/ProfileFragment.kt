@@ -14,26 +14,29 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import how.about.it.R
 import how.about.it.database.SharedManager
 import how.about.it.databinding.FragmentProfileBinding
+import how.about.it.repository.ProfileRepository
 import how.about.it.view.main.MainActivity
 import how.about.it.viewmodel.ProfileViewModel
+import how.about.it.viewmodel.ProfileViewModelFactory
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val sharedManager : SharedManager by lazy { SharedManager(requireContext()) }
-    private val profileViewModel by activityViewModels<ProfileViewModel>()
+    private lateinit var profileViewModel: ProfileViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProfileBinding.inflate(layoutInflater)
+        profileViewModel = ViewModelProvider(this, ProfileViewModelFactory(ProfileRepository(requireContext()))).get(ProfileViewModel::class.java)
 
         binding.toolbarProfileBoard.tvToolbarTitle.setText(R.string.profile_change_nickname)
         (activity as MainActivity).setSupportActionBar(binding.toolbarProfileBoard.toolbarBoard)
@@ -134,6 +137,8 @@ class ProfileFragment : Fragment() {
         // TODO : 현재 닉네임 텍스트와 기존 닉네임이 다를때 뒤로가기누르면 경고 Dialog 띄우기
 
         binding.btnSave.setOnClickListener {
+            profileViewModel.updateNickname(binding.etProfileNickname.text.toString()) // 서버와 닉네임 연동하여 변경
+            sharedManager.updateNickname(binding.etProfileNickname.text.toString()) // 유저 저장소에 변경한 닉네임으로 저장
             // Dialog 제목 및 내용 설정
             mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.profile_change_all_success_dialog_title)
             mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.profile_change_all_success_dialog_description)
@@ -145,7 +150,6 @@ class ProfileFragment : Fragment() {
 
             // Dialog 확인 버튼을 클릭 한 경우
             confirmButton.setOnClickListener {
-                // TODO : 변경내용 서버와 통신하여 저장하는 코드 작성
                 mAlertDialog.dismiss()
                 // 저장 후 바로 메인화면으로 되돌아가기 위해 OnBackPressed 사용
                 (activity as MainActivity).onBackPressed()

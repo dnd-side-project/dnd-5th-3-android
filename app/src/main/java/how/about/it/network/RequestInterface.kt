@@ -12,6 +12,9 @@ interface RequestInterface {
     @POST("/api/v1/member")
     fun requestMember(@Body body : RequestMember) : Call<ResponseMember>
 
+    @PUT("/api/v1/member")
+    fun requestProfileUpdate(@Header("Authorization") accessToken: String, @Body body : RequestProfileUpdate) : Call<ResponseMember>
+
     @PUT("/api/v1/member/token")
     fun requestTokenRefresh(@Body body : RequestTokenRefresh) : Call<ResponseTokenRefresh>
 
@@ -19,7 +22,7 @@ interface RequestInterface {
     @POST("/api/v1/posts")
     fun requestUploadPost(@Part("title") title: String, @Part("content") content: String, @Part file: MultipartBody.Part?) : Call<ResponseUploadPost>
 
-    @GET(" /api/v1/member/exists/{email}/email")
+    @GET("/api/v1/member/exists/{email}/email")
     fun requestDuplicateCheckEmail(@Path("email") email : String) : Call<String>
 
     @GET("/api/v1/member/exists/{name}/name")
