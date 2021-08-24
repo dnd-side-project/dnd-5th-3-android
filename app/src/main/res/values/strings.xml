@@ -210,4 +210,8 @@
 
     <!-- SettingMotion -->
     <string name="setting_motion_description">반응남기기와 투표에 사용되는 모션</string>
+
+    <!-- Notice -->
+    <string name="notice">공지사항</string>
+
 </resources>

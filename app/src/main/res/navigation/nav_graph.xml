@@ -183,6 +183,9 @@
         <action
             android:id="@+id/action_settingFragment_to_settingMotionFragment"
             app:destination="@id/settingMotionFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_noticeListFragment"
+            app:destination="@id/noticeListFragment" />
     </fragment>
 
     <fragment
@@ -195,5 +198,19 @@
         android:name="how.about.it.view.setting.SettingMotionFragment"
         android:label="fragment_motion"
         tools:layout="@layout/fragment_setting_motion"/>
+    <fragment
+        android:id="@+id/noticeListFragment"
+        android:name="how.about.it.view.notice.NoticeListFragment"
+        android:label="fragment_notice_list"
+        tools:layout="@layout/fragment_notice_list">
+        <action
+            android:id="@+id/action_noticeListFragment_to_noticePostFragment"
+            app:destination="@id/noticePostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/noticePostFragment"
+        android:name="how.about.it.view.notice.NoticePostFragment"
+        android:label="fragment_notice_post"
+        tools:layout="@layout/fragment_notice_post"/>
 
 </navigation>
