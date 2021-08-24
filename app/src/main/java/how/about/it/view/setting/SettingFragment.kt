@@ -32,7 +32,7 @@ class SettingFragment : Fragment() {
         setDeleteAccountClickListener()
         setNotificationSettingClickListener()
         setMotionSettingClickListener()
-
+        setNoticeClickListener()
         return binding.root
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -56,6 +56,12 @@ class SettingFragment : Fragment() {
             PreferenceManager.getDefaultSharedPreferences(requireContext())
         val editor = prefs.edit()
         editor.clear().commit()
+    }
+
+    private fun setNoticeClickListener() {
+        binding.btnSettingInformationNotice.setOnClickListener {
+            requireView().findNavController().navigate(R.id.action_settingFragment_to_noticeListFragment)
+        }
     }
 
     private fun setLogoutClickListener() {
