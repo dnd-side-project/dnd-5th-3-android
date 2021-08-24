@@ -122,11 +122,11 @@
             android:id="@+id/tv_feed_top_agree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:text="@{@string/feed_item_percent(feed.permitRatio)}"
             android:textColor="@color/moomool_blue_0098ff"
             android:textSize="14dp"
             android:textStyle="bold"
-            android:layout_marginStart="20dp"
             app:layout_constraintStart_toStartOf="@id/progress_feed_top"
             app:layout_constraintTop_toBottomOf="@id/progress_feed_top" />
 
@@ -134,11 +134,11 @@
             android:id="@+id/tv_feed_top_disagree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
             android:text="@{@string/feed_item_percent(feed.rejectRatio)}"
             android:textColor="@color/moomool_pink_ff227c"
             android:textSize="14dp"
             android:textStyle="bold"
-            android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="@id/progress_feed_top"
             app:layout_constraintTop_toBottomOf="@id/progress_feed_top" />
     </androidx.constraintlayout.widget.ConstraintLayout>

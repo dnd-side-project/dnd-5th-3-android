@@ -13,8 +13,8 @@ import how.about.it.util.TimeChangerUtil
 import how.about.it.view.feed.Feed
 import how.about.it.view.feed.FeedFragmentDirections
 
-class FeedBottomAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
-    ListAdapter<Feed, FeedBottomAdapter.FeedBottomViewHolder>(feedDiffUtil) {
+class FeedBottomAdapter :
+    ListAdapter<Feed, FeedBottomAdapter.FeedBottomViewHolder>(FEED_DIFF_UTIL) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -65,6 +65,16 @@ class FeedBottomAdapter(feedDiffUtil: DiffUtil.ItemCallback<Feed>) :
 
         private fun setImageClipToOutLine() {
             binding.imgFeedBottom.clipToOutline = true
+        }
+    }
+
+    companion object {
+        private val FEED_DIFF_UTIL = object : DiffUtil.ItemCallback<Feed>() {
+            override fun areItemsTheSame(oldItem: Feed, newItem: Feed) =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Feed, newItem: Feed): Boolean =
+                oldItem == newItem
         }
     }
 }
