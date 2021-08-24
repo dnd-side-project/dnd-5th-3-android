@@ -38,7 +38,7 @@ class LoginRepository(private val context: Context) {
                 ) {
                     if (response.isSuccessful) {
                         // TokenRefresh 성공 후 새로운 AccessToken 저장
-                        sharedManager.saveAccessToken(response.body()!!.accessToken)
+                        sharedManager.updateAccessToken(response.body()!!.accessToken)
                         loginCallBack.onSuccess()
                     } else {
                         try {
