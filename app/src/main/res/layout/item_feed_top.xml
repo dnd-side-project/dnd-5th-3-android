@@ -109,6 +109,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:indeterminate="false"
+            android:maxHeight="12dp"
+            android:minHeight="12dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:progress="@{feed.permitRatio}"
