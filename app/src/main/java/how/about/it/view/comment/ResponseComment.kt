@@ -32,5 +32,7 @@ data class Emoji(
     @SerializedName("emojiCount")
     var emojiCount: Int,
     @SerializedName("checked")
-    var checked: Boolean
+    var checked: Boolean,
+    @SerializedName("commentEmojiId")
+    var commentEmojiId: Int
 )

@@ -2,14 +2,15 @@ package how.about.it.view.comment
 
 import android.animation.Animator
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -54,19 +55,19 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     ): View {
         _binding = FragmentCommentBinding.inflate(inflater, container, false)
         setCommentBackClickListener()
-        setBtnEmptyEmojiClickListener()
         setRvReCommentAdapter()
-        setReCommentCollect()
-        setIsPostedCollect()
+        setReplyListCollect()
+        setEmojiListCollect()
         setEmptyReactCollect()
-        setCommentEmojiCollect()
-        setBtnCommentMoreClickListener()
+        setBtnEmptyEmojiClickListener()
         setFabCommentReactClickListener()
         setOpenReactCollect()
         setLayoutCommentClickListener(getLayoutReactionList())
         setLottieAnimationListener()
+        setBtnCommentMoreClickListener()
         setEtReplyEditorActionListener()
-        commentViewModel.requestCommentReply(args.id)
+        setIsPostedCollect()
+        commentViewModel.requestGetComments(args.id)
         return binding.root
     }
 
@@ -77,27 +78,19 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setBtnEmptyEmojiClickListener() {
-        binding.layoutComment.btnReactionEmpty.setOnClickListener {
-            commentViewModel.setOpenReact()
-        }
-    }
-
     private fun setRvReCommentAdapter() {
         binding.rvReComment.adapter = ReCommentAdapter(commentViewModel)
     }
 
-    private fun setReCommentCollect() {
+    private fun setReplyListCollect() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                commentViewModel.reComment.collect { reComment ->
-                    reComment?.let {
-                        if (reComment.isNotEmpty()) {
-                            with(binding.rvReComment.adapter as ReCommentAdapter) {
-                                submitList(reComment.subList(1, reComment.size))
-                            }
-                            binding.layoutComment.comment = reComment[0]
-                            commentViewModel.initEmojiList(reComment[0].emojiList)
+                commentViewModel.replyList.collect { replyList ->
+                    replyList?.let {
+                        if (replyList.isNotEmpty()) {
+                            submitCommentList(replyList)
+                            setLayoutCommentBinding(replyList[0])
+                            initEmojiList(replyList[0])
                         }
                     }
                 }
@@ -105,36 +98,26 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setIsPostedCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                commentViewModel.isPosted.collect { isPosted ->
-                    if (isPosted) {
-                        commentViewModel.requestCommentReply(args.id)
-                    }
-                }
+    private fun submitCommentList(commentList: List<Comment>) {
+        with(binding.rvReComment.adapter as ReCommentAdapter) {
+            submitList(commentList.subList(1, commentList.size)) {
+                binding.rvReComment.scrollToPosition(itemCount - 1)
             }
         }
     }
 
-    private fun setEmptyReactCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                commentViewModel.emptyReact.collect { isEmpty ->
-                    binding.layoutComment.btnReactionEmpty.visibility = when (isEmpty) {
-                        0 -> View.VISIBLE
-                        else -> View.GONE
-                    }
-                }
-            }
-        }
+    private fun setLayoutCommentBinding(comment: Comment) {
+        binding.layoutComment.comment = comment
     }
 
-    private fun setCommentEmojiCollect() {
+    private fun initEmojiList(comment: Comment) {
+        commentViewModel.initEmojiList(comment.emojiList)
+    }
+
+    private fun setEmojiListCollect() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                commentViewModel.commentEmoji.collect { emojiList ->
-                    Log.d("emojiIndex", emojiList.toString())
+                commentViewModel.emojiList.collect { emojiList ->
                     commentViewModel.setEmptyCommentReactVisibility()
                     emojiList.indices.forEach { index ->
                         with(emojiList[index]) {
@@ -147,6 +130,42 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun setEmptyReactCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                commentViewModel.emptyEmoji.collect { isEmpty ->
+                    setBtnReactionEmptyVisibility(isEmpty)
+                }
+            }
+        }
+    }
+
+    private fun setBtnReactionEmptyVisibility(isEmpty: Int) {
+        binding.layoutComment.btnReactionEmpty.visibility = when (isEmpty) {
+            0 -> View.VISIBLE
+            else -> View.GONE
+        }
+    }
+
+    private fun setBtnEmptyEmojiClickListener() {
+        binding.layoutComment.btnReactionEmpty.setOnClickListener {
+            commentViewModel.setOpenOrNotOpenReact()
+        }
+    }
+
+    private fun getLayoutEmoji(emojiId: Int): TextView {
+        with(binding.layoutComment) {
+            return when (emojiId) {
+                1 -> tvCommentReactionBrown
+                2 -> tvCommentReactionBlue
+                3 -> tvCommentReactionGreen
+                4 -> tvCommentReactionRed
+                5 -> tvCommentReactionYellow
+                else -> throw IndexOutOfBoundsException()
             }
         }
     }
@@ -175,77 +194,9 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun getLayoutEmoji(emojiId: Int): TextView {
-        with(binding.layoutComment) {
-            return when (emojiId) {
-                1 -> tvCommentReactionBrown
-                2 -> tvCommentReactionBlue
-                3 -> tvCommentReactionGreen
-                4 -> tvCommentReactionRed
-                5 -> tvCommentReactionYellow
-                else -> throw IndexOutOfBoundsException()
-            }
-        }
-    }
-
-    private fun setBtnCommentMoreClickListener() {
-        binding.layoutComment.btnCommentMore.setOnClickListener {
-            PopupMenu(
-                ContextThemeWrapper(
-                    requireContext(),
-                    R.style.feed_toggle_popup_menu
-                ),
-                binding.layoutComment.btnCommentMore
-            ).apply {
-                setOnMenuItemClickListener(this@CommentFragment)
-                inflate(R.menu.menu_comment)
-                show()
-            }
-        }
-    }
-
-    override fun onMenuItemClick(item: MenuItem) =
-        when (item.itemId) {
-            R.id.menu_comment_update -> {
-                requireView().findNavController()
-                    .navigate(
-                        CommentFragmentDirections.actionCommentFragmentToCommentUpdateFragment(
-                            args.id, binding.layoutComment.tvCommentContent.text.toString()
-                        )
-                    )
-                true
-            }
-            R.id.menu_comment_delete -> {
-                requestCommentDeleteDialog()
-                true
-            }
-            else -> false
-        }
-
-    private fun requestCommentDeleteDialog() {
-        val mDialogView =
-            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-        val mBuilder = AlertDialog.Builder(requireContext())
-            .setView(mDialogView)
-        val mAlertDialog = mBuilder.show()
-
-        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
-            .setText(R.string.delete)
-        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
-            .setText(R.string.comment_delete_dialog)
-
-        mDialogView.findViewById<Button>(R.id.btn_dialog_confirm).setOnClickListener {
-            commentViewModel.requestDeleteComment(args.id)
-            mAlertDialog.dismiss()
-        }
-        mDialogView.findViewById<Button>(R.id.btn_dialog_cancel).setOnClickListener {
-            mAlertDialog.dismiss()
-        }
-    }
-
     private fun setFabCommentReactClickListener() {
         binding.fabCommentReaction.setOnClickListener {
-            commentViewModel.setOpenReact()
+            commentViewModel.setOpenOrNotOpenReact()
         }
     }
 
@@ -323,12 +274,12 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         list.indices.forEach { index ->
             list[index].setOnClickListener {
                 commentViewModel.requestEmoji(index, args.id)
-                setLayoutCommentSelectClose(index, list)
+                setLayoutCommentSelect(index, list)
             }
         }
     }
 
-    private fun setLayoutCommentSelectClose(selected: Int, list: List<ConstraintLayout>) {
+    private fun setLayoutCommentSelect(selected: Int, list: List<ConstraintLayout>) {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             list.indices.forEach { index ->
                 if (selected != index) {
@@ -350,7 +301,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
                 override fun onAnimationEnd(p0: Animator?) {
                     visibility = View.INVISIBLE
-                    commentViewModel.setOpenReact()
+                    commentViewModel.setOpenOrNotOpenReact()
                 }
 
                 override fun onAnimationCancel(p0: Animator?) {
@@ -397,18 +348,98 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             )
         }
 
+    private fun setBtnCommentMoreClickListener() {
+        binding.layoutComment.btnCommentMore.setOnClickListener {
+            PopupMenu(
+                ContextThemeWrapper(
+                    requireContext(),
+                    R.style.feed_toggle_popup_menu
+                ),
+                binding.layoutComment.btnCommentMore
+            ).apply {
+                setOnMenuItemClickListener(this@CommentFragment)
+                inflate(R.menu.menu_comment)
+                show()
+            }
+        }
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_comment_update -> {
+                requireView().findNavController()
+                    .navigate(
+                        CommentFragmentDirections.actionCommentFragmentToCommentUpdateFragment(
+                            args.id, binding.layoutComment.tvCommentContent.text.toString()
+                        )
+                    )
+                true
+            }
+            R.id.menu_comment_delete -> {
+                requestCommentDeleteDialog()
+                true
+            }
+            else -> false
+        }
+    }
+
+    private fun requestCommentDeleteDialog() {
+        val mDialogView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+        val mBuilder = AlertDialog.Builder(requireContext())
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.show()
+
+        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
+            .setText(R.string.delete)
+        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
+            .setText(R.string.comment_delete_dialog)
+
+        mDialogView.findViewById<Button>(R.id.btn_dialog_confirm).setOnClickListener {
+            commentViewModel.requestDeleteComment(args.id)
+            mAlertDialog.dismiss()
+        }
+        mDialogView.findViewById<Button>(R.id.btn_dialog_cancel).setOnClickListener {
+            mAlertDialog.dismiss()
+        }
+    }
+
     private fun setEtReplyEditorActionListener() {
         binding.etReply.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    if (binding.etReply.text.toString().isNotEmpty())
+                    if (binding.etReply.text.toString().isNotEmpty()) {
+                        setEtReplyClearFocus()
                         commentViewModel.requestPostReply(
                             args.id,
                             binding.etReply.text.toString()
                         )
+                    }
                     true
                 }
                 else -> false
+            }
+        }
+    }
+
+    private fun setEtReplyClearFocus() {
+        binding.etReply.clearFocus()
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(binding.etReply.windowToken, 0)
+    }
+
+    private fun setIsPostedCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                with(commentViewModel) {
+                    isPosted.collect { isPosted ->
+                        if (isPosted) {
+                            resetIsPosted()
+                            requestGetComments(args.id)
+                        }
+                    }
+                }
             }
         }
     }
