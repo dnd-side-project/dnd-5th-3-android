@@ -1,26 +1,25 @@
 package how.about.it.view.comment.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import how.about.it.view.comment.*
 import how.about.it.view.comment.repository.CommentRepository
 import how.about.it.view.commentupdate.RequestPutComment
 import how.about.it.view.vote.RequestCommentId
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class CommentViewModel(private val commentRepository: CommentRepository) : ViewModel() {
     private val _openReact = MutableStateFlow(0)
-    val openReact: StateFlow<Int> = _openReact
+    val openReact = _openReact.asStateFlow()
 
-    private val _emptyReact = MutableStateFlow(0)
-    val emptyReact: StateFlow<Int> = _emptyReact
+    private val _emptyEmoji = MutableStateFlow(0)
+    val emptyEmoji = _emptyEmoji.asStateFlow()
 
-    private val _reComment = MutableStateFlow<List<Comment>?>(null)
-    val reComment = _reComment.asStateFlow()
+    private val _replyList = MutableStateFlow<List<Comment>?>(null)
+    val replyList = _replyList.asStateFlow()
 
     private val _isPosted = MutableStateFlow(false)
     val isPosted = _isPosted.asStateFlow()
@@ -29,21 +28,21 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
     val isUpdated = _isUpdated.asStateFlow()
 
     private val _networkError = MutableStateFlow(false)
-    val networkError: StateFlow<Boolean> = _networkError
+    val networkError = _networkError.asStateFlow()
 
-    private val _commentEmoji =
+    private val _emojiList =
         MutableStateFlow(
             listOf(
-                Emoji(emojiId = 1, emojiCount = 0, checked = false),
-                Emoji(emojiId = 2, emojiCount = 0, checked = false),
-                Emoji(emojiId = 3, emojiCount = 0, checked = false),
-                Emoji(emojiId = 4, emojiCount = 0, checked = false),
-                Emoji(emojiId = 5, emojiCount = 0, checked = false),
+                Emoji(emojiId = 1, emojiCount = 0, checked = false, commentEmojiId = -1),
+                Emoji(emojiId = 2, emojiCount = 0, checked = false, commentEmojiId = -1),
+                Emoji(emojiId = 3, emojiCount = 0, checked = false, commentEmojiId = -1),
+                Emoji(emojiId = 4, emojiCount = 0, checked = false, commentEmojiId = -1),
+                Emoji(emojiId = 5, emojiCount = 0, checked = false, commentEmojiId = -1),
             )
         )
-    val commentEmoji: StateFlow<List<Emoji>> = _commentEmoji
+    val emojiList = _emojiList.asStateFlow()
 
-    fun setOpenReact() {
+    fun setOpenOrNotOpenReact() {
         _openReact.value = when (_openReact.value) {
             0 -> 1
             1 -> 0
@@ -51,53 +50,72 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
         }
     }
 
-    fun requestCommentReply(id: Int) {
-        viewModelScope.launch {
-            val commentReply = runCatching { commentRepository.requestCommentReply(id) }.getOrNull()
-            Log.d("commentReply", commentReply.toString())
-            commentReply?.let {
-                _reComment.emit(commentReply.commentList.filterIndexed { index, comment ->
+    fun resetIsPosted() {
+        _isPosted.value = false
+    }
+
+    fun requestGetComments(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                commentRepository.requestCommentReply(id)
+            }.getOrNull()?.let { commentReply ->
+                _replyList.emit(commentReply.commentList.filterIndexed { index, comment ->
                     (index == 0 || !comment.deleted)
                 })
             } ?: _networkError.emit(true)
         }
     }
 
+    fun initEmojiList(emojiList: List<Emoji>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            emojiList.forEach { responseEmoji ->
+                _emojiList.emit(_emojiList.value.map { initEmoji ->
+                    with(responseEmoji) {
+                        if (initEmoji.emojiId == emojiId) {
+                            initEmoji.copy(
+                                emojiId = emojiId,
+                                emojiCount = emojiCount,
+                                checked = checked,
+                                commentEmojiId = commentEmojiId
+                            )
+                        } else initEmoji
+                    }
+                })
+            }
+        }
+    }
+
     fun requestPostReply(id: Int, content: String) {
-        viewModelScope.launch {
-            val postReply = runCatching {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
                 commentRepository.requestPostReComment(
                     id,
                     RequestPostReComment(content = content)
                 )
-            }.getOrNull()
-            postReply?.let {
+            }.getOrNull()?.let {
                 _isPosted.emit(true)
             } ?: _networkError.emit(true)
         }
     }
 
     fun requestCommentUpdate(id: Int, content: String) {
-        viewModelScope.launch {
-            val requestUpdate = runCatching {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
                 commentRepository.requestCommentUpdate(
                     RequestPutComment(commentId = id, content = content)
                 )
-            }.getOrNull()
-            requestUpdate?.let {
+            }.getOrNull()?.let {
                 _isUpdated.emit(true)
             } ?: _networkError.emit(true)
         }
     }
 
     fun requestDeleteComment(id: Int) {
-        viewModelScope.launch {
-            val requestDeleteComment = runCatching {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
                 commentRepository.requestCommentDelete(RequestCommentId(commentId = id))
-            }.getOrNull()
-            Log.d("delete", requestDeleteComment.toString())
-            requestDeleteComment?.let {
-                _reComment.emit((requireNotNull(_reComment.value).map { comment ->
+            }.getOrNull()?.let {
+                _replyList.emit((requireNotNull(_replyList.value).map { comment ->
                     if (comment.commentId == id) {
                         comment.copy(deleted = true)
                     } else comment
@@ -108,76 +126,54 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
         }
     }
 
-    fun initEmojiList(list: List<Emoji>) {
-        viewModelScope.launch {
-            list.forEach { responseEmoji ->
-                _commentEmoji.emit(_commentEmoji.value.map { initEmoji ->
-                    with(responseEmoji) {
-                        if (initEmoji.emojiId == emojiId) {
-                            initEmoji.copy(
-                                emojiId = emojiId,
-                                emojiCount = emojiCount,
-                                checked = checked
-                            )
-                        } else initEmoji
-                    }
-                })
-            }
-        }
-    }
-
     fun requestEmoji(index: Int, id: Int) {
-        when (_commentEmoji.value[index].emojiCount) {
-            0 -> requestPostEmoji(index + 1, id)
-            else -> requestPutEmoji(index + 1)
+        when (_emojiList.value[index].commentEmojiId) {
+            -1 -> requestPostEmoji(index, id)
+            else -> requestPutEmoji(index)
         }
     }
 
     private fun requestPostEmoji(index: Int, id: Int) {
-        viewModelScope.launch {
-            val postEmoji = runCatching {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
                 commentRepository.requestPostEmoji(
                     RequestPostEmoji(
-                        emojiId = index,
+                        emojiId = _emojiList.value[index].emojiId,
                         commentId = id
                     )
                 )
-            }.getOrNull()
-            postEmoji?.let {
+            }.getOrNull()?.let {
                 setCommentEmojiCount(index)
             } ?: _networkError.emit(true)
         }
     }
 
     private fun requestPutEmoji(index: Int) {
-        viewModelScope.launch {
-            val putEmoji = runCatching {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
                 commentRepository.requestPutEmoji(
                     RequestPutEmoji(
-                        commentEmojiId = index,
-                        isChecked = _commentEmoji.value[index].checked
+                        commentEmojiId = _emojiList.value[index].commentEmojiId,
+                        isChecked = !_emojiList.value[index].checked
                     )
                 )
-            }.getOrNull()
-            putEmoji?.let {
+            }.getOrNull()?.let {
                 setCommentEmojiCount(index)
             } ?: _networkError.emit(true)
         }
     }
 
-    private fun setCommentEmojiCount(index: Int) {
-        viewModelScope.launch {
-            Log.d("emojiIndex", index.toString())
-            _commentEmoji.emit(_commentEmoji.value.map { emoji ->
-                with(emoji) {
-                    if (emojiId == index) {
-                        copy(
-                            emojiId = emojiId,
-                            emojiCount = setEmojiCount(this),
-                            checked = !checked
-                        )
-                    } else this
-                }
+    private fun setCommentEmojiCount(selected: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _emojiList.emit(_emojiList.value.mapIndexed { index, emoji ->
+                if (selected == index) {
+                    emoji.copy(
+                        emojiId = emoji.emojiId,
+                        emojiCount = setEmojiCount(emoji),
+                        checked = !emoji.checked,
+                        commentEmojiId = emoji.commentEmojiId
+                    )
+                } else emoji
             })
         }
     }
@@ -187,29 +183,13 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
         false -> emoji.emojiCount + 1
     }
 
-    fun setFloatingCommentEmojiCount(selected: Int) {
-        viewModelScope.launch {
-            _commentEmoji.value = _commentEmoji.value.map { emoji ->
-                with(emoji) {
-                    if (emojiId == selected + 1 && !checked) {
-                        copy(
-                            emojiId = emojiId,
-                            emojiCount = emojiCount + 1,
-                            checked = true
-                        )
-                    } else this
-                }
-            }
-        }
-    }
-
     fun setEmptyCommentReactVisibility() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             var sum = 0
-            _commentEmoji.value.forEach { emoji ->
+            _emojiList.value.forEach { emoji ->
                 sum += emoji.emojiCount
             }
-            _emptyReact.emit(sum)
+            _emptyEmoji.emit(sum)
         }
     }
 }
