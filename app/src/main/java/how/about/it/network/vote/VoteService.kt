@@ -1,6 +1,8 @@
 package how.about.it.network.vote
 
+import how.about.it.view.comment.RequestPutEmoji
 import how.about.it.view.comment.ResponseComment
+import how.about.it.view.comment.ResponseEmoji
 import how.about.it.view.vote.*
 
 interface VoteService {
@@ -15,4 +17,6 @@ interface VoteService {
     suspend fun requestVotePostComment(body: RequestPostComment): ResponsePostComment
 
     suspend fun requestCommentDelete(body: RequestCommentId): ResponsePostComment
+
+    suspend fun requestPutEmoji(body: RequestPutEmoji): ResponseEmoji
 }

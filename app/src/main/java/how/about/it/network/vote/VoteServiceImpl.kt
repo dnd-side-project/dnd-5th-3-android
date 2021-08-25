@@ -1,5 +1,6 @@
 package how.about.it.network.vote
 
+import how.about.it.view.comment.RequestPutEmoji
 import how.about.it.view.vote.RequestCommentId
 import how.about.it.view.vote.RequestPostComment
 import how.about.it.view.vote.RequestVote
@@ -19,4 +20,7 @@ class VoteServiceImpl(private val voteInterface: VoteInterface) : VoteService {
 
     override suspend fun requestCommentDelete(body: RequestCommentId) =
         voteInterface.requestCommentDelete(body)
+
+    override suspend fun requestPutEmoji(body: RequestPutEmoji) =
+        voteInterface.requestPutEmoji(body)
 }

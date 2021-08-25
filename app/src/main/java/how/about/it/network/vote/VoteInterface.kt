@@ -1,6 +1,8 @@
 package how.about.it.network.vote
 
+import how.about.it.view.comment.RequestPutEmoji
 import how.about.it.view.comment.ResponseComment
+import how.about.it.view.comment.ResponseEmoji
 import how.about.it.view.vote.*
 import retrofit2.http.*
 
@@ -36,4 +38,9 @@ interface VoteInterface {
     suspend fun requestCommentDelete(
         @Body body: RequestCommentId
     ): ResponsePostComment
+
+    @PUT("/api/v1/emoji")
+    suspend fun requestPutEmoji(
+        @Body body: RequestPutEmoji
+    ): ResponseEmoji
 }

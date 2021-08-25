@@ -1,6 +1,7 @@
 package how.about.it.view.vote.repository
 
 import how.about.it.network.vote.VoteServiceImpl
+import how.about.it.view.comment.RequestPutEmoji
 import how.about.it.view.vote.RequestCommentId
 import how.about.it.view.vote.RequestPostComment
 import how.about.it.view.vote.RequestVote
@@ -19,4 +20,7 @@ class VoteRepository(private val voteServiceImpl: VoteServiceImpl) {
 
     suspend fun requestCommentDelete(body: RequestCommentId) =
         voteServiceImpl.requestCommentDelete(body)
+
+    suspend fun requestPutEmoji(body: RequestPutEmoji) =
+        voteServiceImpl.requestPutEmoji(body)
 }
