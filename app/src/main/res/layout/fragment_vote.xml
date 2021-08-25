@@ -67,7 +67,7 @@
                 tools:ignore="ContentDescription" />
 
             <androidx.core.widget.NestedScrollView
-                android:id="@+id/layout_scroll_detail_post"
+                android:id="@+id/layout_scroll_vote"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -77,8 +77,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/black">
+                    android:layout_height="match_parent">
 
                     <TextView
                         android:id="@+id/tv_vote_item_title"
@@ -345,8 +344,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
-            android:clickable="@{feed.isVoted ? false : true}"
-            android:visibility="@{feed.currentMemberVoteResult.equals(`NO_RESULT`) ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{feed.isVoted || feed.currentMemberVoteResult.equals(`NO_RESULT`) ? View.VISIBLE : View.INVISIBLE}"
             app:borderWidth="0dp"
             app:elevation="0dp"
             app:layout_constraintBottom_toTopOf="@id/layout_vote_comment"

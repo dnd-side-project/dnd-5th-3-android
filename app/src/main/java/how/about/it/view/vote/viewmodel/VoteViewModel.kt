@@ -1,6 +1,5 @@
 package how.about.it.view.vote.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import how.about.it.view.comment.Comment
@@ -9,6 +8,7 @@ import how.about.it.view.vote.RequestPostComment
 import how.about.it.view.vote.RequestVote
 import how.about.it.view.vote.ResponseFeedDetail
 import how.about.it.view.vote.repository.VoteRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -51,22 +51,29 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
         }
     }
 
+    fun closeVote() {
+        _openVote.value = 0
+    }
+
+    fun resetIsPosted() {
+        _requestPostComment.value = false
+    }
+
     fun requestVoteFeedDetail(id: Int) {
-        viewModelScope.launch {
-            val feedDetail = runCatching { voteRepository.requestVoteFeedDetail(id) }.getOrNull()
-            Log.d("feedDetail", feedDetail.toString())
-            feedDetail?.let {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                voteRepository.requestVoteFeedDetail(id)
+            }.getOrNull()?.let { feedDetail ->
                 _feedDetail.emit(feedDetail)
             } ?: _networkError.emit(true)
         }
     }
 
     fun requestVoteFeedComment(id: Int) {
-        viewModelScope.launch {
-            val feedDetailComment =
-                runCatching { voteRepository.requestVoteFeedComment(id) }.getOrNull()
-            Log.d("feedDetailComment", feedDetailComment.toString())
-            feedDetailComment?.let {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                voteRepository.requestVoteFeedComment(id)
+            }.getOrNull()?.let { feedDetailComment ->
                 _feedDetailComment.emit(feedDetailComment.commentList.filterNot { comment ->
                     (comment.deleted && comment.replyCount == 0)
                 })
@@ -75,11 +82,10 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
     }
 
     fun requestVote(index: Int, id: Int, vote: String) {
-        viewModelScope.launch {
-            val requestVote =
-                runCatching { voteRepository.requestVote(id, RequestVote(vote)) }.getOrNull()
-            Log.d("requestVote", requestVote.toString())
-            requestVote?.let {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                voteRepository.requestVote(id, RequestVote(vote))
+            }.getOrNull()?.let {
                 _requestVote.emit(index)
                 _feedDetail.emit(
                     with(requireNotNull(_feedDetail.value)) {
@@ -93,36 +99,32 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
     }
 
     fun requestVoteDelete(id: Int) {
-        viewModelScope.launch {
-            val requestVoteDelete =
-                runCatching { voteRepository.requestVoteDelete(id) }.getOrNull()
-            Log.d("requestVoteDelete", requestVoteDelete.toString())
-            requestVoteDelete?.let {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                voteRepository.requestVoteDelete(id)
+            }.getOrNull()?.let {
                 _requestDelete.emit(true)
             } ?: _networkError.emit(true)
         }
     }
 
     fun requestPostComment(id: Int, content: String) {
-        viewModelScope.launch {
-            val requestPostComment = runCatching {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
                 voteRepository.requestVotePostComment(
                     RequestPostComment(postId = id, content = content)
                 )
-            }.getOrNull()
-            requestPostComment?.let {
+            }.getOrNull()?.let {
                 _requestPostComment.emit(true)
             } ?: _networkError.emit(true)
         }
     }
 
     fun requestDeleteComment(id: Int) {
-        viewModelScope.launch {
-            val requestDeleteComment = runCatching {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
                 voteRepository.requestCommentDelete(RequestCommentId(commentId = id))
-            }.getOrNull()
-            Log.d("delete", requestDeleteComment.toString())
-            requestDeleteComment?.let {
+            }.getOrNull()?.let {
                 _feedDetailComment.emit((requireNotNull(_feedDetailComment.value).map { comment ->
                     if (comment.commentId == id) {
                         comment.copy(deleted = true)

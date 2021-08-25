@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -25,7 +24,9 @@ import how.about.it.databinding.FragmentVoteBinding
 import how.about.it.network.RequestToServer
 import how.about.it.network.vote.VoteServiceImpl
 import how.about.it.util.FloatingAnimationUtil
+import how.about.it.util.HideKeyBoardUtil
 import how.about.it.util.TimeChangerUtil
+import how.about.it.view.comment.Comment
 import how.about.it.view.vote.adapter.VoteCommentAdapter
 import how.about.it.view.vote.repository.VoteRepository
 import how.about.it.view.vote.viewmodel.VoteViewModel
@@ -56,20 +57,20 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         RequestToServer.initAccessToken(requireContext())
         setVoteBackClickListener()
         setBtnVoteMoreClickListener()
-        setProgressTouchListener()
-        setLottieAnimationListener()
         setImageVoteItemClipToOutLine()
-        setEtVoteCommentFocusListener()
-        setEtVoteCommentEditorActionListener()
-        setRequestPostCommentCollect()
+        setProgressTouchListener()
         setRequestDeleteCollect()
         setFeedDetailCollect()
         setVoteCommentAdapter()
         setFeedDetailCommentCollect()
+        setEtVoteCommentFocusListener()
+        setEtVoteCommentEditorActionListener()
+        setRequestPostCommentCollect()
         setFabVoteClickListener()
         setOpenVoteCollect()
         setLayoutVoteClickListener(getLayoutVoteList())
         setRequestVoteCollect()
+        setLottieAnimationListener()
         voteViewModel.requestVoteFeedDetail(args.id)
         voteViewModel.requestVoteFeedComment(args.id)
         return binding.root
@@ -96,15 +97,6 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 show()
             }
         }
-    }
-
-    private fun setImageVoteItemClipToOutLine() {
-        binding.imgVoteItem.clipToOutline = true
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setProgressTouchListener() {
-        binding.progressVoteItem.setOnTouchListener { _, _ -> true }
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -136,6 +128,16 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             mAlertDialog.dismiss()
         }
     }
+
+    private fun setImageVoteItemClipToOutLine() {
+        binding.imgVoteItem.clipToOutline = true
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setProgressTouchListener() {
+        binding.progressVoteItem.setOnTouchListener { _, _ -> true }
+    }
+
 
     private fun setRequestDeleteCollect() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -169,13 +171,27 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setImageVoteCompleteImage(currentMemberVoteResult: String) {
-        with(binding.imgVoteSelected) {
-            when (currentMemberVoteResult) {
-                "PERMIT" -> setImageResource(R.drawable.ic_vote_complete_agree)
-                "REJECT" -> setImageResource(R.drawable.ic_vote_complete_disagree)
+    private fun setCountDownTimer(deadLine: String) =
+        object : CountDownTimer(
+            (TimeChangerUtil.getDeadLine(deadLine)),
+            1000
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                _binding?.let { binding ->
+                    binding.tvVoteItemTime.text =
+                        TimeChangerUtil.getDeadLineString(millisUntilFinished)
+                }
+            }
+
+            override fun onFinish() {
+                _binding?.let { binding ->
+                    binding.tvVoteItemTime.text = TimeChangerUtil.getDeadLineString(0)
+                }
             }
         }
+
+    private fun cancelCountDownTimer() {
+        timer?.cancel()
     }
 
     private fun setTvFeedAgreeText(feed: ResponseFeedDetail) {
@@ -205,6 +221,15 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
+    private fun setImageVoteCompleteImage(currentMemberVoteResult: String) {
+        with(binding.imgVoteSelected) {
+            when (currentMemberVoteResult) {
+                "PERMIT" -> setImageResource(R.drawable.ic_vote_complete_agree)
+                "REJECT" -> setImageResource(R.drawable.ic_vote_complete_disagree)
+            }
+        }
+    }
+
     private fun setVoteCommentAdapter() {
         binding.rvVoteComment.adapter = VoteCommentAdapter(voteViewModel)
     }
@@ -214,15 +239,17 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 voteViewModel.feedDetailComment.collect { commentList ->
                     commentList?.let {
-                        with(binding.rvVoteComment.adapter as VoteCommentAdapter) {
-                            submitList(commentList) {
-                                binding.rvVoteComment.scrollToPosition(0)
-                            }
-                        }
+                        submitCommentList(commentList)
                         setTvVoteCommentCountText(commentList.size)
                     }
                 }
             }
+        }
+    }
+
+    private fun submitCommentList(commentList: List<Comment>) {
+        with(binding.rvVoteComment.adapter as VoteCommentAdapter) {
+            submitList(commentList)
         }
     }
 
@@ -233,30 +260,11 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         )
     }
 
-    private fun setCountDownTimer(deadLine: String) =
-        object : CountDownTimer(
-            (TimeChangerUtil.getDeadLine(deadLine)),
-            1000
-        ) {
-            override fun onTick(millisUntilFinished: Long) {
-                binding.tvVoteItemTime.text =
-                    TimeChangerUtil.getDeadLineString(millisUntilFinished)
-            }
-
-            override fun onFinish() {
-                binding.tvVoteItemTime.text = TimeChangerUtil.getDeadLineString(0)
-            }
-        }
-
-    private fun cancelCountDownTimer() {
-        requireNotNull(timer).cancel()
-        timer = null
-    }
-
     private fun setEtVoteCommentFocusListener() {
         binding.etVoteComment.setOnFocusChangeListener { _, isFocused ->
-            if (isFocused) {
-                voteViewModel.openVote()
+            when (isFocused) {
+                true -> voteViewModel.openVote()
+                false -> voteViewModel.closeVote()
             }
         }
     }
@@ -265,11 +273,13 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         binding.etVoteComment.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    if (binding.etVoteComment.text.toString().isNotEmpty())
+                    if (binding.etVoteComment.text.toString().isNotEmpty()) {
+                        HideKeyBoardUtil.hide(requireContext(), binding.etVoteComment)
                         voteViewModel.requestPostComment(
                             args.id,
                             binding.etVoteComment.text.toString()
                         )
+                    }
                     true
                 }
                 else -> false
@@ -280,13 +290,22 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun setRequestPostCommentCollect() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                voteViewModel.requestPostComment.collect { isPosted ->
-                    if (isPosted) {
-                        voteViewModel.requestVoteFeedComment(args.id)
+                with(voteViewModel) {
+                    requestPostComment.collect { isPosted ->
+                        if (isPosted) {
+                            resetIsPosted()
+                            requestVoteFeedComment(args.id)
+                            delay(500)
+                            afterPostedScroll()
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun afterPostedScroll() {
+        binding.layoutScrollVote.fullScroll(View.FOCUS_DOWN)
     }
 
     private fun setFabVoteClickListener() {
@@ -329,6 +348,18 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
+    private fun setLayoutVoteCloseAnimation(list: List<ConstraintLayout>) {
+        list.forEach { layout ->
+            FloatingAnimationUtil.setAnimation(layout, 0f)
+        }
+    }
+
+    private fun setLayoutVoteCloseInvisible(list: List<ConstraintLayout>) {
+        list.forEach { layout ->
+            layout.visibility = View.INVISIBLE
+        }
+    }
+
     private fun setFabVoteOpenBackground() {
         with(binding.fabVote) {
             backgroundTintList = requireContext().getColorStateList(R.color.bluegray700_4D535E)
@@ -340,27 +371,8 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         list.indices.forEach { index ->
             list[index].apply {
                 visibility = View.VISIBLE
-                FloatingAnimationUtil.setAnimation(this, dpToPx(-(76 * (index + 1)).toFloat()))
+                FloatingAnimationUtil.setAnimation(this, (-(76 * (index + 1)).toFloat()))
             }
-        }
-    }
-
-    private fun dpToPx(dp: Float) =
-        TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            requireContext().resources.displayMetrics
-        )
-
-    private fun setLayoutVoteCloseAnimation(list: List<ConstraintLayout>) {
-        list.forEach { layout ->
-            FloatingAnimationUtil.setAnimation(layout, 0f)
-        }
-    }
-
-    private fun setLayoutVoteCloseInvisible(list: List<ConstraintLayout>) {
-        list.forEach { layout ->
-            layout.visibility = View.INVISIBLE
         }
     }
 

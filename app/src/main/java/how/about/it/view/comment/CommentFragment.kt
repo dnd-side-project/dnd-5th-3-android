@@ -2,15 +2,12 @@ package how.about.it.view.comment
 
 import android.animation.Animator
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -28,6 +25,7 @@ import how.about.it.databinding.FragmentCommentBinding
 import how.about.it.network.RequestToServer
 import how.about.it.network.comment.CommentServiceImpl
 import how.about.it.util.FloatingAnimationUtil
+import how.about.it.util.HideKeyBoardUtil
 import how.about.it.view.comment.adapter.ReCommentAdapter
 import how.about.it.view.comment.repository.CommentRepository
 import how.about.it.view.comment.viewmodel.CommentViewModel
@@ -247,17 +245,10 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         list.indices.forEach { index ->
             list[index].apply {
                 visibility = View.VISIBLE
-                FloatingAnimationUtil.setAnimation(this, dpToPx(-(76 * (index + 1)).toFloat()))
+                FloatingAnimationUtil.setAnimation(this, -(76 * (index + 1)).toFloat())
             }
         }
     }
-
-    private fun dpToPx(dp: Float) =
-        TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            requireContext().resources.displayMetrics
-        )
 
     private fun setLayoutCommentCloseAnimation(list: List<ConstraintLayout>) {
         list.forEach { layout ->
@@ -283,11 +274,14 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun setLayoutCommentSelect(selected: Int, list: List<ConstraintLayout>) {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             list.indices.forEach { index ->
-                if (selected != index) {
-                    FloatingAnimationUtil.setAnimation(list[index], 0f)
-                    list[index].visibility = View.INVISIBLE
-                } else {
-                    FloatingAnimationUtil.setAnimation(list[index], dpToPx(-76f))
+                when (selected) {
+                    index -> {
+                        FloatingAnimationUtil.setAnimation(list[index], -76f)
+                    }
+                    else -> {
+                        FloatingAnimationUtil.setAnimation(list[index], 0f)
+                        list[index].visibility = View.INVISIBLE
+                    }
                 }
             }
             setLottiePlayAnimation(selected)
@@ -410,7 +404,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     if (binding.etReply.text.toString().isNotEmpty()) {
-                        setEtReplyClearFocus()
+                        HideKeyBoardUtil.hide(requireContext(), binding.etReply)
                         commentViewModel.requestPostReply(
                             args.id,
                             binding.etReply.text.toString()
@@ -421,13 +415,6 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 else -> false
             }
         }
-    }
-
-    private fun setEtReplyClearFocus() {
-        binding.etReply.clearFocus()
-        val inputMethodManager =
-            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(binding.etReply.windowToken, 0)
     }
 
     private fun setIsPostedCollect() {
