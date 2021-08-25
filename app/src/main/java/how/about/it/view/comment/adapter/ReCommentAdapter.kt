@@ -1,12 +1,8 @@
 package how.about.it.view.comment.adapter
 
-import android.app.AlertDialog
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.PopupMenu
-import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
@@ -15,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import how.about.it.BR
 import how.about.it.R
 import how.about.it.databinding.ItemReCommentBinding
+import how.about.it.util.DeleteDialogUtil
 import how.about.it.view.comment.Comment
 import how.about.it.view.comment.CommentFragmentDirections
 import how.about.it.view.comment.viewmodel.CommentViewModel
@@ -70,10 +67,9 @@ class ReCommentAdapter(private val commentViewModel: CommentViewModel) :
                                     true
                                 }
                                 R.id.menu_comment_delete -> {
-                                    requestCommentDeleteDialog(
-                                        context,
-                                        comment.commentId
-                                    )
+                                    DeleteDialogUtil.showDeleteDialog(context, true) {
+                                        commentViewModel.requestDeleteComment(comment.commentId)
+                                    }
                                     true
                                 }
                                 else -> false
@@ -83,27 +79,6 @@ class ReCommentAdapter(private val commentViewModel: CommentViewModel) :
                         show()
                     }
                 }
-            }
-        }
-
-        private fun requestCommentDeleteDialog(context: Context, id: Int) {
-            val mDialogView =
-                LayoutInflater.from(context).inflate(R.layout.dialog_default_confirm, null)
-            val mBuilder = AlertDialog.Builder(context)
-                .setView(mDialogView)
-            val mAlertDialog = mBuilder.show()
-
-            mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
-                .setText(R.string.delete)
-            mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
-                .setText(R.string.comment_delete_dialog)
-
-            mDialogView.findViewById<Button>(R.id.btn_dialog_confirm).setOnClickListener {
-                commentViewModel.requestDeleteComment(id)
-                mAlertDialog.dismiss()
-            }
-            mDialogView.findViewById<Button>(R.id.btn_dialog_cancel).setOnClickListener {
-                mAlertDialog.dismiss()
             }
         }
     }
