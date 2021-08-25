@@ -57,6 +57,10 @@
         <argument
             android:name="id"
             app:argType="integer" />
+        <argument
+            android:name="openEmoji"
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_commentFragment_to_commentUpdateFragment"
             app:destination="@id/commentUpdateFragment" />

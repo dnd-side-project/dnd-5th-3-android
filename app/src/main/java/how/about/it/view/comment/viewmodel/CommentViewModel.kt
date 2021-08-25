@@ -42,6 +42,10 @@ class CommentViewModel(private val commentRepository: CommentRepository) : ViewM
         )
     val emojiList = _emojiList.asStateFlow()
 
+    fun initOpenEmoji(value: Int) {
+        _openReact.value = value
+    }
+
     fun setOpenOrNotOpenReact() {
         _openReact.value = when (_openReact.value) {
             0 -> 1
