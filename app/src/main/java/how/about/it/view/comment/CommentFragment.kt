@@ -67,6 +67,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setBtnCommentMoreClickListener()
         setEtReplyEditorActionListener()
         setIsPostedCollect()
+        commentViewModel.initOpenEmoji(args.openEmoji)
         commentViewModel.requestGetComments(args.id)
         return binding.root
     }

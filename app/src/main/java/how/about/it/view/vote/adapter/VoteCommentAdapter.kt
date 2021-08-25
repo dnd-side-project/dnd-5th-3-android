@@ -20,7 +20,7 @@ import how.about.it.view.vote.VoteFragmentDirections
 import how.about.it.view.vote.viewmodel.VoteViewModel
 
 class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
-    ListAdapter<Comment, VoteCommentAdapter.VoteCommentViewHolder>(VoteCommentDiffUtil()) {
+    ListAdapter<Comment, VoteCommentAdapter.VoteCommentViewHolder>(COMMENT_DIFF_UTIL) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -46,6 +46,7 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
         fun bind(comment: Comment) {
             binding.setVariable(BR.comment, comment)
             setRootClickListener(comment.commentId)
+            setBtnReactionEmptyListener(comment.commentId)
             setBtnMoreClickListener(comment)
         }
 
@@ -59,12 +60,23 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
             }
         }
 
+        private fun setBtnReactionEmptyListener(commentId: Int) {
+            binding.btnReactionEmpty.setOnClickListener { view ->
+                Navigation.findNavController(view).navigate(
+                    VoteFragmentDirections.actionVoteFragmentToCommentFragment(
+                        commentId,
+                        1
+                    )
+                )
+            }
+        }
+
         private fun setBtnMoreClickListener(comment: Comment) {
             with(binding.btnCommentMore) {
                 setOnClickListener {
                     PopupMenu(
                         ContextThemeWrapper(
-                            this.context,
+                            context,
                             R.style.feed_toggle_popup_menu
                         ),
                         this
@@ -118,11 +130,13 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
         }
     }
 
-    private class VoteCommentDiffUtil : DiffUtil.ItemCallback<Comment>() {
-        override fun areItemsTheSame(oldItem: Comment, newItem: Comment) =
-            oldItem.commentId == newItem.commentId
+    companion object {
+        private val COMMENT_DIFF_UTIL = object : DiffUtil.ItemCallback<Comment>() {
+            override fun areItemsTheSame(oldItem: Comment, newItem: Comment) =
+                oldItem.commentId == newItem.commentId
 
-        override fun areContentsTheSame(oldItem: Comment, newItem: Comment): Boolean =
-            oldItem == newItem
+            override fun areContentsTheSame(oldItem: Comment, newItem: Comment): Boolean =
+                oldItem == newItem
+        }
     }
 }
