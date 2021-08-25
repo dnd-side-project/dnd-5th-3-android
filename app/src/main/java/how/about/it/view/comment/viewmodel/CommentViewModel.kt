@@ -2,6 +2,7 @@ package how.about.it.view.comment.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import how.about.it.view.comment.*
 import how.about.it.view.comment.repository.CommentRepository
 import how.about.it.view.commentupdate.RequestPutComment
@@ -10,8 +11,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CommentViewModel(private val commentRepository: CommentRepository) : ViewModel() {
+@HiltViewModel
+class CommentViewModel @Inject constructor(
+    private val commentRepository: CommentRepository
+) : ViewModel() {
     private val _openReact = MutableStateFlow(0)
     val openReact = _openReact.asStateFlow()
 

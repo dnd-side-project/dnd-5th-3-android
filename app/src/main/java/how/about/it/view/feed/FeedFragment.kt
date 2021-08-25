@@ -15,28 +15,21 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import how.about.it.R
 import how.about.it.databinding.FragmentFeedBinding
 import how.about.it.network.RequestToServer
-import how.about.it.network.feed.FeedServiceImpl
 import how.about.it.view.feed.adapter.FeedBottomAdapter
 import how.about.it.view.feed.adapter.FeedTopAdapter
-import how.about.it.view.feed.repository.FeedRepository
 import how.about.it.view.feed.viewmodel.FeedViewModel
-import how.about.it.view.feed.viewmodel.FeedViewModelFactory
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private var _binding: FragmentFeedBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private val feedViewModel by viewModels<FeedViewModel> {
-        FeedViewModelFactory(
-            FeedRepository(
-                FeedServiceImpl(RequestToServer.feedInterface)
-            )
-        )
-    }
+    private val feedViewModel by viewModels<FeedViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

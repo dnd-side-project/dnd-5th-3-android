@@ -2,14 +2,19 @@ package how.about.it.view.feed.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import how.about.it.view.feed.Feed
 import how.about.it.view.feed.repository.FeedRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FeedViewModel(private val feedRepository: FeedRepository) : ViewModel() {
+@HiltViewModel
+class FeedViewModel @Inject constructor(
+    private val feedRepository: FeedRepository
+) : ViewModel() {
     private val _toggleCategory = MutableStateFlow(0)
     val toggleCategory = _toggleCategory.asStateFlow()
 

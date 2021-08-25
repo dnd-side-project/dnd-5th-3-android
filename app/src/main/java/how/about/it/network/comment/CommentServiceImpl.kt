@@ -5,8 +5,11 @@ import how.about.it.view.comment.RequestPostReComment
 import how.about.it.view.comment.RequestPutEmoji
 import how.about.it.view.commentupdate.RequestPutComment
 import how.about.it.view.vote.RequestCommentId
+import javax.inject.Inject
 
-class CommentServiceImpl(private val commentInterface: CommentInterface) : CommentService {
+class CommentServiceImpl @Inject constructor(
+    private val commentInterface: CommentInterface
+) : CommentService {
     override suspend fun requestCommentReply(id: Int) = commentInterface.requestCommentReply(id)
 
     override suspend fun requestPostReComment(id: Int, body: RequestPostReComment) =

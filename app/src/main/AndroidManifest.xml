@@ -4,11 +4,12 @@
     <!-- 권한 설정 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
     <application
+        android:name=".MooMoolApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,18 +18,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HowAboutIt"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.ToolbarActivity"></activity>
+        <activity android:name=".view.ToolbarActivity" />
         <activity android:name=".view.login.LoginActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.main.MainActivity"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+        <activity
+            android:name=".view.main.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

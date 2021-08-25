@@ -16,33 +16,26 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import dagger.hilt.android.AndroidEntryPoint
 import how.about.it.R
 import how.about.it.databinding.FragmentVoteBinding
 import how.about.it.network.RequestToServer
-import how.about.it.network.vote.VoteServiceImpl
 import how.about.it.util.DeleteDialogUtil
 import how.about.it.util.FloatingAnimationUtil
 import how.about.it.util.HideKeyBoardUtil
 import how.about.it.util.TimeChangerUtil
 import how.about.it.view.comment.Comment
 import how.about.it.view.vote.adapter.VoteCommentAdapter
-import how.about.it.view.vote.repository.VoteRepository
 import how.about.it.view.vote.viewmodel.VoteViewModel
-import how.about.it.view.vote.viewmodel.VoteViewModelFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private var _binding: FragmentVoteBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private val voteViewModel by viewModels<VoteViewModel> {
-        VoteViewModelFactory(
-            VoteRepository(
-                VoteServiceImpl(RequestToServer.voteInterface)
-            )
-        )
-    }
+    private val voteViewModel by viewModels<VoteViewModel>()
     private val args by navArgs<VoteFragmentArgs>()
     private var timer: CountDownTimer? = null
 

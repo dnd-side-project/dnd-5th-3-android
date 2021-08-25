@@ -2,6 +2,7 @@ package how.about.it.view.vote.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import how.about.it.view.comment.Comment
 import how.about.it.view.comment.RequestPutEmoji
 import how.about.it.view.vote.RequestCommentId
@@ -13,8 +14,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
+@HiltViewModel
+class VoteViewModel @Inject constructor(
+    private val voteRepository: VoteRepository
+) : ViewModel() {
     private val _openVote = MutableStateFlow(0)
     val openVote = _openVote.asStateFlow()
 

@@ -1,8 +1,11 @@
 package how.about.it.view.feed.repository
 
 import how.about.it.network.feed.FeedServiceImpl
+import javax.inject.Inject
 
-class FeedRepository(private val feedServiceImpl: FeedServiceImpl) {
+class FeedRepository @Inject constructor(
+    private val feedServiceImpl: FeedServiceImpl
+) {
     suspend fun requestTopFeedList() = feedServiceImpl.requestTopFeedList()
 
     suspend fun requestBottomFeedList(sorted: String) =

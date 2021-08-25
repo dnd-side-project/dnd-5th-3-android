@@ -10,11 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import how.about.it.R
 import how.about.it.databinding.FragmentMyPageBinding
 import how.about.it.view.mypage.viewmodel.MyPageViewModel
 import kotlinx.coroutines.flow.collect
 
+@AndroidEntryPoint
 class MyPageFragment : Fragment() {
     private var _binding: FragmentMyPageBinding? = null
     private val binding get() = requireNotNull(_binding)
@@ -32,6 +34,7 @@ class MyPageFragment : Fragment() {
         setCategoryCollect()
         return binding.root
     }
+
     private fun setSettingClickListener() {
         binding.btnMyPageSetting.setOnClickListener {
             requireView().findNavController()
