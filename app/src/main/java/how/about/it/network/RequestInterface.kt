@@ -15,6 +15,9 @@ interface RequestInterface {
     @PUT("/api/v1/member")
     fun requestProfileUpdate(@Header("Authorization") accessToken: String, @Body body : RequestProfileUpdate) : Call<ResponseMember>
 
+    @POST("/api/v1/member/check/password")
+    fun requestCheckOldPassword(@Header("Authorization") accessToken: String, @Body body : RequestOldPasswordCheck) : Call<String>
+
     @PUT("/api/v1/member/token")
     fun requestTokenRefresh(@Body body : RequestTokenRefresh) : Call<ResponseTokenRefresh>
 

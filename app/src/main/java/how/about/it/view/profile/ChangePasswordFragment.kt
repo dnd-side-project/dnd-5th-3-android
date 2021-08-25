@@ -9,19 +9,26 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import how.about.it.R
 import how.about.it.databinding.FragmentChangePasswordBinding
+import how.about.it.repository.ProfileRepository
 import how.about.it.view.main.MainActivity
+import how.about.it.viewmodel.ProfileViewModel
+import how.about.it.viewmodel.ProfileViewModelFactory
 
 class ChangePasswordFragment : Fragment() {
     private var _binding: FragmentChangePasswordBinding? = null
     private val binding get() = requireNotNull(_binding)
+    private lateinit var profileViewModel: ProfileViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
+        profileViewModel = ViewModelProvider(this, ProfileViewModelFactory(ProfileRepository(requireContext()))).get(ProfileViewModel::class.java)
         setToolbarDetail()
         textWatcherEditText()
         setDeleteEditTextButtonClickListener()
@@ -35,29 +42,39 @@ class ChangePasswordFragment : Fragment() {
         return true
     }
     private fun setToolbarDetail() {
-        binding.toolbarChangePasswordBoard.tvToolbarTitle.setText("비밀번호 변경")
+        binding.toolbarChangePasswordBoard.tvToolbarTitle.setText(R.string.change_password)
         (activity as MainActivity).setSupportActionBar(binding.toolbarChangePasswordBoard.toolbarBoard)
         (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
     }
 
     private fun textWatcherEditText() {
+
+        profileViewModel.enableChange.observe(viewLifecycleOwner, Observer {
+            if(it==true &&
+                checkNewPasswordFormat(binding.etChangePasswordNew.text.toString().trim()) &&// 조건 2
+                checkNewPassword(binding.etChangePasswordNew.text.toString().trim(), binding.etChangePasswordNewCheck.text.toString().trim()) // 조건 4
+            ) {
+                activeButtonChange()
+            } else {
+                deactiveButtonChange()
+            }
+        })
+
         binding.etChangePasswordOld.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if(checkOldPassword(s.toString().trim())){
-                    binding.tvMessageChangePasswordCheckOld.visibility = View.INVISIBLE
+                profileViewModel.checkOldPassword(s.toString().trim())
+                profileViewModel.checkNewPassword(binding.etChangePasswordNew.text.toString().trim())
 
-                    if(checkNewPasswordFormat(binding.etChangePasswordNew.text.toString().trim()) &&
-                            checkNewPasswordSame(binding.etChangePasswordNew.text.toString().trim()) &&
-                            checkNewPassword(binding.etChangePasswordNew.text.toString().trim(), binding.etChangePasswordNewCheck.text.toString().trim())){
-                        activeButtonChange()
-                    } else { deactiveButtonChange() }
-
-                } else{
-                    binding.tvMessageChangePasswordCheckOld.setText(R.string.change_password_fail_old_password)
-                    binding.tvMessageChangePasswordCheckOld.visibility = View.VISIBLE
-                    deactiveButtonChange()}
+                profileViewModel.checkOldPasswordSuccess.observe(viewLifecycleOwner, Observer { // 조건 1
+                    if(it==true) {
+                        binding.tvMessageChangePasswordCheckOld.visibility = View.INVISIBLE
+                    } else {
+                        binding.tvMessageChangePasswordCheckOld.setText(R.string.change_password_fail_old_password)
+                        binding.tvMessageChangePasswordCheckOld.visibility = View.VISIBLE
+                    }
+                })
 
                 if(!s.toString().trim().isNullOrBlank()){
                     binding.btnDeleteEtOldPassword.visibility = View.VISIBLE
@@ -70,27 +87,30 @@ class ChangePasswordFragment : Fragment() {
         binding.etChangePasswordNew.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if(checkNewPasswordFormat(s.toString().trim())){ // 새 비밀번호 형식 검사 통과
-                    if(checkNewPasswordSame(s.toString().trim())) { // 이전 비밀번호와 불일치 검사 통과
-                        binding.tvMessageChangePasswordCheckNew.visibility = View.INVISIBLE
-                        if(checkNewPassword(binding.etChangePasswordNew.text.toString().trim(), binding.etChangePasswordNewCheck.text.toString().trim())) {
-                            binding.tvMessageChangePasswordCheckNewCheck.visibility = View.INVISIBLE
-                            if(checkOldPassword(binding.etChangePasswordOld.text.toString().trim())){
-                                activeButtonChange()
-                            } else { deactiveButtonChange() }
+                profileViewModel.checkOldPassword(binding.etChangePasswordOld.text.toString().trim())
+                profileViewModel.checkNewPassword(s.toString().trim())
+
+                profileViewModel.checkNewPasswordSuccess.observe(viewLifecycleOwner, Observer { // 조건 3
+                    if(it==true) {
+                        // binding.tvMessageChangePasswordCheckNewCheck.visibility = View.INVISIBLE
+                        if(checkNewPasswordFormat(s.toString().trim())) { // 조건 2
+                            binding.tvMessageChangePasswordCheckNew.visibility = View.INVISIBLE
                         } else {
-                            binding.tvMessageChangePasswordCheckNewCheck.setText(R.string.change_password_fail_new_password_check)
-                            binding.tvMessageChangePasswordCheckNewCheck.visibility = View.VISIBLE
-                            activeButtonChange()
+                            binding.tvMessageChangePasswordCheckNew.setText(R.string.change_password_fail_new_password_format)
+                            binding.tvMessageChangePasswordCheckNew.visibility = View.VISIBLE
                         }
                     } else {
                         binding.tvMessageChangePasswordCheckNew.setText(R.string.change_password_fail_new_password_same)
                         binding.tvMessageChangePasswordCheckNew.visibility = View.VISIBLE
                     }
-                } else{
-                    binding.tvMessageChangePasswordCheckNew.setText(R.string.change_password_fail_new_password_format)
-                    binding.tvMessageChangePasswordCheckNew.visibility = View.VISIBLE
-                    deactiveButtonChange()}
+                })
+
+                if(checkNewPassword(s.toString().trim(), binding.etChangePasswordNewCheck.text.toString().trim())) { // 조건 4
+                    binding.tvMessageChangePasswordCheckNewCheck.visibility = View.INVISIBLE
+                } else {
+                    binding.tvMessageChangePasswordCheckNewCheck.visibility = View.VISIBLE
+                    binding.tvMessageChangePasswordCheckNewCheck.setText(R.string.change_password_fail_new_password_check)
+                }
 
                 if(!s.toString().trim().isNullOrBlank()){
                     binding.btnDeleteEtNewPassword.visibility = View.VISIBLE
@@ -102,19 +122,15 @@ class ChangePasswordFragment : Fragment() {
         binding.etChangePasswordNewCheck.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                // 이전 비밀번호와 일치 검사
-                if(checkNewPassword(binding.etChangePasswordNew.text.toString().trim(), s.toString().trim())){
-                    binding.tvMessageChangePasswordCheckNewCheck.visibility = View.INVISIBLE
-                    if( checkOldPassword(binding.etChangePasswordOld.text.toString().trim()) &&
-                        checkNewPasswordFormat(binding.etChangePasswordNew.text.toString().trim()) &&
-                        checkNewPasswordSame(binding.etChangePasswordNew.text.toString().trim())){
-                        activeButtonChange()
-                    } else { deactiveButtonChange() }
+                profileViewModel.checkOldPassword(binding.etChangePasswordOld.text.toString().trim())
+                profileViewModel.checkNewPassword(binding.etChangePasswordNew.text.toString().trim())
 
-                } else{
+                if(checkNewPassword(binding.etChangePasswordNew.text.toString().trim(), s.toString().trim())) { //조건 4
+                    binding.tvMessageChangePasswordCheckNewCheck.visibility = View.INVISIBLE
+                } else {
                     binding.tvMessageChangePasswordCheckNewCheck.setText(R.string.change_password_fail_new_password_check)
                     binding.tvMessageChangePasswordCheckNewCheck.visibility = View.VISIBLE
-                    deactiveButtonChange()}
+                }
 
                 if(!s.toString().trim().isNullOrBlank()){
                     binding.btnDeleteEtNewPasswordCheck.visibility = View.VISIBLE
@@ -125,27 +141,12 @@ class ChangePasswordFragment : Fragment() {
         })
     }
 
-    private fun checkOldPassword(oldPassword: String) : Boolean {
-        /** TODO : 현재 비밀번호와 입력한 비밀번호 일치 검사 **/
-        return true
-    }
-
     private fun checkNewPasswordFormat(newPassword : String) : Boolean {
-        if(newPassword.trim().length >= 5) return true
-        return false
-    }
-
-    private fun checkNewPasswordSame(newPassword: String) : Boolean {
-        if(true /** TODO :  newPassword != 현재 비밀번호 **/){
-
-            return true
-        }
-        return false
+        return newPassword.trim().length >= 5
     }
 
     private fun checkNewPassword(newPassword: String, checkPassword: String) : Boolean {
-        if(newPassword == checkPassword) return true
-        return false
+        return newPassword == checkPassword
     }
 
     private fun setDeleteEditTextButtonClickListener() {
@@ -162,6 +163,8 @@ class ChangePasswordFragment : Fragment() {
 
     private fun setChangeButtonClickListener() {
         binding.btnChange.setOnClickListener {
+            profileViewModel.updatePassword(binding.etChangePasswordNew.text.toString()) // 서버와 연동하여 비밀번호 변경
+
             binding.tvMessageChangePasswordCheckNewCheck.setText(R.string.change_password_success)
             binding.tvMessageChangePasswordCheckNewCheck.setTextColor(resources.getColor(R.color.moomool_blue_0098ff, context?.theme))
             binding.tvMessageChangePasswordCheckNewCheck.visibility = View.VISIBLE

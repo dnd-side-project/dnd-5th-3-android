@@ -8,3 +8,8 @@ data class RequestProfileUpdate (
     @SerializedName("password")
     var password : String?= null
 )
+
+data class RequestOldPasswordCheck(
+    @SerializedName("password")
+    var password : String?= null
+)
