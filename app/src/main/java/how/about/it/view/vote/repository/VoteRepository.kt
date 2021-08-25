@@ -5,8 +5,11 @@ import how.about.it.view.comment.RequestPutEmoji
 import how.about.it.view.vote.RequestCommentId
 import how.about.it.view.vote.RequestPostComment
 import how.about.it.view.vote.RequestVote
+import javax.inject.Inject
 
-class VoteRepository(private val voteServiceImpl: VoteServiceImpl) {
+class VoteRepository @Inject constructor(
+    private val voteServiceImpl: VoteServiceImpl
+) {
     suspend fun requestVoteFeedDetail(id: Int) = voteServiceImpl.requestVoteFeedDetail(id)
 
     suspend fun requestVoteFeedComment(id: Int) = voteServiceImpl.requestVoteFeedComment(id)

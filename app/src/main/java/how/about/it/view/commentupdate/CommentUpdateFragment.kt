@@ -13,26 +13,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import dagger.hilt.android.AndroidEntryPoint
 import how.about.it.R
 import how.about.it.databinding.FragmentCommentUpdateBinding
-import how.about.it.network.RequestToServer
-import how.about.it.network.comment.CommentServiceImpl
-import how.about.it.view.comment.repository.CommentRepository
 import how.about.it.view.comment.viewmodel.CommentViewModel
-import how.about.it.view.comment.viewmodel.CommentViewModelFactory
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CommentUpdateFragment : Fragment() {
     private var _binding: FragmentCommentUpdateBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private val commentViewModel by viewModels<CommentViewModel>() {
-        CommentViewModelFactory(
-            CommentRepository(
-                CommentServiceImpl(RequestToServer.commentInterface)
-            )
-        )
-    }
+    private val commentViewModel by viewModels<CommentViewModel>()
     private val args by navArgs<CommentUpdateFragmentArgs>()
 
     override fun onCreateView(

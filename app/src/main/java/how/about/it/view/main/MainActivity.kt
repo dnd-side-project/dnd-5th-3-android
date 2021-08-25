@@ -6,11 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import dagger.hilt.android.AndroidEntryPoint
 import how.about.it.R
 import how.about.it.databinding.ActivityMainBinding
-import how.about.it.view.ToolbarActivity
 
-class MainActivity : ToolbarActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
