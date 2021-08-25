@@ -3,6 +3,7 @@ package how.about.it.view.vote.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import how.about.it.view.comment.Comment
+import how.about.it.view.comment.RequestPutEmoji
 import how.about.it.view.vote.RequestCommentId
 import how.about.it.view.vote.RequestPostComment
 import how.about.it.view.vote.RequestVote
@@ -132,6 +133,20 @@ class VoteViewModel(private val voteRepository: VoteRepository) : ViewModel() {
                 }).filterNot { comment ->
                     (comment.deleted && comment.replyCount == 0)
                 })
+            } ?: _networkError.emit(true)
+        }
+    }
+
+    fun requestPutEmoji(emojiId: Int, checked: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                voteRepository.requestPutEmoji(
+                    RequestPutEmoji(
+                        commentEmojiId = emojiId,
+                        isChecked = checked
+                    )
+                )
+            }.getOrNull()?.let {
             } ?: _networkError.emit(true)
         }
     }

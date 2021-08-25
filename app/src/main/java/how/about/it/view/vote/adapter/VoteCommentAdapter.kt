@@ -45,22 +45,15 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
         private val binding: ItemCommentBinding,
         private val voteViewModel: VoteViewModel
     ) : RecyclerView.ViewHolder(binding.root) {
-        private var emojiList = listOf(
-            Emoji(emojiId = 1, emojiCount = 0, checked = false, commentEmojiId = -1),
-            Emoji(emojiId = 2, emojiCount = 0, checked = false, commentEmojiId = -1),
-            Emoji(emojiId = 3, emojiCount = 0, checked = false, commentEmojiId = -1),
-            Emoji(emojiId = 4, emojiCount = 0, checked = false, commentEmojiId = -1),
-            Emoji(emojiId = 5, emojiCount = 0, checked = false, commentEmojiId = -1),
-        )
+        private var emojiList: MutableList<Emoji> = mutableListOf()
 
         fun bind(comment: Comment) {
             binding.setVariable(BR.comment, comment)
             setRootClickListener(comment.commentId)
             setBtnReactionEmptyListener(comment.commentId)
-            initEmojiList(comment.emojiList)
-            setEmptyCommentReactVisibility()
-            initTvEmoji()
             setBtnMoreClickListener(comment)
+            initEmojiList(comment.emojiList)
+            initTvEmoji(comment.emojiList)
         }
 
         private fun setRootClickListener(commentId: Int) {
@@ -86,42 +79,30 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
 
         private fun initEmojiList(responseEmojiList: List<Emoji>) {
             responseEmojiList.forEach { responseEmoji ->
-                emojiList = emojiList.map { initEmoji ->
-                    with(responseEmoji) {
-                        if (initEmoji.emojiId == emojiId) {
-                            initEmoji.copy(
-                                emojiId = emojiId,
-                                emojiCount = emojiCount,
-                                checked = checked,
-                                commentEmojiId = commentEmojiId
-                            )
-                        } else initEmoji
-                    }
-                }
+                emojiList.add(responseEmoji)
             }
         }
 
-        private fun setEmptyCommentReactVisibility() {
+        private fun initTvEmoji(emojiList: List<Emoji>) {
             var sum = 0
-            emojiList.forEach { emoji ->
-                sum += emoji.emojiCount
-            }
-            binding.btnReactionEmpty.visibility = when (sum) {
-                0 -> View.VISIBLE
-                else -> View.GONE
-            }
-        }
-
-        private fun initTvEmoji() {
             emojiList.indices.forEach { index ->
                 with(emojiList[index]) {
+                    sum += emojiCount
                     getLayoutEmoji(emojiId).apply {
                         setTvCommentReactVisibility(emojiCount)
                         setTvCommentReactCount(emojiCount)
-                        setTvCommentReactClickListener()
+                        setTvCommentReactClickListener(emojiList[index], index)
                         setTvCommentReactionBackground(checked)
                     }
                 }
+            }
+            setEmptyCommentReactVisibility(sum)
+        }
+
+        private fun setEmptyCommentReactVisibility(sum: Int) {
+            binding.btnReactionEmpty.visibility = when (sum) {
+                0 -> View.VISIBLE
+                else -> View.GONE
             }
         }
 
@@ -149,9 +130,29 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
             this.text = emojiCount.toString()
         }
 
-        private fun TextView.setTvCommentReactClickListener() {
+        private fun TextView.setTvCommentReactClickListener(emoji: Emoji, selected: Int) {
             this.setOnClickListener {
+                voteViewModel.requestPutEmoji(emoji.commentEmojiId, !emoji.checked)
+                applyPutEmoji(selected)
+                initTvEmoji(emojiList)
             }
+        }
+
+        private fun applyPutEmoji(selected: Int) {
+            emojiList = emojiList.mapIndexed { index, emoji ->
+                when (index) {
+                    selected -> emoji.copy(
+                        emojiCount = setEmojiCount(emoji),
+                        checked = !emoji.checked
+                    )
+                    else -> emoji
+                }
+            }.toMutableList()
+        }
+
+        private fun setEmojiCount(emoji: Emoji) = when (emoji.checked) {
+            true -> emoji.emojiCount - 1
+            false -> emoji.emojiCount + 1
         }
 
         private fun TextView.setTvCommentReactionBackground(checked: Boolean) {
@@ -174,11 +175,12 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
                         setOnMenuItemClickListener { item ->
                             when (item.itemId) {
                                 R.id.menu_comment_update -> {
-                                    Navigation.findNavController(binding.btnCommentMore).navigate(
-                                        VoteFragmentDirections.actionVoteFragmentToCommentUpdateFragment(
-                                            comment.commentId, comment.content
+                                    Navigation.findNavController(binding.btnCommentMore)
+                                        .navigate(
+                                            VoteFragmentDirections.actionVoteFragmentToCommentUpdateFragment(
+                                                comment.commentId, comment.content
+                                            )
                                         )
-                                    )
                                     true
                                 }
                                 R.id.menu_comment_delete -> {
