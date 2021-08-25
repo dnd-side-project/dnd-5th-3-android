@@ -1,14 +1,12 @@
 package how.about.it.view.comment
 
 import android.animation.Animator
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
@@ -24,6 +22,7 @@ import how.about.it.R
 import how.about.it.databinding.FragmentCommentBinding
 import how.about.it.network.RequestToServer
 import how.about.it.network.comment.CommentServiceImpl
+import how.about.it.util.DeleteDialogUtil
 import how.about.it.util.FloatingAnimationUtil
 import how.about.it.util.HideKeyBoardUtil
 import how.about.it.view.comment.adapter.ReCommentAdapter
@@ -359,44 +358,23 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    override fun onMenuItemClick(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_comment_update -> {
-                requireView().findNavController()
-                    .navigate(
-                        CommentFragmentDirections.actionCommentFragmentToCommentUpdateFragment(
-                            args.id, binding.layoutComment.tvCommentContent.text.toString()
-                        )
+    override fun onMenuItemClick(item: MenuItem) = when (item.itemId) {
+        R.id.menu_comment_update -> {
+            requireView().findNavController()
+                .navigate(
+                    CommentFragmentDirections.actionCommentFragmentToCommentUpdateFragment(
+                        args.id, binding.layoutComment.tvCommentContent.text.toString()
                     )
-                true
+                )
+            true
+        }
+        R.id.menu_comment_delete -> {
+            DeleteDialogUtil.showDeleteDialog(requireContext(), true) {
+                commentViewModel.requestDeleteComment(args.id)
             }
-            R.id.menu_comment_delete -> {
-                requestCommentDeleteDialog()
-                true
-            }
-            else -> false
+            true
         }
-    }
-
-    private fun requestCommentDeleteDialog() {
-        val mDialogView =
-            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-        val mBuilder = AlertDialog.Builder(requireContext())
-            .setView(mDialogView)
-        val mAlertDialog = mBuilder.show()
-
-        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
-            .setText(R.string.delete)
-        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
-            .setText(R.string.comment_delete_dialog)
-
-        mDialogView.findViewById<Button>(R.id.btn_dialog_confirm).setOnClickListener {
-            commentViewModel.requestDeleteComment(args.id)
-            mAlertDialog.dismiss()
-        }
-        mDialogView.findViewById<Button>(R.id.btn_dialog_cancel).setOnClickListener {
-            mAlertDialog.dismiss()
-        }
+        else -> false
     }
 
     private fun setEtReplyEditorActionListener() {
