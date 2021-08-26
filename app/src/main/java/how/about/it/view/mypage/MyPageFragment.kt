@@ -42,6 +42,7 @@ class MyPageFragment : Fragment() {
         setCategoryCollect()
         setRvMyPageAdapter()
         setMyPageFeedListCollect()
+        setNetworkErrorCollect()
         return binding.root
     }
 
@@ -170,6 +171,22 @@ class MyPageFragment : Fragment() {
             tvMyPageContentEmpty.visibility = when (size) {
                 0 -> View.VISIBLE
                 else -> View.INVISIBLE
+            }
+        }
+    }
+
+    private fun setNetworkErrorCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                with(myPageViewModel) {
+                    networkError.collect { networkError ->
+                        if (networkError) {
+                            requireView().findNavController()
+                                .navigate(R.id.action_myPageFragment_to_networkErrorFragment)
+                            resetNetworkError()
+                        }
+                    }
+                }
             }
         }
     }

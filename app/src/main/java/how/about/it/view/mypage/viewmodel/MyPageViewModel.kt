@@ -28,6 +28,10 @@ class MyPageViewModel @Inject constructor(
         _category.value = category
     }
 
+    fun resetNetworkError() {
+        _networkError.value = false
+    }
+
     fun requestMyPageFeedList(sorted: String) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {

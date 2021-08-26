@@ -217,4 +217,9 @@
     <!-- Notice -->
     <string name="notice">공지사항</string>
 
+    <!-- NetworkError -->
+    <string name="network_error_title">연결오류</string>
+    <string name="network_error_content_title">연결에 실패했어요</string>
+    <string name="network_error_contetn">앗! 현재 네트워크가 불안정해요\n네트워크 상태를 확인하고 다시 시도해주세요</string>
+
 </resources>

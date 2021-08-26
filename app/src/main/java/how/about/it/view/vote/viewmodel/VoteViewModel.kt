@@ -65,6 +65,10 @@ class VoteViewModel @Inject constructor(
         _requestPostComment.value = false
     }
 
+    fun resetNetworkError() {
+        _networkError.value = false
+    }
+
     fun requestVoteFeedDetail(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {

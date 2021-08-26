@@ -63,6 +63,10 @@ class CommentViewModel @Inject constructor(
         _isPosted.value = false
     }
 
+    fun resetNetworkError() {
+        _networkError.value = false
+    }
+
     fun requestGetComments(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {

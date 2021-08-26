@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_voteFragment_to_commentUpdateFragment"
             app:destination="@id/commentUpdateFragment" />
+        <action
+            android:id="@+id/action_voteFragment_to_networkErrorFragment"
+            app:destination="@id/networkErrorFragment" />
     </fragment>
 
     <fragment
@@ -64,6 +67,9 @@
         <action
             android:id="@+id/action_commentFragment_to_commentUpdateFragment"
             app:destination="@id/commentUpdateFragment" />
+        <action
+            android:id="@+id/action_commentFragment_to_networkErrorFragment"
+            app:destination="@id/networkErrorFragment" />
     </fragment>
 
     <fragment
@@ -77,6 +83,9 @@
         <argument
             android:name="content"
             app:argType="string" />
+        <action
+            android:id="@+id/action_commentUpdateFragment_to_networkErrorFragment"
+            app:destination="@id/networkErrorFragment" />
     </fragment>
 
     <fragment
@@ -157,6 +166,9 @@
         <action
             android:id="@+id/action_myPageFragment_to_voteFragment"
             app:destination="@id/voteFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_networkErrorFragment"
+            app:destination="@id/networkErrorFragment" />
     </fragment>
 
     <fragment

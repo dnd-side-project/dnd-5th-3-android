@@ -56,6 +56,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setBtnCommentMoreClickListener()
         setEtReplyEditorActionListener()
         setIsPostedCollect()
+        setNetworkErrorCollect()
         commentViewModel.initOpenEmoji(args.openEmoji)
         commentViewModel.requestGetComments(args.id)
         return binding.root
@@ -395,6 +396,22 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                         if (isPosted) {
                             resetIsPosted()
                             requestGetComments(args.id)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setNetworkErrorCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                with(commentViewModel) {
+                    networkError.collect { networkError ->
+                        if (networkError) {
+                            requireView().findNavController()
+                                .navigate(R.id.action_commentFragment_to_networkErrorFragment)
+                            resetNetworkError()
                         }
                     }
                 }

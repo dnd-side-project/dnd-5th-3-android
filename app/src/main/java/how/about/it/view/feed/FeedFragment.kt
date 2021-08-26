@@ -47,6 +47,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setRvFeedBottomAdapter()
         setFeedTopListCollect()
         setFeedBottomListCollect()
+        setNetworkErrorCollect()
         feedViewModel.requestTopFeedList()
         return binding.root
     }
@@ -195,8 +196,14 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun setNetworkErrorCollect() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                feedViewModel.networkError.collect {
-                    //TODO networkerrorpage
+                with(feedViewModel) {
+                    networkError.collect { networkError ->
+                        if (networkError) {
+                            requireView().findNavController()
+                                .navigate(R.id.action_feedFragment_to_networkErrorFragment)
+                            resetNetworkError()
+                        }
+                    }
                 }
             }
         }
