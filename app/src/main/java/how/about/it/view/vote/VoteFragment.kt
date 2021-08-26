@@ -62,6 +62,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setLayoutVoteClickListener(getLayoutVoteList())
         setRequestVoteCollect()
         setLottieAnimationListener()
+        setNetworkErrorCollect()
         voteViewModel.requestVoteFeedDetail(args.id)
         voteViewModel.requestVoteFeedComment(args.id)
         return binding.root
@@ -444,6 +445,22 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 layoutVoteAgree
             )
         }
+
+    private fun setNetworkErrorCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                with(voteViewModel) {
+                    networkError.collect { networkError ->
+                        if (networkError) {
+                            requireView().findNavController()
+                                .navigate(R.id.action_voteFragment_to_networkErrorFragment)
+                            resetNetworkError()
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

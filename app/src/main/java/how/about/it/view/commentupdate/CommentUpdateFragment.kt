@@ -37,6 +37,7 @@ class CommentUpdateFragment : Fragment() {
         setEtCommentUpdateText()
         setTvUpdateRequestClickListener()
         setIsUpdatedCollect()
+        setNetworkErrorCollect()
         return binding.root
     }
 
@@ -97,6 +98,22 @@ class CommentUpdateFragment : Fragment() {
                     if (isUpdated) {
                         requireView().findNavController()
                             .popBackStack()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setNetworkErrorCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                with(commentViewModel) {
+                    networkError.collect { networkError ->
+                        if (networkError) {
+                            requireView().findNavController()
+                                .navigate(R.id.action_commentUpdateFragment_to_networkErrorFragment)
+                            resetNetworkError()
+                        }
                     }
                 }
             }

@@ -31,6 +31,10 @@ class FeedViewModel @Inject constructor(
         _toggleCategory.value = category
     }
 
+    fun resetNetworkError() {
+        _networkError.value = false
+    }
+
     fun requestTopFeedList() {
         viewModelScope.launch(Dispatchers.IO) {
             runCatching {
