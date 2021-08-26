@@ -95,6 +95,8 @@
     <string name="my_page_my_participate">투표참여</string>
     <string name="my_page_my_write_empty">아직 게시물이 없어요 ㅠ.ㅠ\n당신의 고민을 올려주세요!</string>
     <string name="my_page_my_participate_empty">아직 참여한 투표가 없어요 ㅇ.ㅇ\n투표를 참여해주세요!</string>
+    <string name="my_page_request_written">written</string>
+    <string name="my_page_request_voted">voted</string>
 
     <!-- Notification -->
     <string name="notification_title">알림</string>

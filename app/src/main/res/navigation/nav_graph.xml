@@ -154,6 +154,9 @@
         <action
             android:id="@+id/action_myPageFragment_to_settingFragment"
             app:destination="@id/settingFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_voteFragment"
+            app:destination="@id/voteFragment" />
     </fragment>
 
     <fragment

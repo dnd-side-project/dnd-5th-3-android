@@ -6,9 +6,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import how.about.it.network.comment.CommentServiceImpl
 import how.about.it.network.feed.FeedServiceImpl
+import how.about.it.network.mypage.MyPageServiceImpl
 import how.about.it.network.vote.VoteServiceImpl
 import how.about.it.view.comment.repository.CommentRepository
 import how.about.it.view.feed.repository.FeedRepository
+import how.about.it.view.mypage.repository.MyPageRepository
 import how.about.it.view.vote.repository.VoteRepository
 import javax.inject.Singleton
 
@@ -29,4 +31,9 @@ object RepositoryModule {
     @Singleton
     fun provideCommentRepository(commentServiceImpl: CommentServiceImpl): CommentRepository =
         CommentRepository(commentServiceImpl)
+
+    @Provides
+    @Singleton
+    fun provideMyPageRepository(myPageServiceImpl: MyPageServiceImpl): MyPageRepository =
+        MyPageRepository(myPageServiceImpl)
 }

@@ -1,4 +1,4 @@
-package how.about.it.view.feed.adapter
+package how.about.it.view.mypage.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -8,30 +8,30 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import how.about.it.BR
-import how.about.it.databinding.ItemFeedTopBinding
+import how.about.it.databinding.ItemFeedBottomBinding
 import how.about.it.util.TimeChangerUtil
 import how.about.it.view.feed.Feed
-import how.about.it.view.feed.FeedFragmentDirections
+import how.about.it.view.mypage.MyPageFragmentDirections
 
-class FeedTopAdapter :
-    ListAdapter<Feed, FeedTopAdapter.FeedTopViewHolder>(FEED_DIFF_UTIL) {
+class MyPageFeedAdapter :
+    ListAdapter<Feed, MyPageFeedAdapter.MyPageFeedViewHolder>(FEED_DIFF_UTIL) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ) = FeedTopViewHolder(
-        ItemFeedTopBinding.inflate(
+    ) = MyPageFeedViewHolder(
+        ItemFeedBottomBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
     )
 
-    override fun onBindViewHolder(holder: FeedTopViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyPageFeedViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class FeedTopViewHolder(
-        private val binding: ItemFeedTopBinding,
+    class MyPageFeedViewHolder(
+        private val binding: ItemFeedBottomBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(feed: Feed) {
             setBindingSetVariable(feed)
@@ -51,7 +51,7 @@ class FeedTopAdapter :
         private fun setRootClickListener(feedId: Int) {
             binding.root.setOnClickListener { view ->
                 Navigation.findNavController(view).navigate(
-                    FeedFragmentDirections.actionFeedFragmentToVoteFragment(
+                    MyPageFragmentDirections.actionMyPageFragmentToVoteFragment(
                         feedId,
                     )
                 )
@@ -60,11 +60,11 @@ class FeedTopAdapter :
 
         @SuppressLint("ClickableViewAccessibility")
         private fun setProgressTouchListener() {
-            binding.progressFeedTop.setOnTouchListener { _, _ -> true }
+            binding.progressFeedBottom.setOnTouchListener { _, _ -> true }
         }
 
         private fun setImageClipToOutLine() {
-            binding.imgFeedTop.clipToOutline = true
+            binding.imgFeedBottom.clipToOutline = true
         }
     }
 

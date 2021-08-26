@@ -11,6 +11,7 @@ import how.about.it.network.comment.CommentServiceImpl
 import how.about.it.network.feed.FeedInterface
 import how.about.it.network.feed.FeedService
 import how.about.it.network.feed.FeedServiceImpl
+import how.about.it.network.mypage.MyPageInterface
 import how.about.it.network.vote.VoteInterface
 import how.about.it.network.vote.VoteService
 import how.about.it.network.vote.VoteServiceImpl
@@ -30,6 +31,10 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideCommentInterface(): CommentInterface = RequestToServer.commentInterface
+
+    @Provides
+    @Singleton
+    fun provideMyPageInterface(): MyPageInterface = RequestToServer.myPageInterface
 
     @Provides
     @Singleton
