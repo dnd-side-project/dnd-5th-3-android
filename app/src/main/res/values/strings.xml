@@ -113,6 +113,7 @@
     <string name="profile_change_all_success_dialog_description">보다 멋진 프로필로 변경되었어요!\n이제 다시 활동을 시작해볼까요?</string>
 
     <!-- ChangePassword -->
+    <string name="change_password">비밀번호 변경</string>
     <string name="current_password">현재 비밀번호</string>
     <string name="new_password">새 비밀번호</string>
     <string name="hint_old_password">현재 비밀번호를 입력해주세요</string>
