@@ -60,7 +60,6 @@ class FeedBottomAdapter :
         @SuppressLint("ClickableViewAccessibility")
         private fun setProgressTouchListener() {
             binding.progressFeedBottom.setOnTouchListener { _, _ -> true }
-
         }
 
         private fun setImageClipToOutLine() {
