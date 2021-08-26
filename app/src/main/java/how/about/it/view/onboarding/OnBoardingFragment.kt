@@ -13,15 +13,9 @@ import how.about.it.R
 import how.about.it.database.SharedManager
 import how.about.it.databinding.FragmentOnBoardingBinding
 
-class   OnBoardingFragment : Fragment() {
+class OnBoardingFragment : Fragment() {
     private var _binding: FragmentOnBoardingBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private val sharedManager : SharedManager by lazy { SharedManager(requireContext()) }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        skipOnBoarding()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,16 +23,19 @@ class   OnBoardingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
+        skipOnBoarding()
         setVpOnBoardingAdapter()
         setVpOnBoardingPageCallBack()
         setTabOnBoardingMediator()
         setTvOnBoardingSkipClickListener()
+        setBtnOnBoardingSkipClickListener()
         return binding.root
     }
 
     private fun skipOnBoarding() {
-        if(sharedManager.isSkipOnBoardingFragment() == "true")
-            requireView().findNavController().navigate(R.id.action_onBoardingFragment_to_feedFragment)
+        if (SharedManager(requireContext()).isSkipOnBoardingFragment() == "true")
+            requireView().findNavController()
+                .navigate(R.id.action_onBoardingFragment_to_feedFragment)
     }
 
     private fun setVpOnBoardingAdapter() {
@@ -75,7 +72,7 @@ class   OnBoardingFragment : Fragment() {
     }
 
     private fun setStartButtonVisibility(position: Int) {
-        binding.btnOnBoardingStart.visibility = when (position) {
+        binding.btnOnBoardingSkip.visibility = when (position) {
             3 -> View.VISIBLE
             else -> View.GONE
         }
@@ -87,6 +84,13 @@ class   OnBoardingFragment : Fragment() {
 
     private fun setTvOnBoardingSkipClickListener() {
         binding.tvOnBoardingSkip.setOnClickListener {
+            requireView().findNavController()
+                .navigate(R.id.action_onBoardingFragment_to_feedFragment)
+        }
+    }
+
+    private fun setBtnOnBoardingSkipClickListener() {
+        binding.btnOnBoardingSkip.setOnClickListener {
             requireView().findNavController()
                 .navigate(R.id.action_onBoardingFragment_to_feedFragment)
         }
