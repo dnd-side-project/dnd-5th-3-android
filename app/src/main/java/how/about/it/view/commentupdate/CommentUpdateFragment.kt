@@ -37,7 +37,7 @@ class CommentUpdateFragment : Fragment() {
         setEtCommentUpdateText()
         setTvUpdateRequestClickListener()
         setIsUpdatedCollect()
-        setNetworkErrorCollect()
+        //setNetworkErrorCollect()
         return binding.root
     }
 

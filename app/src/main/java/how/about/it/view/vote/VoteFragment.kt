@@ -62,7 +62,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setLayoutVoteClickListener(getLayoutVoteList())
         setRequestVoteCollect()
         setLottieAnimationListener()
-        setNetworkErrorCollect()
+        //setNetworkErrorCollect()
         voteViewModel.requestVoteFeedDetail(args.id)
         voteViewModel.requestVoteFeedComment(args.id)
         return binding.root
