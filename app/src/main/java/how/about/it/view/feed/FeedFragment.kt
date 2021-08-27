@@ -47,7 +47,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setRvFeedBottomAdapter()
         setFeedTopListCollect()
         setFeedBottomListCollect()
-        setNetworkErrorCollect()
+        //setNetworkErrorCollect()
         feedViewModel.requestTopFeedList()
         return binding.root
     }

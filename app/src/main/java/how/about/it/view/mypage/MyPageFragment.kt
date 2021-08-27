@@ -42,7 +42,7 @@ class MyPageFragment : Fragment() {
         setCategoryCollect()
         setRvMyPageAdapter()
         setMyPageFeedListCollect()
-        setNetworkErrorCollect()
+        //setNetworkErrorCollect()
         return binding.root
     }
 
