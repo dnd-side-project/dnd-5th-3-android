@@ -150,6 +150,7 @@ class TempListWriteFragment : Fragment() {
     }
     private fun showBackButton() {
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        (activity as MainActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
         this.setHasOptionsMenu(true)
     }
 

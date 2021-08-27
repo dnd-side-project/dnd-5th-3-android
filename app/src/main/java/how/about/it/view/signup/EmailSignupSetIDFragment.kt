@@ -105,6 +105,7 @@ class EmailSignupSetIDFragment : Fragment() {
 
     private fun showBackButton() {
         (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
         this.setHasOptionsMenu(true)
     }
 
