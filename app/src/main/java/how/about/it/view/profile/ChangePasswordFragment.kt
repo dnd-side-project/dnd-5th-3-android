@@ -17,6 +17,7 @@ import how.about.it.repository.ProfileRepository
 import how.about.it.view.main.MainActivity
 import how.about.it.viewmodel.ProfileViewModel
 import how.about.it.viewmodel.ProfileViewModelFactory
+import java.util.regex.Pattern
 
 class ChangePasswordFragment : Fragment() {
     private var _binding: FragmentChangePasswordBinding? = null
@@ -142,7 +143,7 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun checkNewPasswordFormat(newPassword : String) : Boolean {
-        return newPassword.trim().length >= 5
+        return Pattern.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$", newPassword.trim()) && newPassword.length >= 8
     }
 
     private fun checkNewPassword(newPassword: String, checkPassword: String) : Boolean {
