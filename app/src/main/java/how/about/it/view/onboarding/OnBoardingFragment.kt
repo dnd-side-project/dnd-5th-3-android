@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -33,9 +34,10 @@ class OnBoardingFragment : Fragment() {
     }
 
     private fun skipOnBoarding() {
-        if (SharedManager(requireContext()).isSkipOnBoardingFragment() == "true")
-            requireView().findNavController()
+        if (SharedManager(requireContext()).isSkipOnBoardingFragment() == "true") {
+            this.findNavController()
                 .navigate(R.id.action_onBoardingFragment_to_feedFragment)
+        }
     }
 
     private fun setVpOnBoardingAdapter() {
