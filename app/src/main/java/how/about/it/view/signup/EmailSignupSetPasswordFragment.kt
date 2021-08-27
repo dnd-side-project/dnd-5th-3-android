@@ -15,6 +15,7 @@ import how.about.it.R
 import how.about.it.databinding.FragmentEmailSignupSetPasswordBinding
 import how.about.it.view.login.LoginActivity
 import how.about.it.viewmodel.SignupViewModel
+import java.util.regex.Pattern
 
 class EmailSignupSetPasswordFragment : Fragment() {
     private var _binding : FragmentEmailSignupSetPasswordBinding?= null
@@ -25,7 +26,6 @@ class EmailSignupSetPasswordFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentEmailSignupSetPasswordBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
@@ -66,8 +66,8 @@ class EmailSignupSetPasswordFragment : Fragment() {
                     binding.tvMessageSignupPasswordFormat.visibility = View.INVISIBLE
                 }
 
-                // TODO : 비밀번호 형식 확인 코드 작성
-                if(s.toString().trim().length >= 5) {
+                // 최소 하나의 문자 및 하나의 숫자를 포함한 8자리 이상 정규식 조건
+                if(Pattern.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$", s.toString().trim()) && s.toString().trim().length >= 8) {
                     // 형식 검사 성공시
                     binding.tvMessageSignupPasswordFormat.setText(getString(R.string.success_message_email_signup_password))
                     binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))

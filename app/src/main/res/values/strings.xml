@@ -51,9 +51,9 @@
     <string name="message_email_signup_id">이메일은 로그인과\n비밀번호 분실 시 사용될 거에요!</string>
 
     <!-- SignupEmailPassword -->
-    <string name="hint_password_format">5자 이상으로 입력해주세요</string>
+    <string name="hint_password_format">영어및 숫자를 포함하여 8자리 이상으로 입력해주세요</string>
     <string name="hint_password_check">비밀번호 확인할게요 :)</string>
-    <string name="fail_message_email_signup_password_format">5자리를 넘겨주세요</string>
+    <string name="fail_message_email_signup_password_format">영어및 숫자를 포함하여 8자리 넘겨주세요</string>
     <string name="fail_message_email_signup_password_empty">앗! 위에 비밀번호를 먼저 입력해주세요</string>
     <string name="fail_message_email_signup_password_check">헉! 비밀번호가 다른데요? 확인해 주시겠어요?</string>
     <string name="success_message_email_signup_password">좋은데요!</string>
@@ -119,10 +119,10 @@
     <string name="current_password">현재 비밀번호</string>
     <string name="new_password">새 비밀번호</string>
     <string name="hint_old_password">현재 비밀번호를 입력해주세요</string>
-    <string name="hint_new_password">5자 이상으로 입력해주세요</string>
+    <string name="hint_new_password">새롭게 설정할 비밀번호를 입력해주세요</string>
     <string name="hint_new_password_check">비밀번호 확인할게요 :)</string>
     <string name="change_password_fail_old_password">비밀번호가 올바르지 않아요!</string>
-    <string name="change_password_fail_new_password_format">5자리를 넘겨주세요!</string>
+    <string name="change_password_fail_new_password_format">영어및 숫자를 포함하여 8자리를 넘겨주세요!</string>
     <string name="change_password_fail_new_password_same">현재 비밀번호와 똑같아요</string>
     <string name="change_password_fail_new_password_check">헉! 비밀번호가 다른데요? 확인해 주시겠어요?</string>
     <string name="change_password_fail_new_password_empty">앗! 위에 비밀번호를 먼저 입력해주세요</string>
