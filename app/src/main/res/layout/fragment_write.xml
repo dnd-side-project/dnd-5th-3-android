@@ -65,7 +65,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:hint="@string/hint_wirte_description"
                 android:breakStrategy="simple"
-                android:textSize="14dp"
+                android:textSize="16dp"
                 android:textColor="@color/bluegray300_CBCFD6"
                 android:textColorHint="@color/bluegray500_878C96"
                 />
