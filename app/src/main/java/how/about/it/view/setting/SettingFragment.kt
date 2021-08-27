@@ -12,21 +12,27 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import how.about.it.R
 import how.about.it.databinding.FragmentSettingBinding
+import how.about.it.repository.SettingRepository
 import how.about.it.view.login.LoginActivity
 import how.about.it.view.main.MainActivity
+import how.about.it.viewmodel.*
 
 class SettingFragment : Fragment() {
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = requireNotNull(_binding)
+    private lateinit var settingViewModel : SettingViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSettingBinding.inflate(layoutInflater)
+        settingViewModel = ViewModelProvider(this, SettingViewModelFactory(SettingRepository(requireContext()))).get(SettingViewModel::class.java)
         setToolbarDetail()
         setLogoutClickListener()
         setDeleteAccountClickListener()
@@ -111,7 +117,7 @@ class SettingFragment : Fragment() {
                     mAlertDialog.dismiss()
                 }
                 confirmButton.setOnClickListener {
-                    /** TODO: 서버와 통신하여 회원정보 삭제 코드 작성 **/
+                    settingViewModel.deleteAccount()
                     mAlertDialog.dismiss()
                     mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.setting_delete_account_complete)
                     mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.setting_delete_account_complete_dialog_description)
@@ -129,7 +135,6 @@ class SettingFragment : Fragment() {
                     }
                 }
             }
-            deleteSharedPreferencesInfo()
         }
     }
 

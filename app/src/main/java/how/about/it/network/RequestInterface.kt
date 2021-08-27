@@ -15,6 +15,9 @@ interface RequestInterface {
     @PUT("/api/v1/member")
     fun requestProfileUpdate(@Header("Authorization") accessToken: String, @Body body : RequestProfileUpdate) : Call<ResponseMember>
 
+    @HTTP(method = "DELETE", path = "/api/v1/member", hasBody = true)
+    fun requestDeleteAccount(@Header("Authorization") accessToken: String, @Body body : RequestDeleteAccount) : Call<ResponseMember>
+
     @POST("/api/v1/member/check/password")
     fun requestCheckOldPassword(@Header("Authorization") accessToken: String, @Body body : RequestOldPasswordCheck) : Call<String>
 
