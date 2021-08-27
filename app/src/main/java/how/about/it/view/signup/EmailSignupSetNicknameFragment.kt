@@ -1,5 +1,6 @@
 package how.about.it.view.signup
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -37,6 +40,9 @@ class EmailSignupSetNicknameFragment : Fragment() {
         (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
 
+        setKeyboardDoneClick()
+        setKeyboardHide()
+        
         binding.btnNext.setOnClickListener {
             if(binding.etSignupEmailNickname.text.isNullOrBlank()) {
                 Toast.makeText(activity, R.string.hint_nickname, Toast.LENGTH_SHORT).show()
@@ -123,6 +129,26 @@ class EmailSignupSetNicknameFragment : Fragment() {
         binding.btnNext.isEnabled = false
         binding.btnNext.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
         binding.btnNext.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
+    }
+
+    private fun setKeyboardDoneClick() {
+        binding.etSignupEmailNickname.setOnEditorActionListener { _, actionId, event ->
+            var handled = false
+
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(binding.etSignupEmailNickname.windowToken, 0)
+                handled = true
+            }
+            handled
+        }
+    }
+    private fun setKeyboardHide() {
+        binding.root.setOnTouchListener { _, event ->
+            val inputMethodManager : InputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
+            true
+        }
     }
 
     override fun onDestroyView() {
