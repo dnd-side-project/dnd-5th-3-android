@@ -63,6 +63,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setRequestVoteCollect()
         setLottieAnimationListener()
         //setNetworkErrorCollect()
+        voteViewModel.closeVote()
         voteViewModel.requestVoteFeedDetail(args.id)
         voteViewModel.requestVoteFeedComment(args.id)
         return binding.root
@@ -269,6 +270,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                             requestVoteFeedComment(args.id)
                             delay(500)
                             afterPostedScroll()
+                            resetEtVoteCommentText()
                         }
                     }
                 }
@@ -278,6 +280,10 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun afterPostedScroll() {
         binding.layoutScrollVote.fullScroll(View.FOCUS_DOWN)
+    }
+
+    private fun resetEtVoteCommentText() {
+        binding.etVoteComment.setText("")
     }
 
     private fun setFabVoteClickListener() {
@@ -365,9 +371,13 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun setRequestVoteCollect() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                voteViewModel.requestVote.collect { index ->
-                    index?.let {
-                        setLayoutCommentSelectClose(index, getLayoutVoteList())
+                with(voteViewModel) {
+                    requestVote.collect { index ->
+                        index?.let {
+                            resetRequestVote()
+                            requestVoteFeedComment(args.id)
+                            setLayoutCommentSelectClose(index, getLayoutVoteList())
+                        }
                     }
                 }
             }

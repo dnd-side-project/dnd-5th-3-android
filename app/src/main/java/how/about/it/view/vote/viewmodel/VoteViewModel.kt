@@ -61,6 +61,10 @@ class VoteViewModel @Inject constructor(
         _openVote.value = 0
     }
 
+    fun resetRequestVote() {
+        _requestVote.value = null
+    }
+
     fun resetIsPosted() {
         _requestPostComment.value = false
     }
@@ -81,6 +85,7 @@ class VoteViewModel @Inject constructor(
 
     fun requestVoteFeedComment(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
+            _feedDetailComment.emit(null)
             runCatching {
                 voteRepository.requestVoteFeedComment(id)
             }.getOrNull()?.let { feedDetailComment ->
