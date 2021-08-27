@@ -1,5 +1,6 @@
 package how.about.it.view.signup
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -33,6 +35,8 @@ class EmailSignupSetPasswordFragment : Fragment() {
         (activity as LoginActivity).setSupportActionBar(binding.toolbarSignupBoard.toolbarBoard)
         (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
+
+        setKeyboardHide()
 
         binding.btnNext.setOnClickListener {
             if(binding.etSignupEmailPassword.text.isNullOrBlank() || binding.etSignupEmailPasswordCheck.text.isNullOrBlank()) {
@@ -143,6 +147,14 @@ class EmailSignupSetPasswordFragment : Fragment() {
         binding.btnNext.isEnabled = false
         binding.btnNext.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
         binding.btnNext.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
+    }
+
+    private fun setKeyboardHide() {
+        binding.root.setOnTouchListener { _, event ->
+            val inputMethodManager : InputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
+            true
+        }
     }
 
     override fun onDestroyView() {
