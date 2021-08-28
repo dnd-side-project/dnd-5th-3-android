@@ -1,6 +1,7 @@
 package how.about.it.view.login
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -46,6 +48,8 @@ class EmailLoginFragment : Fragment() {
         val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
         val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
         val mAlertDialog = mBuilder.create()
+
+        setKeyboardHide()
 
         binding.btnLoginEmail.setOnClickListener {
             if (binding.etLoginEmailId.text.isNullOrBlank() || binding.etLoginEmailPassword.text.isNullOrBlank()) {
@@ -128,6 +132,14 @@ class EmailLoginFragment : Fragment() {
     fun deactiveButtonLoginEmail() {
         binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
         binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
+    }
+
+    private fun setKeyboardHide() {
+        binding.root.setOnTouchListener { _, event ->
+            val inputMethodManager : InputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
+            true
+        }
     }
 
     override fun onDestroyView() {
