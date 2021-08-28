@@ -56,7 +56,6 @@ class ProfileFragment : Fragment() {
         setEtChangePasswordClickListener()
 
         binding.etProfileNickname.setText(sharedManager.getCurrentUser().nickname.toString())
-        binding.etProfileEmail.setText(sharedManager.getCurrentUser().email.toString())
         val originalNickname = sharedManager.getCurrentUser().nickname.toString()
 
         binding.etProfileNickname.addTextChangedListener(object : TextWatcher {
