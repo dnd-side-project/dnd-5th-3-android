@@ -84,16 +84,21 @@ class EmailPasswordResetFragment : Fragment() {
                     deactiveButtonResetPassword()
                     binding.btnDeleteEtEmailId.visibility = View.INVISIBLE
                 }
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(!s.isNullOrBlank()){
+
+                if(android.util.Patterns.EMAIL_ADDRESS.matcher(s.toString().trim()).matches()) {
+                    binding.tvMessageEmailIdCheck.visibility = View.INVISIBLE
+                    // TODO : 비밀번호 초기화 서버와 연동 코드 작성
                     activeButtonResetPassword()
-                    binding.btnDeleteEtEmailId.visibility = View.VISIBLE
                 } else {
+                    // 형식 검사 실패시
+                    binding.tvMessageEmailIdCheck.visibility = View.VISIBLE
+                    binding.tvMessageEmailIdCheck.setText(getString(R.string.fail_message_email_signup_id_format))
+                    binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
                     deactiveButtonResetPassword()
-                    binding.btnDeleteEtEmailId.visibility = View.INVISIBLE
                 }
+
             }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged( s as Editable? ) }
         })
 
 
