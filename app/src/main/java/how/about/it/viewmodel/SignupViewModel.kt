@@ -1,11 +1,14 @@
 package how.about.it.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import how.about.it.model.RequestLogin
 import how.about.it.model.RequestMember
+import how.about.it.repository.LoginRepository
 import how.about.it.repository.SignupRepository
 
-class SignupViewModel() : ViewModel() {
+class SignupViewModel(application: Application) : AndroidViewModel(application) {
     private var email = ""
     private var password = ""
     private var nickname = ""
@@ -18,7 +21,11 @@ class SignupViewModel() : ViewModel() {
     val duplicateCheckNicknameSuccess = MutableLiveData<Boolean>()
     val duplicateCheckNicknameFailedMessage = MutableLiveData<String?>()
 
+    val loginSuccess = MutableLiveData<Boolean>()
+    val loginFailedMessage = MutableLiveData<String?>()
+
     private val signupRepository = SignupRepository()
+    private val loginRepository = LoginRepository(getApplication<Application>().applicationContext)
 
     fun setEmail(email : String) {
         this.email = email
@@ -68,6 +75,19 @@ class SignupViewModel() : ViewModel() {
             override fun onError(message: String?) {
                 signupSuccess.postValue(false)
                 signupFailedMessage.postValue(message)
+            }
+        })
+    }
+
+    fun login() {
+        loginRepository.loginUser(RequestLogin(getEmail(), getPassword()), object : LoginRepository.LoginCallBack {
+            override fun onSuccess() {
+                loginSuccess.postValue(true)
+            }
+
+            override fun onError(message: String?) {
+                loginSuccess.postValue(false)
+                loginFailedMessage.postValue(message)
             }
         })
     }

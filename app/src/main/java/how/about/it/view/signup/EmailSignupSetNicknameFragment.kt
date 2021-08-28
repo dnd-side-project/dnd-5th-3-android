@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer
 import how.about.it.R
 import how.about.it.databinding.FragmentEmailSignupSetNicknameBinding
 import how.about.it.view.login.LoginActivity
+import how.about.it.view.main.MainActivity
 import how.about.it.viewmodel.SignupViewModel
 
 class EmailSignupSetNicknameFragment : Fragment() {
@@ -53,15 +54,25 @@ class EmailSignupSetNicknameFragment : Fragment() {
         }
 
         signupViewModel.signupSuccess.observe(viewLifecycleOwner, Observer {
-            if(it) { // 회원가입이 성공할 경우 메인 화면으로 이동
-                val loginIntent = Intent(activity, LoginActivity::class.java)
+            if(it) { // 회원가입이 성공할 경우 자동 로그인
+                signupViewModel.login()
+            }
+        })
+        signupViewModel.signupFailedMessage.observe(viewLifecycleOwner, Observer {
+            Log.e("Signup Error", it.toString())
+        })
+
+        signupViewModel.loginSuccess.observe(viewLifecycleOwner, Observer {
+            if(it) { // 자동 로그인 성공시 바로 메인 화면으로 이동
+                val loginIntent = Intent(activity, MainActivity::class.java)
                 startActivity(loginIntent)
                 (activity as LoginActivity).finish()
             }
         })
-        signupViewModel.signupFailedMessage.observe(viewLifecycleOwner, Observer {
+        signupViewModel.loginFailedMessage.observe(viewLifecycleOwner, Observer {
             Log.e("Login Error", it.toString())
         })
+
 
         binding.btnDeleteEtEmailNickname.setOnClickListener{
             binding.etSignupEmailNickname.setText("")
