@@ -18,6 +18,7 @@ import androidx.preference.PreferenceManager
 import how.about.it.R
 import how.about.it.databinding.FragmentSettingBinding
 import how.about.it.repository.SettingRepository
+import how.about.it.view.ToastDefaultBlack
 import how.about.it.view.login.LoginActivity
 import how.about.it.view.main.MainActivity
 import how.about.it.viewmodel.*
@@ -141,12 +142,14 @@ class SettingFragment : Fragment() {
 
     private fun setNotificationSettingClickListener() {
         binding.btnSettingNotification.setOnClickListener {
-            requireView().findNavController().navigate(R.id.action_settingFragment_to_settingNotificationFragment)
+            ToastDefaultBlack.createToast(requireContext(), getString(R.string.fail_navigate_page_developing))?.show()
+            // requireView().findNavController().navigate(R.id.action_settingFragment_to_settingNotificationFragment)
         }
     }
     private fun setMotionSettingClickListener() {
         binding.btnSettingMotion.setOnClickListener {
-            requireView().findNavController().navigate(R.id.action_settingFragment_to_settingMotionFragment)
+            ToastDefaultBlack.createToast(requireContext(), getString(R.string.fail_navigate_page_developing))?.show()
+            // requireView().findNavController().navigate(R.id.action_settingFragment_to_settingMotionFragment)
         }
     }
 

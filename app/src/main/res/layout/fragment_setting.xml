@@ -39,6 +39,7 @@
         android:text="@string/setting_notification"
         android:textSize="18dp"
         android:textColor="@color/bluegray300_CBCFD6"
+        android:letterSpacing="0"
         android:drawableEnd="@drawable/ic_next"/>
     <Button
         android:id="@+id/btn_setting_motion"
@@ -52,6 +53,7 @@
         android:text="@string/setting_motion"
         android:textSize="18dp"
         android:textColor="@color/bluegray300_CBCFD6"
+        android:letterSpacing="0"
         android:drawableEnd="@drawable/ic_next"/>
 
     <TextView
@@ -81,6 +83,7 @@
         android:text="@string/setting_information_notice"
         android:textSize="18dp"
         android:textColor="@color/bluegray300_CBCFD6"
+        android:letterSpacing="0"
         android:drawableEnd="@drawable/ic_next"/>
     <Button
         android:id="@+id/btn_setting_information_inquiry"
@@ -94,7 +97,46 @@
         android:text="@string/setting_information_inquiry"
         android:textSize="18dp"
         android:textColor="@color/bluegray300_CBCFD6"
+        android:letterSpacing="0"
         android:drawableEnd="@drawable/ic_next"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_setting_information_application_version"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_setting_information_inquiry">
+
+        <TextView
+            android:id="@+id/tv_setting_information_application_version_current"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="right|center_vertical"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingRight="20dp"
+            android:text="@string/setting_information_application_version_current"
+            android:textSize="18dp"
+            android:textColor="@color/bluegray500_878C96"
+            />
+        <Button
+            android:id="@+id/btn_setting_information_application_version_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingLeft="20dp"
+            android:text="@string/setting_information_application_version"
+            android:textSize="18dp"
+            android:textColor="@color/bluegray300_CBCFD6"
+            android:background="@android:color/transparent"
+            android:enabled="false"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
