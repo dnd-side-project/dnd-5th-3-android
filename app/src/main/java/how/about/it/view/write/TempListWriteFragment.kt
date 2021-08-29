@@ -1,8 +1,9 @@
 package how.about.it.view.write
 
 import android.app.AlertDialog
-import android.app.Application
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.widget.Button
 import android.widget.TextView
@@ -67,7 +68,6 @@ class TempListWriteFragment : Fragment() {
         binding.toolbarWriteTempListBoard.tvToolbarTitle.setText(R.string.write_temp_save)
         (activity as MainActivity).setSupportActionBar(binding.toolbarWriteTempListBoard.toolbarBoard)
         (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         showBackButton()
 
         return binding.root
@@ -75,6 +75,14 @@ class TempListWriteFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_write_temp_toolbar, menu)
+        menu?.apply {
+            for(index in 0 until this.size()){
+                val item = this.getItem(index)
+                val s = SpannableString(item.title)
+                s.setSpan(ForegroundColorSpan(resources.getColor(R.color.moomool_pink_ff227c, requireContext()?.theme)),0,s.length,0)
+                item.title = s
+            }
+        }
         super.onCreateOptionsMenu(menu, inflater)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -106,7 +114,7 @@ class TempListWriteFragment : Fragment() {
                             writeViewModel.deleteTempPost(post)
                         }
                         mAlertDialog.dismiss()
-                        ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_list_delete_toast_description))
+                        ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_list_delete_toast_description))?.show()
                     }
                     cancelButton.setOnClickListener {
                         mAlertDialog.dismiss()
