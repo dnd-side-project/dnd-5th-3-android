@@ -14,5 +14,14 @@
         <item name="android:windowLightStatusBar">false</item>
         <!-- Background color -->
         <item name="android:windowBackground">@color/bluegray900_13161f</item>
+        <!-- EditText color-->
+        <item name="android:textSelectHandle">@color/moomool_pink_ff227c</item>
+        <item name="android:textColorHighlight">@color/moomool_pink_ff227c</item>
+        <item name="android:textCursorDrawable">@drawable/background_cursor_color_pink</item>
+    </style>
+
+    <style name="feed_toggle_popup_menu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/bluegray800_303540</item>
     </style>
 </resources>
