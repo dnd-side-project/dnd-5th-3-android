@@ -33,4 +33,10 @@ interface RequestInterface {
 
     @GET("/api/v1/member/exists/{name}/name")
     fun requestDuplicateCheckNickname(@Path("name") name : String) : Call<String>
+
+    @GET("/api/v1/notice")
+    fun requestNoticeList() : Call<ResponseNotice>
+
+    @GET("/api/v1/notice/{noticeId}")
+    fun requestNoticePost(@Path("noticeId") noticeId: String) : Call<Notice>
 }
