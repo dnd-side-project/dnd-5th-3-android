@@ -66,7 +66,7 @@ class LoginActivity : ToolbarActivity() {
             mGoogleSignInClient.silentSignIn().addOnCompleteListener(this, OnCompleteListener<GoogleSignInAccount?> { task -> handleSignInResult(task) })
         }
 
-        loginViewBinding.btnGoogleLogin.setOnClickListener {
+        loginViewBinding.layoutGoogleLogin.setOnClickListener {
             GoogleAccountSignIn()
         }
         loginViewBinding.btnEmailLogin.setOnClickListener {
@@ -126,7 +126,7 @@ class LoginActivity : ToolbarActivity() {
     public fun EmailAccountSignUp() {
         // 액티비티 버튼이 눌리지 않도록 임시조치
         loginViewBinding.btnEmailLogin.isEnabled = false
-        loginViewBinding.btnGoogleLogin.isEnabled = false
+        loginViewBinding.layoutGoogleLogin.isEnabled = false
         val emailSignupSetIDFragment = EmailSignupSetIDFragment()
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.frameLayout_login_signup_fragment, emailSignupSetIDFragment)
@@ -143,7 +143,7 @@ class LoginActivity : ToolbarActivity() {
     private fun EmailAccountSignIn() {
         // 액티비티 버튼이 눌리지 않도록 임시조치
         loginViewBinding.btnEmailLogin.isEnabled = false
-        loginViewBinding.btnGoogleLogin.isEnabled = false
+        loginViewBinding.layoutGoogleLogin.isEnabled = false
         // Email로 로그인하는 Fragment로 이동
         val emailLoginFragment = EmailLoginFragment()
         val transaction = supportFragmentManager.beginTransaction()

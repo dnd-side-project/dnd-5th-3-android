@@ -31,7 +31,8 @@
 
     <!-- Login -->
     <string name="login">로그인</string>
-    <string name="login_email">이메일로 시작하기</string>
+    <string name="login_google">구글 계정으로 로그인</string>
+    <string name="login_email">이메일 계정으로 로그인</string>
     <string name="signup_guide_message">무물이 처음이신가요? <u>회원가입</u></string>
     <string name="login_fail_dialog_title">로그인 실패!</string>
     <string name="login_fail_dialog_description">아이디 혹은 비밀번호가 일치하지 않아요!</string>
