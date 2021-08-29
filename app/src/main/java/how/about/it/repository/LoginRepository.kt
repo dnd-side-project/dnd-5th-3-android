@@ -54,6 +54,8 @@ class LoginRepository(private val context: Context) {
                     loginCallBack.onError(t.localizedMessage)
                 }
             })
+        } else { // 로그인 정보 미존재시, Error 처리하여 ViewModel에 전달
+            loginCallBack.onError(null)
         }
     }
 
