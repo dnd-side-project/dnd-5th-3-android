@@ -31,25 +31,11 @@ class LoginActivity : ToolbarActivity() {
     private val TAG = "LoginActivity"
 
     private lateinit var loginViewBinding: ActivityLoginBinding
-    private lateinit var loginViewModel : LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(this))).get(LoginViewModel::class.java)
-        loginViewModel.autoLogin()
         super.onCreate(savedInstanceState)
         loginViewBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(loginViewBinding.root)
-
-        loginViewModel.loginSuccess.observe(this, Observer {
-            if(it) {
-                val loginIntent = Intent(this, MainActivity::class.java)
-                startActivity(loginIntent)
-                finish()
-            }
-        })
-        loginViewModel.loginFailedMessage.observe(this, Observer {
-            Log.e("Login Error Activity", it.toString())
-        })
 
         // 앱에 필요한 사용자 데이터를 요청하도록 로그인 옵션을 설정한다.
         // DEFAULT_SIGN_IN parameter는 유저의 ID와 기본적인 프로필 정보를 요청하는데 사용된다.
