@@ -51,13 +51,14 @@
     <string name="message_email_signup_id">이메일은 로그인과\n비밀번호 분실 시 사용될 거에요!</string>
 
     <!-- SignupEmailPassword -->
-    <string name="hint_password_format">영어및 숫자를 포함하여 8자리 이상으로 입력해주세요</string>
+    <string name="hint_password_format">비밀번호를 입력해주세요</string>
     <string name="hint_password_check">비밀번호 확인할게요 :)</string>
-    <string name="fail_message_email_signup_password_format">영어및 숫자를 포함하여 8자리 넘겨주세요</string>
+    <string name="fail_message_email_signup_password_format">조건에 맞게 비밀번호를 입력해주세요!</string>
     <string name="fail_message_email_signup_password_empty">앗! 위에 비밀번호를 먼저 입력해주세요</string>
     <string name="fail_message_email_signup_password_check">헉! 비밀번호가 다른데요? 확인해 주시겠어요?</string>
     <string name="success_message_email_signup_password">좋은데요!</string>
     <string name="success_message_email_signup_password_check">완벽해요! 다음으로 넘어갈까요?</string>
+    <string name="message_email_signup_password_format">영어 및 숫자를 포함하여\n8자리 이상으로 입력해주세요!</string>
 
     <!-- SignupEmailNickname -->
     <string name="fail_message_email_signup_nickname_format">8글자를 넘지않게 적어주세요</string>

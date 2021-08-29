@@ -34,11 +34,25 @@
         />
 
     <TextView
+        android:id="@+id/tv_message_email_id_notice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_signup_board"
+        app:layout_constraintLeft_toLeftOf="@id/tv_message_email"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/message_email_signup_id"
+        android:textSize="12sp"
+        android:textColor="@color/bluegray300_CBCFD6"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
         android:id="@+id/tv_message_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_signup_board"
+        app:layout_constraintTop_toBottomOf="@+id/tv_message_email_id_notice"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="20dp"
@@ -93,20 +107,6 @@
         android:text="@string/fail_message_email_signup_id_format"
         android:textColor="@color/moomool_pink_ff227c"
         android:visibility="invisible"
-        />
-
-    <TextView
-        android:id="@+id/tv_message_email_id_notice"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        app:layout_constraintTop_toBottomOf="@+id/tv_message_email_id_check"
-        app:layout_constraintLeft_toLeftOf="@id/tv_message_email"
-        app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/message_email_signup_id"
-        android:textSize="12sp"
-        android:textColor="@color/bluegray300_CBCFD6"
-        android:layout_marginTop="20dp"
         />
 
     <androidx.appcompat.widget.AppCompatButton
