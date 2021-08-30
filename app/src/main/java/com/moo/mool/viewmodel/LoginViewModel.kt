@@ -16,6 +16,9 @@ class LoginViewModel(private val loginRepository: LoginRepository): ViewModel() 
     val loginSuccess = MutableLiveData<Boolean>()
     val loginFailedMessage = MutableLiveData<String?>()
 
+    val resetPasswordSuccess = MutableLiveData<Boolean>()
+    val resetPasswordFailedMessage = MutableLiveData<String?>()
+
     fun login(requestLogin: RequestLogin) {
         loginRepository.loginUser(requestLogin, object : LoginRepository.LoginCallBack {
             override fun onSuccess() {
@@ -37,6 +40,19 @@ class LoginViewModel(private val loginRepository: LoginRepository): ViewModel() 
             override fun onError(message: String?) {
                 loginSuccess.postValue(false)
                 loginFailedMessage.postValue(message)
+            }
+        })
+    }
+
+    fun resetPassword(email: String) {
+        loginRepository.resetPassword(email, object : LoginRepository.LoginCallBack {
+            override fun onSuccess() {
+                resetPasswordSuccess.postValue(true)
+            }
+
+            override fun onError(message: String?) {
+                resetPasswordSuccess.postValue(false)
+                resetPasswordFailedMessage.postValue(message)
             }
         })
     }

@@ -24,15 +24,18 @@ interface RequestInterface {
     @PUT("/api/v1/member/token")
     fun requestTokenRefresh(@Body body : RequestTokenRefresh) : Call<ResponseTokenRefresh>
 
-    @Multipart
-    @POST("/api/v1/posts")
-    fun requestUploadPost(@Part("title") title: String, @Part("content") content: String, @Part file: MultipartBody.Part?) : Call<ResponseUploadPost>
-
     @GET("/api/v1/member/exists/{email}/email")
     fun requestDuplicateCheckEmail(@Path("email") email : String) : Call<String>
 
     @GET("/api/v1/member/exists/{name}/name")
     fun requestDuplicateCheckNickname(@Path("name") name : String) : Call<String>
+
+    @PUT("/api/v1/member/reset")
+    fun requestResetPassword(@Body body : RequestResetPassword) : Call<String>
+
+    @Multipart
+    @POST("/api/v1/posts")
+    fun requestUploadPost(@Part("title") title: String, @Part("content") content: String, @Part file: MultipartBody.Part?) : Call<ResponseUploadPost>
 
     @GET("/api/v1/notice")
     fun requestNoticeList() : Call<ResponseNotice>
