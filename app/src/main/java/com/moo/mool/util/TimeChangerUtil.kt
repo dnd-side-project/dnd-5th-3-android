@@ -8,42 +8,42 @@ import java.util.*
 
 object TimeChangerUtil {
     private val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
-    private val currentTime =
-        requireNotNull(format.parse(format.format(System.currentTimeMillis()))).time
 
     fun timeChange(context: Context, time: String): String {
-        val longTime = requireNotNull(format.parse(time.replace("T", " "))).time
-
-        val seconds = (System.currentTimeMillis() - longTime) / 1000
+        val seconds = (System.currentTimeMillis() - getStringTime(time)) / 1000
 
         when {
             seconds < 60 -> {
                 return context.getString(R.string.comment_time_now)
             }
             seconds < 60 * 60 -> {
-                return getString(context, seconds / 60, R.string.comment_time_minute_ago)
+                return getStringFormat(context, seconds / 60, R.string.comment_time_minute_ago)
             }
             seconds < 60 * 60 * 24 -> {
-                return getString(context, seconds / 3600, R.string.comment_time_hour_ago)
+                return getStringFormat(context, seconds / 3600, R.string.comment_time_hour_ago)
             }
             seconds < 60 * 60 * 24 * 30 -> {
-                return getString(context, seconds / 86400, R.string.comment_time_day_ago)
+                return getStringFormat(context, seconds / 86400, R.string.comment_time_day_ago)
             }
             else -> {
-                return getString(context, seconds / 31104000, R.string.comment_time_year_ago)
+                return getStringFormat(context, seconds / 31104000, R.string.comment_time_year_ago)
             }
         }
     }
 
-    private fun getString(context: Context, time: Long, id: Int) = String.format(
+    private fun getStringTime(time: String) =
+        requireNotNull(format.parse(time.replace("T", " "))).time
+
+    private fun getStringFormat(context: Context, time: Long, id: Int) = String.format(
         context.getString(R.string.comment_time),
         time,
         context.getString(id)
     )
 
     fun getRemainTime(time: String): Long {
-        val longTime = requireNotNull(format.parse(time.replace("T", " "))).time
-        val remainTime = (longTime - currentTime) / 1000
+        val currentTime =
+            requireNotNull(format.parse(format.format(System.currentTimeMillis()))).time
+        val remainTime = (getStringTime(time) - currentTime) / 1000
         return when {
             remainTime < 0 -> {
                 -1
@@ -58,8 +58,9 @@ object TimeChangerUtil {
     }
 
     fun getDeadLine(time: String): Long {
-        val longTime = requireNotNull(format.parse(time.replace("T", " "))).time
-        return (longTime - currentTime)
+        val currentTime =
+            requireNotNull(format.parse(format.format(System.currentTimeMillis()))).time
+        return (getStringTime(time) - currentTime)
     }
 
     fun getDeadLineString(time: Long): String {
