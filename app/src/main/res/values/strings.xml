@@ -160,6 +160,7 @@
     <string name="comment_delete_dialog">정말 삭제하시겠습니까?</string>
 
     <!-- Write -->
+    <string name="write">글쓰기</string>
     <string name="write_message_title">👀 당신의 고민은 무엇인가요?</string>
     <string name="hint_wirte_description">내용을 작성해주세요</string>
     <string name="write_save_fail_format_dialog_title">올바르지 않은 형식</string>

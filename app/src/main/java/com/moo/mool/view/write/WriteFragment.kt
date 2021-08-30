@@ -53,8 +53,10 @@ class WriteFragment : Fragment() {
     private val binding get() = requireNotNull(_binding)
     private lateinit var writeViewModel: WriteViewModel
     private lateinit var db : TempPostDatabase
+
     private var productImageUpload = ""
     private var imagePath : String? = null
+    private val imageFileTimeFormat = SimpleDateFormat("yyyy-MM-d-HH-mm-ss", Locale.KOREA)
     private val timeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,80 +81,18 @@ class WriteFragment : Fragment() {
 
         writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(requireActivity().application)).get(WriteViewModel::class.java)
         binding.writeViewModel = writeViewModel
-
-        binding.toolbarWriteBoard.tvToolbarTitle.text = "글쓰기"
-        (activity as MainActivity).setSupportActionBar(binding.toolbarWriteBoard.toolbarBoard)
-        (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        showBackButton()
+        setToolbarDetail()
 
         val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
         val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
         val mAlertDialog = mBuilder.create()
 
-        // 임시 저장 게시글 유무 판단
-        writeViewModel.getAllTempList.observe(viewLifecycleOwner, Observer {
-            if(it.isNullOrEmpty()){
-                binding.imgWrtieTempPostsArchiveNew.visibility = View.INVISIBLE
-            } else {
-                binding.imgWrtieTempPostsArchiveNew.visibility = View.VISIBLE
-            }
-        })
+        setUploadImagePath()
+        textWatcherEditText()
+        recallTempPost()
 
-        // 임시 저장한 게시글을 불러온 경우 채워넣음
-        val tempPost = arguments?.getParcelable<TempPost>("currentTempPost")
-        binding.etWriteTitle.setText(tempPost?.title)
-        binding.etWriteContent.setText(tempPost?.content)
-        productImageUpload = tempPost?.productImage.toString()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            binding.imgDetailPost.setImageBitmap(tempPost?.productImage?.toBitmap())
-        }
-
-        binding.etWriteTitle.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { afterTextChanged(s as Editable?) }
-            override fun afterTextChanged(s: Editable?) {
-                if(!s.toString().trim().isNullOrBlank() && !binding.etWriteContent.text.toString().trim().isNullOrBlank() ) {
-                    activeButtonSave()
-                } else {
-                    deactiveButtonSave()
-                }
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
-        })
-
-        binding.etWriteContent.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { afterTextChanged(s as Editable?) }
-            override fun afterTextChanged(s: Editable?) {
-                if(!s.toString().trim().isNullOrBlank() && !binding.etWriteTitle.text.toString().trim().isNullOrBlank() ) {
-                    activeButtonSave()
-                } else {
-                    deactiveButtonSave()
-                }
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
-        })
-
-        // 이미지 추가 클릭시, 권한 확인 후 갤러리를 띄운 뒤 해당 이미지 출력 및 저장
-        binding.btnWriteAddPhoto.setOnClickListener {
-            requestOpenGallery.launch(
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            )
-        }
-
-        // 글 작성 완료 버튼을 눌렀을 때 서버와의 연동 확인 방식으로 변경
-        binding.fabWriteToComplete.setOnClickListener {
-            if(binding.etWriteTitle.text.toString().length > 20) {
-                ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_save_fail_toast_length_exceed_title))?.show()
-            } else if (binding.etWriteContent.text.toString().length > 1000) {
-                ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_save_fail_toast_length_exceed_content))?.show()
-            } else {
-                writeViewModel.uploadPost(
-                    binding.etWriteTitle.text.toString(),
-                    binding.etWriteContent.text.toString(),
-                    bitmapToFile(productImageUpload.toBitmap(), imagePath) )
-            }
-        }
+        setAddPhotoClickListener()
+        setWriteCompleteClickListener()
 
         writeViewModel.writeSuccess.observe(viewLifecycleOwner, Observer {
             if(it) {
@@ -212,8 +152,87 @@ class WriteFragment : Fragment() {
         }
         return true
     }
+    private fun setToolbarDetail() {
+        binding.toolbarWriteBoard.tvToolbarTitle.setText(R.string.write)
+        (activity as MainActivity).setSupportActionBar(binding.toolbarWriteBoard.toolbarBoard)
+        (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        showBackButton()
+    }
 
-    val requestOpenGallery = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+    private fun textWatcherEditText() {
+        binding.etWriteTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if(!s.toString().trim().isNullOrBlank() && !binding.etWriteContent.text.toString().trim().isNullOrBlank() ) {
+                    activeButtonSave()
+                } else {
+                    deactiveButtonSave()
+                }
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
+        })
+
+        binding.etWriteContent.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if(!s.toString().trim().isNullOrBlank() && !binding.etWriteTitle.text.toString().trim().isNullOrBlank() ) {
+                    activeButtonSave()
+                } else {
+                    deactiveButtonSave()
+                }
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
+        })
+    }
+
+    private fun recallTempPost() {
+        // 임시 저장 게시글 유무 판단
+        writeViewModel.getAllTempList.observe(viewLifecycleOwner, Observer {
+            if(it.isNullOrEmpty()){
+                binding.imgWrtieTempPostsArchiveNew.visibility = View.INVISIBLE
+            } else {
+                binding.imgWrtieTempPostsArchiveNew.visibility = View.VISIBLE
+            }
+        })
+
+        // 임시 저장한 게시글을 불러온 경우 채워넣음
+        val tempPost = arguments?.getParcelable<TempPost>("currentTempPost")
+        binding.etWriteTitle.setText(tempPost?.title)
+        binding.etWriteContent.setText(tempPost?.content)
+        productImageUpload = tempPost?.productImage.toString()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            binding.imgDetailPost.setImageBitmap(tempPost?.productImage?.toBitmap())
+        }
+    }
+
+    private fun setAddPhotoClickListener() {
+        // 이미지 추가 클릭시, 권한 확인 후 갤러리를 띄운 뒤 해당 이미지 출력 및 저장
+        binding.btnWriteAddPhoto.setOnClickListener {
+            requestOpenGallery.launch(
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            )
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setWriteCompleteClickListener() {
+        // 글 작성 완료 버튼을 눌렀을 때 서버와의 연동 확인 방식으로 변경
+        binding.fabWriteToComplete.setOnClickListener {
+            if(binding.etWriteTitle.text.toString().length > 20) {
+                ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_save_fail_toast_length_exceed_title))?.show()
+            } else if (binding.etWriteContent.text.toString().length > 1000) {
+                ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_save_fail_toast_length_exceed_content))?.show()
+            } else {
+                writeViewModel.uploadPost(
+                    binding.etWriteTitle.text.toString(),
+                    binding.etWriteContent.text.toString(),
+                    bitmapToFile(productImageUpload.toBitmap(), imagePath) )
+            }
+        }
+    }
+
+    private val requestOpenGallery = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         permissions.entries.forEach{
             if(it.value == false){
                 return@registerForActivityResult
@@ -237,7 +256,6 @@ class WriteFragment : Fragment() {
             val uri = data?.data!!
             // Glide를 사용하여 uri을 전달하여 보여준 뒤, Glide를 사용해 Uri -> Bitmap 변환
             // BitmapToString 확장함수를 사용하여 Bitmap -> String으로 변환하여 product_image_upload에 저장
-            imagePath = getFullPathFromUri(requireContext(), uri)!!
             Glide.with(requireContext())
                 .load(uri)
                 .listener(setBitmapListener())
@@ -274,42 +292,13 @@ class WriteFragment : Fragment() {
         }
     }
 
-    private fun getFullPathFromUri(ctx: Context, fileUri: Uri?): String? {
-        var fullPath: String? = null
-        val column = "_data"
-        var cursor = ctx.contentResolver.query(fileUri!!, null, null, null, null)
-        if (cursor != null) {
-            cursor.moveToFirst()
-            var document_id = cursor.getString(0)
-            if (document_id == null) {
-                for (i in 0 until cursor.columnCount) {
-                    if (column.equals(cursor.getColumnName(i), ignoreCase = true)) {
-                        fullPath = cursor.getString(i)
-                        break
-                    }
-                }
-            } else {
-                document_id = document_id.substring(document_id.lastIndexOf(":") + 1)
-                cursor.close()
-                val projection = arrayOf(column)
-                try {
-                    cursor = ctx.contentResolver.query(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        projection,
-                        MediaStore.Images.Media._ID + " = ? ",
-                        arrayOf(document_id),
-                        null
-                    )
-                    if (cursor != null) {
-                        cursor.moveToFirst()
-                        fullPath = cursor.getString(cursor.getColumnIndexOrThrow(column))
-                    }
-                } finally {
-                    if (cursor != null) cursor.close()
-                }
-            }
-        }
-        return fullPath
+    private fun setUploadImagePath() {
+        // uri를 통하여 불러온 이미지를 임시로 파일로 저장할 경로로 앱 내부 캐시 디렉토리로 설정,
+        // 파일 이름은 불러온 시간 사용
+        val fileName = imageFileTimeFormat.format(Date(System.currentTimeMillis())).toString() + ".jpg"
+        val cacheDir = requireContext().cacheDir.toString()
+        imagePath = "$cacheDir/$fileName"
+        Log.e("IMGPATH", imagePath!!)
     }
 
     fun bitmapToFile(bitmap: Bitmap?, path: String?): File? {
