@@ -7,7 +7,7 @@
 
         <variable
             name="feed"
-            type="how.about.it.view.feed.Feed" />
+            type="com.moo.mool.view.feed.Feed" />
 
         <variable
             name="remainTime"
