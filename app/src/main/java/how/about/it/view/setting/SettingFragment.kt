@@ -1,8 +1,11 @@
 package how.about.it.view.setting
 
 import android.app.AlertDialog
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -15,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
+import how.about.it.BuildConfig
 import how.about.it.R
 import how.about.it.databinding.FragmentSettingBinding
 import how.about.it.repository.SettingRepository
@@ -39,7 +43,9 @@ class SettingFragment : Fragment() {
         setDeleteAccountClickListener()
         setNotificationSettingClickListener()
         setMotionSettingClickListener()
+        setInquiryClickListener()
         setNoticeClickListener()
+        setCurrentAppVersion()
         return binding.root
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -70,6 +76,29 @@ class SettingFragment : Fragment() {
         binding.btnSettingInformationNotice.setOnClickListener {
             requireView().findNavController().navigate(R.id.action_settingFragment_to_noticeListFragment)
         }
+    }
+
+    private fun setInquiryClickListener() {
+        binding.btnSettingInformationInquiry.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:") // only email apps should handle this
+                putExtra(Intent.EXTRA_EMAIL, arrayOf("moomool.official1@gmail.com"))
+                putExtra(Intent.EXTRA_SUBJECT, "[문의사항]")
+                putExtra(Intent.EXTRA_TEXT, String.format(
+                    "[기본 사항] \nApp Version : ${BuildConfig.VERSION_NAME}\nDevice : ${Build.MODEL}\nAndroid(SDK) : ${Build.VERSION.SDK_INT}(${Build.VERSION.RELEASE})\n\n문의 내용 : "));
+            }
+            val chooser = Intent.createChooser(intent, "Select an email app to open")
+
+            try {
+                startActivity(chooser)
+            } catch (e: ActivityNotFoundException) {
+                e.stackTrace
+            }
+        }
+    }
+
+    private fun setCurrentAppVersion() {
+        binding.appVersion = BuildConfig.VERSION_NAME
     }
 
     private fun setLogoutClickListener() {
