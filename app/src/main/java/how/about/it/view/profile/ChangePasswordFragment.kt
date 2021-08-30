@@ -9,27 +9,24 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import how.about.it.R
 import how.about.it.databinding.FragmentChangePasswordBinding
-import how.about.it.repository.ProfileRepository
 import how.about.it.view.main.MainActivity
 import how.about.it.viewmodel.ProfileViewModel
-import how.about.it.viewmodel.ProfileViewModelFactory
 import java.util.regex.Pattern
 
 class ChangePasswordFragment : Fragment() {
     private var _binding: FragmentChangePasswordBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private lateinit var profileViewModel: ProfileViewModel
+    private val profileViewModel by activityViewModels<ProfileViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
-        profileViewModel = ViewModelProvider(this, ProfileViewModelFactory(ProfileRepository(requireContext()))).get(ProfileViewModel::class.java)
         setToolbarDetail()
         textWatcherEditText()
         setDeleteEditTextButtonClickListener()

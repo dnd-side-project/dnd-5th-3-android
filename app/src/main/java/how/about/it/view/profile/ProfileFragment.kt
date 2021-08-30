@@ -14,29 +14,26 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import how.about.it.R
 import how.about.it.database.SharedManager
 import how.about.it.databinding.FragmentProfileBinding
-import how.about.it.repository.ProfileRepository
 import how.about.it.view.main.MainActivity
 import how.about.it.viewmodel.ProfileViewModel
-import how.about.it.viewmodel.ProfileViewModelFactory
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val sharedManager : SharedManager by lazy { SharedManager(requireContext()) }
-    private lateinit var profileViewModel: ProfileViewModel
+    private val profileViewModel by activityViewModels<ProfileViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProfileBinding.inflate(layoutInflater)
-        profileViewModel = ViewModelProvider(this, ProfileViewModelFactory(ProfileRepository(requireContext()))).get(ProfileViewModel::class.java)
 
         binding.toolbarProfileBoard.tvToolbarTitle.setText(R.string.profile_change_nickname)
         (activity as MainActivity).setSupportActionBar(binding.toolbarProfileBoard.toolbarBoard)
@@ -54,6 +51,7 @@ class ProfileFragment : Fragment() {
         cancelButton.text = resources.getText(R.string.back)
 
         setEtChangePasswordClickListener()
+        setCheckPasswordChanged()
 
         binding.etProfileNickname.setText(sharedManager.getCurrentUser().nickname.toString())
         val originalNickname = sharedManager.getCurrentUser().nickname.toString()
@@ -199,9 +197,17 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun setCheckPasswordChanged() {
+        if(profileViewModel.checkPasswordChanged)
+            binding.tvMessageChangeCheckEmailPassword.visibility = View.VISIBLE
+        else
+            binding.tvMessageChangeCheckEmailPassword.visibility = View.INVISIBLE
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         profileViewModel.duplicateCheckNicknameSuccess.value = null // 이전 화면과 같은 Dialog 실행 방지
+        profileViewModel.checkPasswordChanged = false
         _binding = null
     }
 }
