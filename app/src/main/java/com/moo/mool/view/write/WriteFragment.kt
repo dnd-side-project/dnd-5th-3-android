@@ -204,6 +204,11 @@ class WriteFragment : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.imgDetailPost.setImageBitmap(tempPost?.productImage?.toBitmap())
         }
+        if(binding.etWriteTitle.text.toString().trim().isNotEmpty() && binding.etWriteContent.text.toString().trim().isNotEmpty()) {
+            activeButtonSave()
+        } else {
+            deactiveButtonSave()
+        }
     }
 
     private fun setAddPhotoClickListener() {
