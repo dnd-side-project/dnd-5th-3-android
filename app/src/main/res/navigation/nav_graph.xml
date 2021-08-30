@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/onBoardingFragment"
-        android:name="how.about.it.view.onboarding.OnBoardingFragment"
+        android:name="com.moo.mool.view.onboarding.OnBoardingFragment"
         android:label="fragment_on_boarding"
         tools:layout="@layout/fragment_on_boarding">
         <action
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/feedFragment"
-        android:name="how.about.it.view.feed.FeedFragment"
+        android:name="com.moo.mool.view.feed.FeedFragment"
         android:label="fragment_feed"
         tools:layout="@layout/fragment_feed">
         <action
@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/voteFragment"
-        android:name="how.about.it.view.vote.VoteFragment"
+        android:name="com.moo.mool.view.vote.VoteFragment"
         android:label="fragment_vote"
         tools:layout="@layout/fragment_vote">
         <argument
@@ -54,7 +54,7 @@
 
     <fragment
         android:id="@+id/commentFragment"
-        android:name="how.about.it.view.comment.CommentFragment"
+        android:name="com.moo.mool.view.comment.CommentFragment"
         android:label="fragment_comment"
         tools:layout="@layout/fragment_comment">
         <argument
@@ -74,7 +74,7 @@
 
     <fragment
         android:id="@+id/commentUpdateFragment"
-        android:name="how.about.it.view.commentupdate.CommentUpdateFragment"
+        android:name="com.moo.mool.view.commentupdate.CommentUpdateFragment"
         android:label="fragment_comment_update"
         tools:layout="@layout/fragment_comment_update">
         <argument
@@ -90,7 +90,7 @@
 
     <fragment
         android:id="@+id/writeFragment"
-        android:name="how.about.it.view.write.WriteFragment"
+        android:name="com.moo.mool.view.write.WriteFragment"
         android:label="fragment_write"
         tools:layout="@layout/fragment_write">
         <action
@@ -100,7 +100,7 @@
 
     <fragment
         android:id="@+id/tempListWriteFragment"
-        android:name="how.about.it.view.write.TempListWriteFragment"
+        android:name="com.moo.mool.view.write.TempListWriteFragment"
         android:label="fragment_temp_list_write"
         tools:layout="@layout/fragment_temp_list_write">
         <action
@@ -123,7 +123,7 @@
 
     <fragment
         android:id="@+id/tempSavedWriteFragment"
-        android:name="how.about.it.view.write.TempSavedWriteFragment"
+        android:name="com.moo.mool.view.write.TempSavedWriteFragment"
         android:label="fragment_temp_saved_write"
         tools:layout="@layout/fragment_temp_saved_write">
         <action
@@ -148,13 +148,13 @@
 
     <fragment
         android:id="@+id/notificationFragment"
-        android:name="how.about.it.view.notification.NotificationFragment"
+        android:name="com.moo.mool.view.notification.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
 
     <fragment
         android:id="@+id/myPageFragment"
-        android:name="how.about.it.view.mypage.MyPageFragment"
+        android:name="com.moo.mool.view.mypage.MyPageFragment"
         android:label="fragment_my_page"
         tools:layout="@layout/fragment_my_page">
         <action
@@ -173,7 +173,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="how.about.it.view.profile.ProfileFragment"
+        android:name="com.moo.mool.view.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile">
 
@@ -184,13 +184,13 @@
 
     <fragment
         android:id="@+id/changePasswordFragment"
-        android:name="how.about.it.view.profile.ChangePasswordFragment"
+        android:name="com.moo.mool.view.profile.ChangePasswordFragment"
         android:label="fragment_change_password"
         tools:layout="@layout/fragment_change_password" />
 
     <fragment
         android:id="@+id/settingFragment"
-        android:name="how.about.it.view.setting.SettingFragment"
+        android:name="com.moo.mool.view.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting">
         <action
@@ -206,17 +206,17 @@
 
     <fragment
         android:id="@+id/settingNotificationFragment"
-        android:name="how.about.it.view.setting.SettingNotificationFragment"
+        android:name="com.moo.mool.view.setting.SettingNotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_setting_notification" />
     <fragment
         android:id="@+id/settingMotionFragment"
-        android:name="how.about.it.view.setting.SettingMotionFragment"
+        android:name="com.moo.mool.view.setting.SettingMotionFragment"
         android:label="fragment_motion"
         tools:layout="@layout/fragment_setting_motion" />
     <fragment
         android:id="@+id/noticeListFragment"
-        android:name="how.about.it.view.notice.NoticeListFragment"
+        android:name="com.moo.mool.view.notice.NoticeListFragment"
         android:label="fragment_notice_list"
         tools:layout="@layout/fragment_notice_list">
         <action
@@ -225,13 +225,13 @@
     </fragment>
     <fragment
         android:id="@+id/noticePostFragment"
-        android:name="how.about.it.view.notice.NoticePostFragment"
+        android:name="com.moo.mool.view.notice.NoticePostFragment"
         android:label="fragment_notice_post"
         tools:layout="@layout/fragment_notice_post" />
 
     <fragment
         android:id="@+id/networkErrorFragment"
-        android:name="how.about.it.view.networkerror.NetworkErrorFragment"
+        android:name="com.moo.mool.view.networkerror.NetworkErrorFragment"
         android:label="fragment_network_error"
         tools:layout="@layout/fragment_network_error" />
 

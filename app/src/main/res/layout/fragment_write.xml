@@ -5,7 +5,7 @@
     <data>
         <variable
             name="writeViewModel"
-            type="how.about.it.viewmodel.WriteViewModel" />
+            type="com.moo.mool.viewmodel.WriteViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"

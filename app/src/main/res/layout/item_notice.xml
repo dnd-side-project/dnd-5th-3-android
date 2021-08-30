@@ -6,7 +6,7 @@
     <data>
         <variable
             name="notice"
-            type="how.about.it.model.Notice" />
+            type="com.moo.mool.model.Notice" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

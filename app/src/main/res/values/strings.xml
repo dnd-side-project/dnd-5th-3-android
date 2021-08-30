@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HowAboutIt</string>
+    <string name="app_name">무물</string>
     <string name="server_client_id">SERVER_CLIENT_ID</string>
     <string name="feed">피드</string>
     <string name="my_page">마이페이지</string>

@@ -9,7 +9,7 @@
 
         <variable
             name="feed"
-            type="how.about.it.view.vote.ResponseFeedDetail" />
+            type="com.moo.mool.view.vote.ResponseFeedDetail" />
 
         <variable
             name="remainTime"

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="noticeViewModel"
-            type="how.about.it.viewmodel.NoticeViewModel" />
+            type="com.moo.mool.viewmodel.NoticeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
