@@ -43,6 +43,7 @@
             android:layout_height="0dp"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="20dp"
+            android:alpha="@{feed.isVoted? 0.5f : 1f}"
             android:background="@drawable/background_small_emoji_round_20"
             android:backgroundTint="@android:color/transparent"
             android:scaleType="centerCrop"
