@@ -103,6 +103,13 @@ class LoginActivity : ToolbarActivity() {
         finish()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        // 뒤로가기 버튼으로 오면 액티비티 버튼이 눌리도록 TODO : 임시조치
+        loginViewBinding.btnEmailLogin.isEnabled = true
+        loginViewBinding.layoutGoogleLogin.isEnabled = true
+    }
+
     public fun EmailAccountSignUp() {
         // 액티비티 버튼이 눌리지 않도록 임시조치
         loginViewBinding.btnEmailLogin.isEnabled = false
