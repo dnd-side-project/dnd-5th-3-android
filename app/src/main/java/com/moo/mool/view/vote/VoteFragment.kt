@@ -16,7 +16,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import dagger.hilt.android.AndroidEntryPoint
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentVoteBinding
 import com.moo.mool.network.RequestToServer
@@ -27,6 +26,7 @@ import com.moo.mool.util.TimeChangerUtil
 import com.moo.mool.view.comment.Comment
 import com.moo.mool.view.vote.adapter.VoteCommentAdapter
 import com.moo.mool.view.vote.viewmodel.VoteViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -164,7 +164,10 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
 
     private fun cancelCountDownTimer() {
-        timer?.cancel()
+        timer?.let {
+            requireNotNull(timer).cancel()
+            timer = null
+        }
     }
 
     private fun setTvFeedAgreeText(feed: ResponseFeedDetail) {
@@ -472,9 +475,13 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        cancelCountDownTimer()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        cancelCountDownTimer()
         _binding = null
     }
 }
