@@ -2,9 +2,9 @@ package com.moo.mool.view.feed.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import com.moo.mool.view.feed.Feed
 import com.moo.mool.view.feed.repository.FeedRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,6 +26,10 @@ class FeedViewModel @Inject constructor(
 
     private val _networkError = MutableStateFlow(false)
     val networkError = _networkError.asStateFlow()
+
+    init {
+        requestTopFeedList()
+    }
 
     fun setToggleCategory(category: Int) {
         _toggleCategory.value = category
