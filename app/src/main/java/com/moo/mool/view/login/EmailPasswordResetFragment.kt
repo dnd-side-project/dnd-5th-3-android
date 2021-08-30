@@ -14,17 +14,21 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.moo.mool.R
-import com.moo.mool.database.SharedManager
 import com.moo.mool.databinding.FragmentEmailPasswordResetBinding
+import com.moo.mool.repository.LoginRepository
+import com.moo.mool.view.ToastDefaultBlack
+import com.moo.mool.viewmodel.LoginViewModel
+import com.moo.mool.viewmodel.LoginViewModelFactory
 
 class EmailPasswordResetFragment : Fragment() {
     private var _binding : FragmentEmailPasswordResetBinding?= null
     private val binding get() = _binding!!
-    private val sharedManager : SharedManager by lazy { SharedManager(requireContext()) }
+    private lateinit var loginViewModel : LoginViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,25 +37,21 @@ class EmailPasswordResetFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentEmailPasswordResetBinding.inflate(layoutInflater, container, false)
         val view = binding.root
+        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(requireContext()))).get(LoginViewModel::class.java)
 
-        binding.toolbarLoginBoard.tvToolbarTitle.setText(R.string.reset_password)
-        (activity as LoginActivity).setSupportActionBar(binding.toolbarLoginBoard.toolbarBoard)
-        (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        showBackButton()
+        setToolbarDetail()
+        textWatcherEditText()
+        setResetPasswordClickListener()
 
-        setKeyboardDoneClick()
-        setKeyboardHide()
+        // TODO : Dialog 띄우기 코드 개선 필요
+        val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+        val mBuilder = AlertDialog.Builder(requireContext())
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.create()
+        mAlertDialog.setCancelable(false)
 
-        binding.btnResetEmail.setOnClickListener {
-            if(binding.etLoginEmailId.text.isNullOrBlank()) {
-                Toast.makeText(activity, R.string.hint_email, Toast.LENGTH_SHORT).show()
-            } else {
-                // TODO : Dialog 띄우기 코드 개선 필요
-                val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-                val mBuilder = AlertDialog.Builder(requireContext())
-                    .setView(mDialogView)
-                val mAlertDialog = mBuilder.show()
-
+        loginViewModel.resetPasswordSuccess.observe(viewLifecycleOwner, Observer {
+            if(it){
                 // Dialog 제목 및 내용 설정
                 mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.reset_password_dialog_title)
                 mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.reset_password_dialog_description)
@@ -66,40 +66,16 @@ class EmailPasswordResetFragment : Fragment() {
                     // 비밀번호 초기화 화면을 그냥 바로 빠져나가기 위해서 onBackPressed()
                     (activity as LoginActivity).onBackPressed()
                 }
+                mAlertDialog.show()
             }
-        }
+        })
+
+        setKeyboardDoneClick()
+        setKeyboardHide()
 
         binding.btnDeleteEtEmailId.setOnClickListener{
             binding.etLoginEmailId.setText("")
         }
-
-        binding.etLoginEmailId.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                if(!s.isNullOrBlank()){
-                    activeButtonResetPassword()
-                    binding.btnDeleteEtEmailId.visibility = View.VISIBLE
-                } else {
-                    deactiveButtonResetPassword()
-                    binding.btnDeleteEtEmailId.visibility = View.INVISIBLE
-                }
-
-                if(android.util.Patterns.EMAIL_ADDRESS.matcher(s.toString().trim()).matches()) {
-                    binding.tvMessageEmailIdCheck.visibility = View.INVISIBLE
-                    // TODO : 비밀번호 초기화 서버와 연동 코드 작성
-                    activeButtonResetPassword()
-                } else {
-                    // 형식 검사 실패시
-                    binding.tvMessageEmailIdCheck.visibility = View.VISIBLE
-                    binding.tvMessageEmailIdCheck.setText(getString(R.string.fail_message_email_signup_id_format))
-                    binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
-                    deactiveButtonResetPassword()
-                }
-
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged( s as Editable? ) }
-        })
-
 
         return view
     }
@@ -114,6 +90,52 @@ class EmailPasswordResetFragment : Fragment() {
         (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
         this.setHasOptionsMenu(true)
     }
+    private fun setToolbarDetail() {
+        binding.toolbarLoginBoard.tvToolbarTitle.setText(R.string.reset_password)
+        (activity as LoginActivity).setSupportActionBar(binding.toolbarLoginBoard.toolbarBoard)
+        (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        showBackButton()
+    }
+
+    private fun textWatcherEditText() {
+        binding.etLoginEmailId.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if(!s.isNullOrBlank()){
+                    activeButtonResetPassword()
+                    binding.btnDeleteEtEmailId.visibility = View.VISIBLE
+                } else {
+                    deactiveButtonResetPassword()
+                    binding.btnDeleteEtEmailId.visibility = View.INVISIBLE
+                }
+
+                if(android.util.Patterns.EMAIL_ADDRESS.matcher(s.toString().trim()).matches()) {
+                    binding.tvMessageEmailIdCheck.visibility = View.INVISIBLE
+                    activeButtonResetPassword()
+                } else {
+                    // 형식 검사 실패시
+                    binding.tvMessageEmailIdCheck.visibility = View.VISIBLE
+                    binding.tvMessageEmailIdCheck.setText(getString(R.string.fail_message_email_signup_id_format))
+                    binding.tvMessageEmailIdCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                    deactiveButtonResetPassword()
+                }
+
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged( s as Editable? ) }
+        })
+    }
+
+    private fun setResetPasswordClickListener() {
+        binding.btnResetEmail.setOnClickListener {
+            if(binding.etLoginEmailId.text.isNullOrBlank()) {
+                ToastDefaultBlack.createToast(requireContext(), getString(R.string.hint_email))?.show()
+            } else {
+                loginViewModel.resetPassword(binding.etLoginEmailId.text.toString().trim())
+                deactiveButtonResetPassword() // 비밀번호 초기화 메일을 보내는 동안 중복해서 보내지 않도록 초기화 버튼 비활성화
+            }
+        }
+    }
+
     fun activeButtonResetPassword() {
         binding.btnResetEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_enable))
         binding.btnResetEmail.setTextColor(resources.getColorStateList(R.color.bluegray50_F9FAFC, context?.theme))

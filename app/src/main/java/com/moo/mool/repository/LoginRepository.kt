@@ -3,10 +3,7 @@ package com.moo.mool.repository
 import android.content.Context
 import com.moo.mool.database.SharedManager
 import com.moo.mool.database.User
-import com.moo.mool.model.RequestLogin
-import com.moo.mool.model.RequestTokenRefresh
-import com.moo.mool.model.ResponseLogin
-import com.moo.mool.model.ResponseTokenRefresh
+import com.moo.mool.model.*
 import com.moo.mool.network.RequestToServer
 import org.json.JSONObject
 import retrofit2.Call
@@ -91,6 +88,28 @@ class LoginRepository(private val context: Context) {
                         loginCallBack.onError(e.message)
                     }
                 }
+            }
+        })
+    }
+
+    fun resetPassword(email: String, loginCallBack: LoginCallBack) {
+        RequestToServer.service.requestResetPassword(
+            RequestResetPassword(email)
+        ).enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if(response.isSuccessful) {
+                    loginCallBack.onSuccess()
+                } else {
+                    try {
+                        val jObjError = JSONObject(response.errorBody()!!.string())
+                        loginCallBack.onError(jObjError.getString("user_msg"))
+                    } catch (e: Exception) {
+                        loginCallBack.onError(e.message)
+                    }
+                }
+            }
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                loginCallBack.onError(t.localizedMessage)
             }
         })
     }
