@@ -8,20 +8,20 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import dagger.hilt.android.AndroidEntryPoint
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentFeedBinding
 import com.moo.mool.network.RequestToServer
 import com.moo.mool.view.feed.adapter.FeedBottomAdapter
 import com.moo.mool.view.feed.adapter.FeedTopAdapter
 import com.moo.mool.view.feed.viewmodel.FeedViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private var _binding: FragmentFeedBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private val feedViewModel by viewModels<FeedViewModel>()
+    private val feedViewModel by activityViewModels<FeedViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +48,6 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setFeedTopListCollect()
         setFeedBottomListCollect()
         //setNetworkErrorCollect()
-        feedViewModel.requestTopFeedList()
         return binding.root
     }
 
