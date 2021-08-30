@@ -1,18 +1,13 @@
 package how.about.it.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.*
 import how.about.it.repository.ProfileRepository
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 
-class ProfileViewModelFactory(val profileRepository: ProfileRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(profileRepository::class.java)
-            .newInstance(profileRepository)
-    }
-}
-
-class ProfileViewModel(private val profileRepository: ProfileRepository) : ViewModel() {
+class ProfileViewModel(application: Application) : AndroidViewModel(application) {
+    private val profileRepository = ProfileRepository(getApplication<Application>().applicationContext)
 
     val duplicateCheckNicknameSuccess = MutableLiveData<Boolean?>()
     val duplicateCheckNicknameFailedMessage = MutableLiveData<String?>()
@@ -23,6 +18,8 @@ class ProfileViewModel(private val profileRepository: ProfileRepository) : ViewM
     val checkOldPasswordFailedMessage = MutableLiveData<String?>()
     val checkNewPasswordSuccess = MutableLiveData<Boolean?>()
     val checkNewPasswordFailedMessage = MutableLiveData<String?>()
+
+    var checkPasswordChanged = false
 
     val enableChange = combine(checkOldPasswordSuccess.asFlow(), checkNewPasswordSuccess.asFlow()) {
         checkOldPasswordSuccess, checkNewPasswordSuccess -> checkOldPasswordSuccess==true && checkNewPasswordSuccess==true
@@ -60,6 +57,7 @@ class ProfileViewModel(private val profileRepository: ProfileRepository) : ViewM
         profileRepository.updatePassword(newPassword, object : ProfileRepository.ProfileCallBack {
             override fun onSuccess() {
                 updatePasswordSuccess.postValue(true)
+                checkPasswordChanged = true
             }
 
             override fun onError(message: String?) {
