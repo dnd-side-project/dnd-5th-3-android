@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailPasswordResetBinding
 import com.moo.mool.repository.LoginRepository
+import com.moo.mool.util.LodingDialogUtil
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.viewmodel.LoginViewModel
 import com.moo.mool.viewmodel.LoginViewModelFactory
@@ -29,6 +30,7 @@ class EmailPasswordResetFragment : Fragment() {
     private var _binding : FragmentEmailPasswordResetBinding?= null
     private val binding get() = _binding!!
     private lateinit var loginViewModel : LoginViewModel
+    private lateinit var loadingDialog : AlertDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +54,7 @@ class EmailPasswordResetFragment : Fragment() {
 
         loginViewModel.resetPasswordSuccess.observe(viewLifecycleOwner, Observer {
             if(it){
+                LodingDialogUtil.hideLoadingIcon(loadingDialog)
                 // Dialog 제목 및 내용 설정
                 mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.reset_password_dialog_title)
                 mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.reset_password_dialog_description)
@@ -131,7 +134,7 @@ class EmailPasswordResetFragment : Fragment() {
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.hint_email))?.show()
             } else {
                 loginViewModel.resetPassword(binding.etLoginEmailId.text.toString().trim())
-                deactiveButtonResetPassword() // 비밀번호 초기화 메일을 보내는 동안 중복해서 보내지 않도록 초기화 버튼 비활성화
+                loadingDialog = LodingDialogUtil.showLodingIcon(requireContext())
             }
         }
     }
