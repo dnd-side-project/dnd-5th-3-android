@@ -164,7 +164,7 @@
     <string name="write_message_title">👀 당신의 고민은 무엇인가요?</string>
     <string name="hint_wirte_description">내용을 작성해주세요</string>
     <string name="write_save_fail_format_dialog_title">올바르지 않은 형식</string>
-    <string name="write_save_fail_format_dialog_description">jpg, png, gif 형식의 이미지 파일만 업로드 가능합니다.</string>
+    <string name="write_save_fail_format_dialog_description">jpg, jpeg, png, webp 형식의 이미지 파일만 업로드 가능합니다.</string>
     <string name="write_save_fail_server_error_dialog_title">등록 실패</string>
     <string name="write_save_fail_server_error_dialog_description">서버 상의 오류가 발생했습니다.\n다시 시도해주세요.</string>
     <string name="write_save_fail_toast_length_exceed_title">제목은 20자까지만 입력할 수 있어요.</string>

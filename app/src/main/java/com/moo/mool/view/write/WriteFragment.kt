@@ -87,7 +87,6 @@ class WriteFragment : Fragment() {
         val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
         val mAlertDialog = mBuilder.create()
 
-        setUploadImagePath()
         textWatcherEditText()
         recallTempPost()
 
@@ -261,11 +260,35 @@ class WriteFragment : Fragment() {
             val uri = data?.data!!
             // Glide를 사용하여 uri을 전달하여 보여준 뒤, Glide를 사용해 Uri -> Bitmap 변환
             // BitmapToString 확장함수를 사용하여 Bitmap -> String으로 변환하여 product_image_upload에 저장
-            Glide.with(requireContext())
-                .load(uri)
-                .listener(setBitmapListener())
-                .centerCrop()
-                .into(binding.imgDetailPost)
+
+            val permitFileExtensionList = arrayListOf("jpg", "jpeg", "png", "webp")
+            val fileExtension = requireContext().contentResolver.getType(uri).toString().split("/")[1]
+            if(permitFileExtensionList.contains(fileExtension)){
+                setUploadImagePath(fileExtension)
+                Glide.with(requireContext())
+                    .load(uri)
+                    .listener(setBitmapListener())
+                    .centerCrop()
+                    .into(binding.imgDetailPost)
+            } else {
+                val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+                val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
+                val mAlertDialog = mBuilder.create()
+
+                // Dialog 중복 실행 방지
+                if(mAlertDialog != null && !mAlertDialog.isShowing){
+                    mAlertDialog.show()
+
+                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.write_save_fail_format_dialog_title)
+                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_save_fail_format_dialog_description)
+
+                    val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
+                    mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
+                    confirmButton.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+                }
+            }
         }
     }
 
@@ -297,10 +320,10 @@ class WriteFragment : Fragment() {
         }
     }
 
-    private fun setUploadImagePath() {
+    private fun setUploadImagePath(fileExtension: String) {
         // uri를 통하여 불러온 이미지를 임시로 파일로 저장할 경로로 앱 내부 캐시 디렉토리로 설정,
         // 파일 이름은 불러온 시간 사용
-        val fileName = imageFileTimeFormat.format(Date(System.currentTimeMillis())).toString() + ".jpg"
+        val fileName = imageFileTimeFormat.format(Date(System.currentTimeMillis())).toString() + "." + fileExtension
         val cacheDir = requireContext().cacheDir.toString()
         imagePath = "$cacheDir/$fileName"
         Log.e("IMGPATH", imagePath!!)

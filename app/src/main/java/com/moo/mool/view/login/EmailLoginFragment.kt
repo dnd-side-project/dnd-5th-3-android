@@ -9,12 +9,12 @@ import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -23,6 +23,7 @@ import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailLoginBinding
 import com.moo.mool.model.RequestLogin
 import com.moo.mool.repository.LoginRepository
+import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.LoginViewModel
 import com.moo.mool.viewmodel.LoginViewModelFactory
@@ -35,29 +36,19 @@ class EmailLoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentEmailLoginBinding.inflate(layoutInflater, container, false)
         val view = binding.root
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(requireContext()))).get(LoginViewModel::class.java)
-
-        binding.toolbarLoginBoard.tvToolbarTitle.setText(R.string.login)
-        (activity as LoginActivity).setSupportActionBar(binding.toolbarLoginBoard.toolbarBoard)
-        (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
         val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
         val mAlertDialog = mBuilder.create()
 
+        setToolbarDetail()
         setKeyboardHide()
+        textWatcherEditText()
 
-        binding.btnLoginEmail.setOnClickListener {
-            if (binding.etLoginEmailId.text.isNullOrBlank() || binding.etLoginEmailPassword.text.isNullOrBlank()) {
-                Toast.makeText(activity, "이메일과 비밀번호를 모두 입력하세요.", Toast.LENGTH_SHORT).show()
-            } else {
-                loginViewModel.login(RequestLogin(binding.etLoginEmailId.text.toString(), binding.etLoginEmailPassword.text.toString()))
-            }
-        }
+        setLoginEmailClickListener()
 
         loginViewModel.loginSuccess.observe(viewLifecycleOwner, Observer {
             if(it) {
@@ -95,11 +86,33 @@ class EmailLoginFragment : Fragment() {
             binding.etLoginEmailPassword.setText("")
         }
 
+        return view
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        (activity as LoginActivity).onBackPressed()
+        return true
+    }
+
+    private fun showBackButton() {
+        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
+        this.setHasOptionsMenu(true)
+    }
+    private fun setToolbarDetail() {
+        binding.toolbarLoginBoard.tvToolbarTitle.setText(R.string.login)
+        (activity as LoginActivity).setSupportActionBar(binding.toolbarLoginBoard.toolbarBoard)
+        (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        showBackButton()
+    }
+
+    private fun textWatcherEditText() {
         binding.etLoginEmailId.addTextChangedListener(object :TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 if(!s.isNullOrBlank() && !binding.etLoginEmailPassword.text.isNullOrBlank()){
-                        activeButtonLoginEmail()
+                    activeButtonLoginEmail()
                 } else { deactiveButtonLoginEmail() }
 
                 if(!s.isNullOrBlank()){
@@ -121,8 +134,16 @@ class EmailLoginFragment : Fragment() {
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
         })
+    }
 
-        return view
+    private fun setLoginEmailClickListener() {
+        binding.btnLoginEmail.setOnClickListener {
+            if (binding.etLoginEmailId.text.isNullOrBlank() || binding.etLoginEmailPassword.text.isNullOrBlank()) {
+                ToastDefaultBlack.createToast(requireContext(), "이메일과 비밀번호를 모두 입력하세요.")?.show()
+            } else {
+                loginViewModel.login(RequestLogin(binding.etLoginEmailId.text.toString(), binding.etLoginEmailPassword.text.toString()))
+            }
+        }
     }
 
     fun activeButtonLoginEmail() {
