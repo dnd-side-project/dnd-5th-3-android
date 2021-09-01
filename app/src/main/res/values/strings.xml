@@ -180,6 +180,7 @@
     <string name="write_temp_list_delete_toast_description">선택한 임시 저장글이 삭제되었어요.</string>
     <string name="write_temp_list_delete_empty_dialog_title">선택없음</string>
     <string name="write_temp_list_delete_empty_dialog_description">선택한 임시저장 글이 없어요.</string>
+    <string name="write_temp_post">저장된 글</string>
     <string name="write_temp_post_recall_dialog_description">작성 중이던 글은 저장되지 않습니다. 선택한 글을 불러올까요?</string>
 
     <!-- OnBoarding -->

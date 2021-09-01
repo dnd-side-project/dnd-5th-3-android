@@ -3,6 +3,8 @@ package com.moo.mool.view.write
 import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
@@ -49,11 +51,7 @@ class TempSavedWriteFragment : Fragment() {
         writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(requireActivity().application)).get(WriteViewModel::class.java)
         binding.writeViewModel = writeViewModel
 
-        binding.toolbarWriteTempSavedBoard.tvToolbarTitle.text = "저장된 글"
-        (activity as MainActivity).setSupportActionBar(binding.toolbarWriteTempSavedBoard.toolbarBoard)
-        (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        showBackButton()
+        setToolbarDetail()
 
         binding.tvTempSavedWriteTitle.text = currentTempPost.title
         binding.tvTempSavedWriteDetail.text = currentTempPost.content
@@ -85,7 +83,9 @@ class TempSavedWriteFragment : Fragment() {
             val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
             val mBuilder = AlertDialog.Builder(requireContext())
                 .setView(mDialogView)
-            val mAlertDialog = mBuilder.show()
+            val mAlertDialog = mBuilder.create()
+            mAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            mAlertDialog.show()
 
             // Dialog 제목 및 내용 설정
             mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.recall)
@@ -123,7 +123,12 @@ class TempSavedWriteFragment : Fragment() {
         (activity as MainActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
         this.setHasOptionsMenu(true)
     }
-
+    private fun setToolbarDetail() {
+        binding.toolbarWriteTempSavedBoard.tvToolbarTitle.setText(R.string.write_temp_post)
+        (activity as MainActivity).setSupportActionBar(binding.toolbarWriteTempSavedBoard.toolbarBoard)
+        (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        showBackButton()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
