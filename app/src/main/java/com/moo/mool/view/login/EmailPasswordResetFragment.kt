@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailPasswordResetBinding
 import com.moo.mool.repository.LoginRepository
-import com.moo.mool.util.LodingDialogUtil
+import com.moo.mool.util.LoadingDialogUtil
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.viewmodel.LoginViewModel
 import com.moo.mool.viewmodel.LoginViewModelFactory
@@ -54,7 +54,7 @@ class EmailPasswordResetFragment : Fragment() {
 
         loginViewModel.resetPasswordSuccess.observe(viewLifecycleOwner, Observer {
             if(it){
-                LodingDialogUtil.hideLoadingIcon(loadingDialog)
+                LoadingDialogUtil.hideLoadingIcon(loadingDialog)
                 // Dialog 제목 및 내용 설정
                 mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.reset_password_dialog_title)
                 mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.reset_password_dialog_description)
@@ -134,7 +134,7 @@ class EmailPasswordResetFragment : Fragment() {
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.hint_email))?.show()
             } else {
                 loginViewModel.resetPassword(binding.etLoginEmailId.text.toString().trim())
-                loadingDialog = LodingDialogUtil.showLodingIcon(requireContext())
+                loadingDialog = LoadingDialogUtil.showLoadingIcon(requireContext())
             }
         }
     }

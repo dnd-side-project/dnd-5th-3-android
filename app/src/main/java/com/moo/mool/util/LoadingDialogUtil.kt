@@ -11,8 +11,8 @@ import androidx.core.content.ContextCompat
 import com.moo.mool.R
 
 
-object LodingDialogUtil {
-    fun showLodingIcon(context: Context) : AlertDialog {
+object LoadingDialogUtil {
+    fun showLoadingIcon(context: Context) : AlertDialog {
         val linearLayout = LinearLayout(context)
         linearLayout.gravity = Gravity.CENTER
         val progressBar = ProgressBar(context)
