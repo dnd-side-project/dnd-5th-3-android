@@ -15,7 +15,7 @@
         <!-- Background color -->
         <item name="android:windowBackground">@color/bluegray900_13161f</item>
         <!-- EditText color-->
-        <item name="android:textSelectHandle">@color/moomool_pink_ff227c</item>
+        <item name="android:colorControlActivated">@color/moomool_pink_ff227c</item>
         <item name="android:textColorHighlight">@color/moomool_pink_ff227c</item>
         <item name="android:textCursorDrawable">@drawable/background_cursor_color_pink</item>
     </style>
