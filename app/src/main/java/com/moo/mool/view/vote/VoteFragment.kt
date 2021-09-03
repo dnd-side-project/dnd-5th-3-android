@@ -56,6 +56,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setFeedDetailCommentCollect()
         setEtVoteCommentFocusListener()
         setEtVoteCommentEditorActionListener()
+        setLayoutClickListener()
         setRequestPostCommentCollect()
         setFabVoteClickListener()
         setOpenVoteCollect()
@@ -239,7 +240,11 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun setEtVoteCommentFocusListener() {
         binding.etVoteComment.setOnFocusChangeListener { _, isFocused ->
             when (isFocused) {
-                true -> voteViewModel.openVote()
+                true -> {
+                    if (binding.feed?.isVoted == false) {
+                        voteViewModel.openVote()
+                    }
+                }
                 false -> voteViewModel.closeVote()
             }
         }
@@ -260,6 +265,12 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun setLayoutClickListener() {
+        binding.layoutVote.setOnClickListener {
+            HideKeyBoardUtil.hide(requireContext(), binding.etVoteComment)
         }
     }
 

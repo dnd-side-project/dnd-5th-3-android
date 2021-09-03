@@ -22,7 +22,6 @@
         tools:context=".view.vote.VoteFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_vote"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/layout_vote_comment"
@@ -76,6 +75,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_vote_title">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_vote"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
