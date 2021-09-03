@@ -11,8 +11,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailPasswordResetBinding
 import com.moo.mool.repository.LoginRepository
+import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.util.LoadingDialogUtil
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.viewmodel.LoginViewModel
@@ -73,8 +74,7 @@ class EmailPasswordResetFragment : Fragment() {
             }
         })
 
-        setKeyboardDoneClick()
-        setKeyboardHide()
+        setEtEditTextEditorActionListener(binding.etLoginEmailId)
 
         binding.btnDeleteEtEmailId.setOnClickListener{
             binding.etLoginEmailId.setText("")
@@ -148,24 +148,21 @@ class EmailPasswordResetFragment : Fragment() {
         binding.btnResetEmail.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
     }
 
-    private fun setKeyboardDoneClick() {
-        binding.etLoginEmailId.setOnEditorActionListener { _, actionId, event ->
-            var handled = false
-
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(binding.etLoginEmailId.windowToken, 0)
-                handled = true
+    private fun setEtEditTextEditorActionListener(editText: EditText) {
+        editText.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    HideKeyBoardUtil.hide(requireContext(), editText)
+                    true
+                }
+                else -> false
             }
-            handled
         }
     }
-    private fun setKeyboardHide() {
-        binding.root.setOnTouchListener { _, event ->
-            val inputMethodManager : InputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
-            true
-        }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        HideKeyBoardUtil.hideTouchDisplay(requireActivity(), view)
     }
 
     override fun onDestroyView() {
