@@ -37,4 +37,12 @@ class SharedManager(context: Context) {
         prefs["skipOnBoarding"] = "true"
     }
     fun isSkipOnBoardingFragment() = prefs["skipOnBoarding", ""]
+
+    fun setHideEmojiMotion() {
+        prefs["skipEmojiMotion"] = "true"
+    }
+    fun setShowEmojiMotion() {
+        prefs["skipEmojiMotion"] = "false"
+    }
+    fun isSkipEmojiMotion() = prefs["skipEmojiMotion", "true"]
 }

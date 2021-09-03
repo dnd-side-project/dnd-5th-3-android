@@ -27,4 +27,8 @@ class SettingViewModel(private val settingRepository: SettingRepository) : ViewM
             }
         })
     }
+
+    fun setHideEmojiMotion() = settingRepository.setHideEmojiMotion()
+    fun setShowEmojiMotion() = settingRepository.setShowEmojiMotion()
+    val isHideEmojiMotion = settingRepository.isHideEmojiMotion
 }
