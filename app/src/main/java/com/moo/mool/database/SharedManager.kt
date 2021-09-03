@@ -44,5 +44,5 @@ class SharedManager(context: Context) {
     fun setShowEmojiMotion() {
         prefs["skipEmojiMotion"] = "false"
     }
-    fun isSkipEmojiMotion() = prefs["skipEmojiMotion", "true"]
+    fun isSkipEmojiMotion() = prefs["skipEmojiMotion", "false"]
 }
