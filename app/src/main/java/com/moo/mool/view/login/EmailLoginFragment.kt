@@ -23,6 +23,7 @@ import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailLoginBinding
 import com.moo.mool.model.RequestLogin
 import com.moo.mool.repository.LoginRepository
+import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.LoginViewModel
@@ -45,7 +46,6 @@ class EmailLoginFragment : Fragment() {
         val mAlertDialog = mBuilder.create()
 
         setToolbarDetail()
-        setKeyboardHide()
         textWatcherEditText()
 
         setLoginEmailClickListener()
@@ -155,12 +155,9 @@ class EmailLoginFragment : Fragment() {
         binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
     }
 
-    private fun setKeyboardHide() {
-        binding.root.setOnTouchListener { _, event ->
-            val inputMethodManager : InputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
-            true
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        HideKeyBoardUtil.hideTouchDisplay(requireActivity(), view)
     }
 
     override fun onDestroyView() {
