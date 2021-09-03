@@ -28,6 +28,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -94,11 +95,7 @@ class WriteFragment : Fragment() {
         setWriteCompleteClickListener()
 
         writeViewModel.writeSuccess.observe(viewLifecycleOwner, Observer {
-            if(it) {
-                val mainIntent = Intent(activity, MainActivity::class.java)
-                startActivity(mainIntent)
-                (activity as MainActivity).finish()
-            } else { /** 서버와 연동에 실패한 경우 **/
+            if(!it) { /** 서버와 연동에 실패한 경우 **/
                 // Dialog 중복 실행 방지
                 if(mAlertDialog != null && !mAlertDialog.isShowing){
                     mAlertDialog.show()
@@ -222,7 +219,7 @@ class WriteFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setWriteCompleteClickListener() {
         // 글 작성 완료 버튼을 눌렀을 때 서버와의 연동 확인 방식으로 변경
-        binding.fabWriteToComplete.setOnClickListener {
+        binding.fabWriteToComplete.setOnClickListener { view ->
             if(binding.etWriteTitle.text.toString().length > 20) {
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_save_fail_toast_length_exceed_title))?.show()
             } else if (binding.etWriteContent.text.toString().length > 1000) {
@@ -233,6 +230,11 @@ class WriteFragment : Fragment() {
                     binding.etWriteContent.text.toString(),
                     bitmapToFile(productImageUpload.toBitmap(), imagePath) )
             }
+            writeViewModel.writePostId.observe(viewLifecycleOwner, Observer {
+                Navigation.findNavController(view).navigate(
+                    WriteFragmentDirections.actionWriteFragmentToVoteFragment(it.toInt())
+                )
+            })
         }
     }
 
