@@ -6,20 +6,38 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
+import androidx.lifecycle.ViewModelProvider
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentSettingMotionBinding
+import com.moo.mool.repository.SettingRepository
 import com.moo.mool.view.main.MainActivity
+import com.moo.mool.viewmodel.SettingViewModel
+import com.moo.mool.viewmodel.SettingViewModelFactory
 
 class SettingMotionFragment : Fragment() {
     private var _binding: FragmentSettingMotionBinding? = null
     private val binding get() = requireNotNull(_binding)
+    private lateinit var settingViewModel : SettingViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSettingMotionBinding.inflate(layoutInflater)
+        settingViewModel = ViewModelProvider(this, SettingViewModelFactory(SettingRepository(requireContext()))).get(SettingViewModel::class.java)
         setToolbarDetail()
-
+        
+        binding.switchSettingMotion.isChecked = settingViewModel.isHideEmojiMotion=="false"
+        binding.switchSettingMotion.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
+            override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+                if(isChecked){
+                    settingViewModel.setShowEmojiMotion()
+                } else {
+                    settingViewModel.setHideEmojiMotion()
+                }
+            }
+        })
         return binding.root
     }
 

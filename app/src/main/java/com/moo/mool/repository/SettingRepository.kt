@@ -42,4 +42,8 @@ class SettingRepository(private val context: Context) {
                 }
         })
     }
+
+    fun setHideEmojiMotion() = sharedManager.setHideEmojiMotion()
+    fun setShowEmojiMotion() = sharedManager.setShowEmojiMotion()
+    val isHideEmojiMotion = sharedManager.isSkipEmojiMotion()
 }
