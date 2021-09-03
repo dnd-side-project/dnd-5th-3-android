@@ -28,13 +28,13 @@ class SettingMotionFragment : Fragment() {
         settingViewModel = ViewModelProvider(this, SettingViewModelFactory(SettingRepository(requireContext()))).get(SettingViewModel::class.java)
         setToolbarDetail()
         
-        binding.switchSettingMotion.isChecked = settingViewModel.isHideEmojiMotion=="true"
+        binding.switchSettingMotion.isChecked = settingViewModel.isHideEmojiMotion=="false"
         binding.switchSettingMotion.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
             override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
                 if(isChecked){
-                    settingViewModel.setHideEmojiMotion()
-                } else {
                     settingViewModel.setShowEmojiMotion()
+                } else {
+                    settingViewModel.setHideEmojiMotion()
                 }
             }
         })
