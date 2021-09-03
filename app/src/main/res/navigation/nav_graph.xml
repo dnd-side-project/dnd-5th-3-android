@@ -96,6 +96,10 @@
         <action
             android:id="@+id/action_writeFragment_to_tempListWriteFragment"
             app:destination="@id/tempListWriteFragment" />
+        <action
+            android:id="@+id/action_writeFragment_to_voteFragment"
+            app:destination="@id/voteFragment"
+            app:popUpTo="@id/feedFragment" />
     </fragment>
 
     <fragment

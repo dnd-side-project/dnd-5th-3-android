@@ -16,6 +16,7 @@ class WriteViewModel(application: Application): AndroidViewModel(application) {
     private var tempPostRepository : TempPostRepository
 
     val writeSuccess = MutableLiveData<Boolean>()
+    val writePostId = MutableLiveData<String>()
     val writeFailedMessage = MutableLiveData<String?>()
     private val writeRepository = WriteRepository(application.applicationContext)
 
@@ -43,7 +44,8 @@ class WriteViewModel(application: Application): AndroidViewModel(application) {
 
     fun uploadPost(title: String, content: String, file: File?) {
         writeRepository.uploadPost(title, content, file, object : WriteRepository.WriteCallBack {
-            override fun onSuccess() {
+            override fun onSuccess(postId: String) {
+                writePostId.postValue(postId)
                 writeSuccess.postValue(true)
             }
 

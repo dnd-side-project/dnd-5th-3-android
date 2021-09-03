@@ -13,7 +13,7 @@ import java.io.File
 
 class WriteRepository(private val context: Context) {
     interface WriteCallBack {
-        fun onSuccess()
+        fun onSuccess(postId: String)
         fun onError(message: String?)
     }
 
@@ -40,7 +40,7 @@ class WriteRepository(private val context: Context) {
                 response: Response<ResponseUploadPost>
             ) {
                 if (response.isSuccessful) {
-                    writeCallBack.onSuccess()
+                    writeCallBack.onSuccess(response.body()!!.id)
                 } else {
                     try {
                         val jObjError = JSONObject(response.errorBody()!!.string())
