@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_login"
+    app:startDestination="@id/loginMainFragment">
+
+    <fragment
+        android:id="@+id/loginMainFragment"
+        android:name="com.moo.mool.view.login.LoginMainFragment"
+        android:label="fragment_login_main"
+        tools:layout="@layout/fragment_login_main">
+        <action
+            android:id="@+id/action_loginMainFragment_to_emailLoginFragment"
+            app:destination="@id/emailLoginFragment"
+            app:popUpTo="@id/nav_graph_login"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginMainFragment_to_emailSignupSetIDFragment"
+            app:destination="@id/EmailSignupSetIDFragment"
+            app:popUpTo="@id/nav_graph_login"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/emailLoginFragment"
+        android:name="com.moo.mool.view.login.EmailLoginFragment"
+        android:label="fragment_email_login"
+        tools:layout="@layout/fragment_email_login">
+        <action
+            android:id="@+id/action_emailLoginFragment_to_emailPasswordResetFragment"
+            app:destination="@+id/EmailPasswordResetFragment"/>
+        <action
+            android:id="@+id/action_emailLoginFragment_to_mainActivity"
+            app:destination="@id/main_activity" />
+    </fragment>
+    <fragment
+        android:id="@+id/EmailPasswordResetFragment"
+        android:name="com.moo.mool.view.login.EmailPasswordResetFragment"
+        android:label="fragment_email_password_reset"
+        tools:layout="@layout/fragment_email_password_reset"/>
+
+    <fragment
+        android:id="@+id/EmailSignupSetIDFragment"
+        android:name="com.moo.mool.view.signup.EmailSignupSetIDFragment"
+        android:label="fragment_email_signup_set_id_fragment"
+        tools:layout="@layout/fragment_email_signup_set_id">
+        <action
+            android:id="@+id/action_emailSignupSetIDFragment_to_emailSignupSetPasswordFragment"
+            app:destination="@+id/EmailSignupSetPasswordFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/EmailSignupSetPasswordFragment"
+        android:name="com.moo.mool.view.signup.EmailSignupSetPasswordFragment"
+        android:label="fragment_email_signup_set_password_fragment"
+        tools:layout="@layout/fragment_email_signup_set_password">
+        <action
+            android:id="@+id/action_emailSignupSetPasswordFragment_to_emailSignupSetNicknameFragment"
+            app:destination="@+id/EmailSignupSetNicknameFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/EmailSignupSetNicknameFragment"
+        android:name="com.moo.mool.view.signup.EmailSignupSetNicknameFragment"
+        android:label="fragment_email_signup_set_nickname_fragment"
+        tools:layout="@layout/fragment_email_signup_set_nickname">
+        <action
+            android:id="@+id/action_emailSignupSetNicknameFragment_to_mainActivity"
+            app:destination="@id/main_activity"/>
+    </fragment>
+
+    <activity
+        android:id="@+id/main_activity"
+        android:name="com.moo.mool.view.main.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main">
+    </activity>
+</navigation>

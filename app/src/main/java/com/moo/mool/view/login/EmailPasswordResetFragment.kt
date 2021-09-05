@@ -1,7 +1,6 @@
 package com.moo.mool.view.login
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -37,13 +36,12 @@ class EmailPasswordResetFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentEmailPasswordResetBinding.inflate(layoutInflater, container, false)
-        val view = binding.root
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(requireContext()))).get(LoginViewModel::class.java)
 
         setToolbarDetail()
         textWatcherEditText()
+        setEtClearClickListener()
         setResetPasswordClickListener()
 
         // TODO : Dialog 띄우기 코드 개선 필요
@@ -74,13 +72,9 @@ class EmailPasswordResetFragment : Fragment() {
             }
         })
 
-        setEtEditTextEditorActionListener(binding.etLoginEmailId)
+        setEditTextEditorActionListener(binding.etLoginEmailId)
 
-        binding.btnDeleteEtEmailId.setOnClickListener{
-            binding.etLoginEmailId.setText("")
-        }
-
-        return view
+        return binding.root
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
@@ -128,6 +122,12 @@ class EmailPasswordResetFragment : Fragment() {
         })
     }
 
+    private fun setEtClearClickListener() {
+        binding.btnDeleteEtEmailId.setOnClickListener{
+            binding.etLoginEmailId.setText("")
+        }
+    }
+
     private fun setResetPasswordClickListener() {
         binding.btnResetEmail.setOnClickListener {
             if(binding.etLoginEmailId.text.isNullOrBlank()) {
@@ -148,7 +148,7 @@ class EmailPasswordResetFragment : Fragment() {
         binding.btnResetEmail.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
     }
 
-    private fun setEtEditTextEditorActionListener(editText: EditText) {
+    private fun setEditTextEditorActionListener(editText: EditText) {
         editText.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {

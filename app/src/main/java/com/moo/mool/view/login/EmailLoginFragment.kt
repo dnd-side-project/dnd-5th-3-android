@@ -1,8 +1,6 @@
 package com.moo.mool.view.login
 
 import android.app.AlertDialog
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,20 +10,19 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailLoginBinding
 import com.moo.mool.model.RequestLogin
 import com.moo.mool.repository.LoginRepository
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.view.ToastDefaultBlack
-import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.LoginViewModel
 import com.moo.mool.viewmodel.LoginViewModelFactory
 
@@ -36,9 +33,9 @@ class EmailLoginFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentEmailLoginBinding.inflate(layoutInflater, container, false)
-        val view = binding.root
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(requireContext()))).get(LoginViewModel::class.java)
 
         val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
@@ -47,13 +44,13 @@ class EmailLoginFragment : Fragment() {
 
         setToolbarDetail()
         textWatcherEditText()
-
+        setEtClearClickListener()
         setLoginEmailClickListener()
+        setEmailPasswordResetClickListener()
 
         loginViewModel.loginSuccess.observe(viewLifecycleOwner, Observer {
             if(it) {
-                val loginIntent = Intent(activity, MainActivity::class.java)
-                startActivity(loginIntent)
+                requireView().findNavController().navigate(R.id.action_emailLoginFragment_to_mainActivity)
                 (activity as LoginActivity).finish()
             } else {
                 // Dialog 중복 실행 방지
@@ -75,25 +72,14 @@ class EmailLoginFragment : Fragment() {
             Log.e("Login Error", it.toString())
         })
 
-        binding.tvMessagePasswordReset.setOnClickListener {
-            (activity as LoginActivity).ReplaceEmailPasswordResetFragment()
-        }
-
-        binding.btnDeleteEtEmailId.setOnClickListener{
-            binding.etLoginEmailId.setText("")
-        }
-        binding.btnDeleteEtEmailPassword.setOnClickListener {
-            binding.etLoginEmailPassword.setText("")
-        }
-
-        return view
+        return binding.root
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         (activity as LoginActivity).onBackPressed()
         return true
     }
-
     private fun showBackButton() {
         (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
@@ -103,7 +89,6 @@ class EmailLoginFragment : Fragment() {
         binding.toolbarLoginBoard.tvToolbarTitle.setText(R.string.login)
         (activity as LoginActivity).setSupportActionBar(binding.toolbarLoginBoard.toolbarBoard)
         (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         showBackButton()
     }
 
@@ -136,6 +121,15 @@ class EmailLoginFragment : Fragment() {
         })
     }
 
+    private fun setEtClearClickListener() {
+        binding.btnDeleteEtEmailId.setOnClickListener{
+            binding.etLoginEmailId.setText("")
+        }
+        binding.btnDeleteEtEmailPassword.setOnClickListener {
+            binding.etLoginEmailPassword.setText("")
+        }
+    }
+
     private fun setLoginEmailClickListener() {
         binding.btnLoginEmail.setOnClickListener {
             if (binding.etLoginEmailId.text.isNullOrBlank() || binding.etLoginEmailPassword.text.isNullOrBlank()) {
@@ -146,11 +140,17 @@ class EmailLoginFragment : Fragment() {
         }
     }
 
-    fun activeButtonLoginEmail() {
+    private fun setEmailPasswordResetClickListener() {
+        binding.tvMessagePasswordReset.setOnClickListener {
+            requireView().findNavController().navigate(R.id.action_emailLoginFragment_to_emailPasswordResetFragment)
+        }
+    }
+
+    private fun activeButtonLoginEmail() {
         binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_enable))
         binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray50_F9FAFC, context?.theme))
     }
-    fun deactiveButtonLoginEmail() {
+    private fun deactiveButtonLoginEmail() {
         binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
         binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
     }
