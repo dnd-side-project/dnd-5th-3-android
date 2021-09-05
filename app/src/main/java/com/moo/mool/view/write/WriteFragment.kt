@@ -229,6 +229,7 @@ class WriteFragment : Fragment() {
                     binding.etWriteTitle.text.toString(),
                     binding.etWriteContent.text.toString(),
                     bitmapToFile(productImageUpload.toBitmap(), imagePath) )
+                deactiveButtonSave()
             }
             writeViewModel.writePostId.observe(viewLifecycleOwner, Observer {
                 Navigation.findNavController(view).navigate(
