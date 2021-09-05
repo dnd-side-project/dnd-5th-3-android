@@ -1,5 +1,6 @@
 package com.moo.mool.view
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.moo.mool.repository.LoginRepository
+import com.moo.mool.util.LoadingDialogUtil
 import com.moo.mool.view.login.LoginActivity
 import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.LoginViewModel
@@ -14,10 +16,11 @@ import com.moo.mool.viewmodel.LoginViewModelFactory
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var loginViewModel : LoginViewModel
+    private lateinit var loadingDialog : AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        loadingDialog = LoadingDialogUtil.showLoadingIcon(this)
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(this))).get(LoginViewModel::class.java)
         loginViewModel.autoLogin()
         loginViewModel.loginSuccess.observe(this, Observer {
@@ -35,5 +38,10 @@ class SplashActivity : AppCompatActivity() {
         loginViewModel.loginFailedMessage.observe(this, Observer {
             Log.e("Login Error Activity", it.toString())
         })
+    }
+
+    override fun onDestroy() {
+        LoadingDialogUtil.hideLoadingIcon(loadingDialog)
+        super.onDestroy()
     }
 }
