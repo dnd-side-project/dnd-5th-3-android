@@ -1,7 +1,5 @@
 package com.moo.mool.view.signup
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,11 +15,11 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailSignupSetNicknameBinding
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.view.login.LoginActivity
-import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.SignupViewModel
 
 class EmailSignupSetNicknameFragment : Fragment() {
@@ -33,25 +31,13 @@ class EmailSignupSetNicknameFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentEmailSignupSetNicknameBinding.inflate(layoutInflater, container, false)
-        val view = binding.root
 
-        binding.toolbarSignupBoard.tvToolbarTitle.setText(R.string.signup)
-        (activity as LoginActivity).setSupportActionBar(binding.toolbarSignupBoard.toolbarBoard)
-        (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        showBackButton()
-
-        setEtEditTextEditorActionListener(binding.etSignupEmailNickname)
-
-        binding.btnNext.setOnClickListener {
-            if(binding.etSignupEmailNickname.text.isNullOrBlank()) {
-                Toast.makeText(activity, R.string.hint_nickname, Toast.LENGTH_SHORT).show()
-            } else {
-                signupViewModel.setNickname(binding.etSignupEmailNickname.text.toString().trim())
-                signupViewModel.signup()
-            }
-        }
+        setToolbarDetail()
+        textWatcherEditText()
+        setEtClearClickListener()
+        setEtEditorActionListener(binding.etSignupEmailNickname)
+        setNextClickListener()
 
         signupViewModel.signupSuccess.observe(viewLifecycleOwner, Observer {
             if(it) { // 회원가입이 성공할 경우 자동 로그인
@@ -64,8 +50,7 @@ class EmailSignupSetNicknameFragment : Fragment() {
 
         signupViewModel.loginSuccess.observe(viewLifecycleOwner, Observer {
             if(it) { // 자동 로그인 성공시 바로 메인 화면으로 이동
-                val loginIntent = Intent(activity, MainActivity::class.java)
-                startActivity(loginIntent)
+                requireView().findNavController().navigate(R.id.action_emailSignupSetNicknameFragment_to_mainActivity)
                 (activity as LoginActivity).finish()
             }
         })
@@ -73,11 +58,26 @@ class EmailSignupSetNicknameFragment : Fragment() {
             Log.e("Login Error", it.toString())
         })
 
+        return binding.root
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        (activity as LoginActivity).onBackPressed()
+        return true
+    }
+    private fun showBackButton() {
+        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
+        this.setHasOptionsMenu(true)
+    }
+    private fun setToolbarDetail() {
+        binding.toolbarSignupBoard.tvToolbarTitle.setText(R.string.signup)
+        (activity as LoginActivity).setSupportActionBar(binding.toolbarSignupBoard.toolbarBoard)
+        (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        showBackButton()
+    }
 
-        binding.btnDeleteEtEmailNickname.setOnClickListener{
-            binding.etSignupEmailNickname.setText("")
-        }
-
+    private fun textWatcherEditText() {
         binding.etSignupEmailNickname.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
@@ -117,19 +117,12 @@ class EmailSignupSetNicknameFragment : Fragment() {
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
         })
-
-        return view
-    }
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
-        (activity as LoginActivity).onBackPressed()
-        return true
     }
 
-    private fun showBackButton() {
-        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
-        this.setHasOptionsMenu(true)
+    private fun setEtClearClickListener() {
+        binding.btnDeleteEtEmailNickname.setOnClickListener{
+            binding.etSignupEmailNickname.setText("")
+        }
     }
 
     private fun activeButtonNext() {
@@ -143,7 +136,7 @@ class EmailSignupSetNicknameFragment : Fragment() {
         binding.btnNext.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
     }
 
-    private fun setEtEditTextEditorActionListener(editText: EditText) {
+    private fun setEtEditorActionListener(editText: EditText) {
         editText.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
@@ -151,6 +144,17 @@ class EmailSignupSetNicknameFragment : Fragment() {
                     true
                 }
                 else -> false
+            }
+        }
+    }
+
+    private fun setNextClickListener() {
+        binding.btnNext.setOnClickListener {
+            if(binding.etSignupEmailNickname.text.isNullOrBlank()) {
+                Toast.makeText(activity, R.string.hint_nickname, Toast.LENGTH_SHORT).show()
+            } else {
+                signupViewModel.setNickname(binding.etSignupEmailNickname.text.toString().trim())
+                signupViewModel.signup()
             }
         }
     }

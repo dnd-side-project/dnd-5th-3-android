@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailSignupSetPasswordBinding
 import com.moo.mool.util.HideKeyBoardUtil
@@ -28,33 +29,33 @@ class EmailSignupSetPasswordFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentEmailSignupSetPasswordBinding.inflate(layoutInflater, container, false)
-        val view = binding.root
 
+        setToolbarDetail()
+        textWatcherEditText()
+        setEtClearClickListener()
+        setNextClickListener()
+
+        return binding.root
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        (activity as LoginActivity).onBackPressed()
+        return true
+    }
+    private fun showBackButton() {
+        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
+        this.setHasOptionsMenu(true)
+    }
+    private fun setToolbarDetail() {
         binding.toolbarSignupBoard.tvToolbarTitle.setText(R.string.signup)
         (activity as LoginActivity).setSupportActionBar(binding.toolbarSignupBoard.toolbarBoard)
         (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
+    }
 
-        binding.btnNext.setOnClickListener {
-            if(binding.etSignupEmailPassword.text.isNullOrBlank() || binding.etSignupEmailPasswordCheck.text.isNullOrBlank()) {
-                Toast.makeText(activity, R.string.hint_password, Toast.LENGTH_SHORT).show()
-            } else {
-                signupViewModel.setPassword(binding.etSignupEmailPassword.text.toString().trim())
-                // 닉네임 작성 화면으로 이동
-                (activity as LoginActivity).ReplaceEmailSignupSetNicknameFragment()
-            }
-        }
-
-        binding.btnDeleteEtEmailPassword.setOnClickListener{
-            binding.etSignupEmailPassword.setText("")
-            // X버튼 누른 경우 비밀번호 확인 아래 안내메시지와 다음단계 버튼 업데이트 안되는 현상 임시조치
-            binding.tvMessageSignupPasswordCheck.setText(getString(R.string.fail_message_email_signup_password_check))
-            binding.tvMessageSignupPasswordCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
-            deactiveButtonNext()
-        }
-        binding.btnDeleteEtEmailPasswordCheck.setOnClickListener{
-            binding.etSignupEmailPasswordCheck.setText("")
-        }
+    private fun textWatcherEditText() {
         binding.etSignupEmailPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
@@ -133,20 +134,30 @@ class EmailSignupSetPasswordFragment : Fragment() {
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
         })
-
-        return view
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
-        (activity as LoginActivity).onBackPressed()
-        return true
+    private fun setEtClearClickListener() {
+        binding.btnDeleteEtEmailPassword.setOnClickListener{
+            binding.etSignupEmailPassword.setText("")
+            // X버튼 누른 경우 비밀번호 확인 아래 안내메시지와 다음단계 버튼 업데이트 안되는 현상 임시조치
+            binding.tvMessageSignupPasswordCheck.setText(getString(R.string.fail_message_email_signup_password_check))
+            binding.tvMessageSignupPasswordCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+            deactiveButtonNext()
+        }
+        binding.btnDeleteEtEmailPasswordCheck.setOnClickListener{
+            binding.etSignupEmailPasswordCheck.setText("")
+        }
     }
 
-    private fun showBackButton() {
-        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
-        this.setHasOptionsMenu(true)
+    private fun setNextClickListener() {
+        binding.btnNext.setOnClickListener {
+            if(binding.etSignupEmailPassword.text.isNullOrBlank() || binding.etSignupEmailPasswordCheck.text.isNullOrBlank()) {
+                Toast.makeText(activity, R.string.hint_password, Toast.LENGTH_SHORT).show()
+            } else {
+                signupViewModel.setPassword(binding.etSignupEmailPassword.text.toString().trim())
+                requireView().findNavController().navigate(R.id.action_emailSignupSetPasswordFragment_to_emailSignupSetNicknameFragment)
+            }
+        }
     }
 
     private fun activeButtonNext() {

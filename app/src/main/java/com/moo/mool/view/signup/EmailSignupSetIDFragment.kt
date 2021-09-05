@@ -1,6 +1,5 @@
 package com.moo.mool.view.signup
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +14,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailSignupSetIdBinding
 import com.moo.mool.util.HideKeyBoardUtil
@@ -31,28 +31,34 @@ class EmailSignupSetIDFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentEmailSignupSetIdBinding.inflate(layoutInflater, container, false)
-        val view = binding.root
 
+        setToolbarDetail()
+        textWatcherEditText()
+        setEtClearClickListener()
+        setEtEditorActionListener()
+        setNextClickListener()
+
+        return binding.root
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        (activity as LoginActivity).onBackPressed()
+        return true
+    }
+    private fun showBackButton() {
+        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
+        this.setHasOptionsMenu(true)
+    }
+    private fun setToolbarDetail() {
         binding.toolbarSignupBoard.tvToolbarTitle.setText(R.string.signup)
         (activity as LoginActivity).setSupportActionBar(binding.toolbarSignupBoard.toolbarBoard)
         (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         showBackButton()
-        setEtIdEditorActionListener()
+    }
 
-        binding.btnNext.setOnClickListener {
-            if(binding.etSignupEmailId.text.isNullOrBlank()) {
-                Toast.makeText(activity, R.string.hint_email, Toast.LENGTH_SHORT).show()
-            } else {
-                signupViewModel.setEmail(binding.etSignupEmailId.text.toString().trim())
-                // 비밀번호 작성 화면으로 이동
-                (activity as LoginActivity).ReplaceEmailSignupSetPasswordFragment()
-            }
-        }
-
-        binding.btnDeleteEtEmailId.setOnClickListener{
-            binding.etSignupEmailId.setText("")
-        }
-
+    private fun textWatcherEditText() {
         binding.etSignupEmailId.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
@@ -91,20 +97,35 @@ class EmailSignupSetIDFragment : Fragment() {
             }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
         })
-
-        return view
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
-        (activity as LoginActivity).onBackPressed()
-        return true
+    private fun setEtClearClickListener() {
+        binding.btnDeleteEtEmailId.setOnClickListener{
+            binding.etSignupEmailId.setText("")
+        }
     }
 
-    private fun showBackButton() {
-        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
-        this.setHasOptionsMenu(true)
+    private fun setEtEditorActionListener() {
+        binding.etSignupEmailId.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    HideKeyBoardUtil.hide(requireContext(), binding.etSignupEmailId)
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun setNextClickListener() {
+        binding.btnNext.setOnClickListener {
+            if(binding.etSignupEmailId.text.isNullOrBlank()) {
+                Toast.makeText(activity, R.string.hint_email, Toast.LENGTH_SHORT).show()
+            } else {
+                signupViewModel.setEmail(binding.etSignupEmailId.text.toString().trim())
+                requireView().findNavController().navigate(R.id.action_emailSignupSetIDFragment_to_emailSignupSetPasswordFragment)
+            }
+        }
     }
 
     private fun activeButtonNext() {
@@ -116,18 +137,6 @@ class EmailSignupSetIDFragment : Fragment() {
         binding.btnNext.isEnabled = false
         binding.btnNext.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
         binding.btnNext.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
-    }
-
-    private fun setEtIdEditorActionListener() {
-        binding.etSignupEmailId.setOnEditorActionListener { _, actionId, _ ->
-            when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    HideKeyBoardUtil.hide(requireContext(), binding.etSignupEmailId)
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
