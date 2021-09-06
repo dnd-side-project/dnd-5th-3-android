@@ -142,6 +142,7 @@
 
     <!-- Comment -->
     <string name="comment_post">게시</string>
+    <string name="comment_length_warning">댓글을 500자까지만 입력할 수 있어요.</string>
     <string name="comment_title">반응 남기기</string>
     <string name="comment_reaction_yellow">올~~~</string>
     <string name="comment_reaction_red">!?!?!?</string>
