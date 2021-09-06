@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
@@ -18,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import dagger.hilt.android.AndroidEntryPoint
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentCommentBinding
 import com.moo.mool.util.DeleteDialogUtil
@@ -26,6 +24,7 @@ import com.moo.mool.util.FloatingAnimationUtil
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.view.comment.adapter.ReCommentAdapter
 import com.moo.mool.view.comment.viewmodel.CommentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -54,7 +53,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setLayoutCommentClickListener(getLayoutReactionList())
         setLottieAnimationListener()
         setBtnCommentMoreClickListener()
-        setEtReplyEditorActionListener()
+        setTvReplyPostClickListener()
         setIsPostedCollect()
         //setNetworkErrorCollect()
         commentViewModel.initOpenEmoji(args.openEmoji)
@@ -370,20 +369,14 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         else -> false
     }
 
-    private fun setEtReplyEditorActionListener() {
-        binding.etReply.setOnEditorActionListener { _, actionId, _ ->
-            when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    if (binding.etReply.text.toString().isNotEmpty()) {
-                        HideKeyBoardUtil.hide(requireContext(), binding.etReply)
-                        commentViewModel.requestPostReply(
-                            args.id,
-                            binding.etReply.text.toString()
-                        )
-                    }
-                    true
-                }
-                else -> false
+    private fun setTvReplyPostClickListener() {
+        binding.tvReplyPost.setOnClickListener {
+            if (binding.etReply.text.toString().isNotEmpty()) {
+                HideKeyBoardUtil.hide(requireContext(), binding.etReply)
+                commentViewModel.requestPostReply(
+                    args.id,
+                    binding.etReply.text.toString()
+                )
             }
         }
     }
