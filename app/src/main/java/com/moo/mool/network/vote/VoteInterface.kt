@@ -1,9 +1,9 @@
 package com.moo.mool.network.vote
 
-import com.moo.mool.view.comment.RequestPutEmoji
-import com.moo.mool.view.comment.ResponseComment
-import com.moo.mool.view.comment.ResponseEmoji
-import com.moo.mool.view.vote.*
+import com.moo.mool.view.comment.model.RequestPutEmoji
+import com.moo.mool.view.comment.model.ResponseComment
+import com.moo.mool.view.comment.model.ResponseEmoji
+import com.moo.mool.view.vote.model.*
 import retrofit2.http.*
 
 interface VoteInterface {

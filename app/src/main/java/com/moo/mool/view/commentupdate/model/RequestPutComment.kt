@@ -1,4 +1,4 @@
-package com.moo.mool.view.commentupdate
+package com.moo.mool.view.commentupdate.model
 
 import com.google.gson.annotations.SerializedName
 

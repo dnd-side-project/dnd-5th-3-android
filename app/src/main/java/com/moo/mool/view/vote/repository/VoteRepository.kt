@@ -1,10 +1,10 @@
 package com.moo.mool.view.vote.repository
 
 import com.moo.mool.network.vote.VoteServiceImpl
-import com.moo.mool.view.comment.RequestPutEmoji
-import com.moo.mool.view.vote.RequestCommentId
-import com.moo.mool.view.vote.RequestPostComment
-import com.moo.mool.view.vote.RequestVote
+import com.moo.mool.view.comment.model.RequestPutEmoji
+import com.moo.mool.view.vote.model.RequestCommentId
+import com.moo.mool.view.vote.model.RequestPostComment
+import com.moo.mool.view.vote.model.RequestVote
 import javax.inject.Inject
 
 class VoteRepository @Inject constructor(

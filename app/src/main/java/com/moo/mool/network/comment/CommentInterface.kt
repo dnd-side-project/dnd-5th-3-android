@@ -1,9 +1,9 @@
 package com.moo.mool.network.comment
 
-import com.moo.mool.view.comment.*
-import com.moo.mool.view.commentupdate.RequestPutComment
-import com.moo.mool.view.vote.RequestCommentId
-import com.moo.mool.view.vote.ResponsePostComment
+import com.moo.mool.view.comment.model.*
+import com.moo.mool.view.commentupdate.model.RequestPutComment
+import com.moo.mool.view.vote.model.RequestCommentId
+import com.moo.mool.view.vote.model.ResponsePostComment
 import retrofit2.http.*
 
 interface CommentInterface {

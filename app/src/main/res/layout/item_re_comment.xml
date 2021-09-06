@@ -7,7 +7,7 @@
 
         <variable
             name="comment"
-            type="com.moo.mool.view.comment.Comment" />
+            type="com.moo.mool.view.comment.model.Comment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

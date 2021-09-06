@@ -1,11 +1,11 @@
 package com.moo.mool.view.comment.repository
 
 import com.moo.mool.network.comment.CommentServiceImpl
-import com.moo.mool.view.comment.RequestPostEmoji
-import com.moo.mool.view.comment.RequestPostReComment
-import com.moo.mool.view.comment.RequestPutEmoji
-import com.moo.mool.view.commentupdate.RequestPutComment
-import com.moo.mool.view.vote.RequestCommentId
+import com.moo.mool.view.comment.model.RequestPostEmoji
+import com.moo.mool.view.comment.model.RequestPostReComment
+import com.moo.mool.view.comment.model.RequestPutEmoji
+import com.moo.mool.view.commentupdate.model.RequestPutComment
+import com.moo.mool.view.vote.model.RequestCommentId
 import javax.inject.Inject
 
 class CommentRepository @Inject constructor(
