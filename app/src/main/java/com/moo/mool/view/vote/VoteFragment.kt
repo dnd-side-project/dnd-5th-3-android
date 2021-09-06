@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.*
-import android.view.inputmethod.EditorInfo
 import android.widget.PopupMenu
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -55,7 +54,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setVoteCommentAdapter()
         setFeedDetailCommentCollect()
         setEtVoteCommentFocusListener()
-        setEtVoteCommentEditorActionListener()
+        setTvVoteCommentPostClickListener()
         setLayoutClickListener()
         setRequestPostCommentCollect()
         setFabVoteClickListener()
@@ -250,20 +249,14 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setEtVoteCommentEditorActionListener() {
-        binding.etVoteComment.setOnEditorActionListener { _, actionId, _ ->
-            when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    if (binding.etVoteComment.text.toString().isNotEmpty()) {
-                        HideKeyBoardUtil.hide(requireContext(), binding.etVoteComment)
-                        voteViewModel.requestPostComment(
-                            args.id,
-                            binding.etVoteComment.text.toString()
-                        )
-                    }
-                    true
-                }
-                else -> false
+    private fun setTvVoteCommentPostClickListener() {
+        binding.tvVoteCommentPost.setOnClickListener {
+            if (binding.etVoteComment.text.toString().isNotEmpty()) {
+                HideKeyBoardUtil.hide(requireContext(), binding.etVoteComment)
+                voteViewModel.requestPostComment(
+                    args.id,
+                    binding.etVoteComment.text.toString()
+                )
             }
         }
     }

@@ -354,7 +354,7 @@
             app:tint="@null"
             tools:ignore="ContentDescription" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_vote_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -368,12 +368,28 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:hint="@string/vote_comment_hint"
-                android:imeOptions="actionDone"
-                android:inputType="text"
+                android:inputType="textMultiLine"
+                android:maxLength="500"
                 android:paddingVertical="15dp"
                 android:textColor="@color/bluegray50_F9FAFC"
                 android:textColorHint="@color/bluegray600_626670"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="Autofill" />
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_vote_comment_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:text="@string/comment_post"
+                android:textColor="@color/moomool_pink_ff227c"
+                android:textSize="16dp"
+                app:layout_constraintBottom_toBottomOf="@id/et_vote_comment"
+                app:layout_constraintEnd_toEndOf="@id/et_vote_comment" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

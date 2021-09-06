@@ -141,6 +141,7 @@
     <string name="vote_delete_dialog">정말 삭제하시겠어요?\n삭제한 글은 되돌릴 수 없어요.</string>
 
     <!-- Comment -->
+    <string name="comment_post">게시</string>
     <string name="comment_title">반응 남기기</string>
     <string name="comment_reaction_yellow">올~~~</string>
     <string name="comment_reaction_red">!?!?!?</string>
