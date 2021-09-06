@@ -86,16 +86,20 @@ class OnBoardingFragment : Fragment() {
 
     private fun setTvOnBoardingSkipClickListener() {
         binding.tvOnBoardingSkip.setOnClickListener {
-            requireView().findNavController()
-                .navigate(R.id.action_onBoardingFragment_to_feedFragment)
+            finishOnBoarding()
         }
     }
 
     private fun setBtnOnBoardingSkipClickListener() {
         binding.btnOnBoardingSkip.setOnClickListener {
-            requireView().findNavController()
-                .navigate(R.id.action_onBoardingFragment_to_feedFragment)
+            finishOnBoarding()
         }
+    }
+
+    private fun finishOnBoarding() {
+        requireView().findNavController()
+            .navigate(R.id.action_onBoardingFragment_to_feedFragment)
+        SharedManager(requireContext()).setSkipOnBoardingFragment()
     }
 
     override fun onDestroyView() {

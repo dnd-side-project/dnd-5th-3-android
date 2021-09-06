@@ -24,6 +24,7 @@ import com.moo.mool.databinding.FragmentCommentBinding
 import com.moo.mool.util.DeleteDialogUtil
 import com.moo.mool.util.FloatingAnimationUtil
 import com.moo.mool.util.HideKeyBoardUtil
+import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.comment.adapter.ReCommentAdapter
 import com.moo.mool.view.comment.model.Comment
 import com.moo.mool.view.comment.viewmodel.CommentViewModel
