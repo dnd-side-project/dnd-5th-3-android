@@ -13,10 +13,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import dagger.hilt.android.AndroidEntryPoint
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentCommentUpdateBinding
+import com.moo.mool.util.HideKeyBoardUtil
+import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.comment.viewmodel.CommentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -33,7 +35,8 @@ class CommentUpdateFragment : Fragment() {
     ): View {
         _binding = FragmentCommentUpdateBinding.inflate(inflater, container, false)
         setCommentUpdateBackClickListener()
-        setEtTextChangedListener()
+        setRootClickListener()
+        setEtCommentUpdateListener()
         setEtCommentUpdateText()
         setTvUpdateRequestClickListener()
         setIsUpdatedCollect()
@@ -48,11 +51,17 @@ class CommentUpdateFragment : Fragment() {
         }
     }
 
+    private fun setRootClickListener() {
+        binding.root.setOnClickListener {
+            HideKeyBoardUtil.hide(requireContext(), binding.etCommentUpdate)
+        }
+    }
+
     private fun setEtCommentUpdateText() {
         binding.etCommentUpdate.setText(args.content)
     }
 
-    private fun setEtTextChangedListener() {
+    private fun setEtCommentUpdateListener() {
         with(binding.etCommentUpdate) {
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -64,6 +73,13 @@ class CommentUpdateFragment : Fragment() {
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
+                    if (text.length > 500) {
+                        text.delete(text.length - 1, text.length)
+                        ToastDefaultBlack.createToast(
+                            requireContext(),
+                            getString(R.string.comment_length_warning)
+                        )?.show()
+                    }
                 }
             })
         }
