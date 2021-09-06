@@ -46,6 +46,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     ): View {
         _binding = FragmentCommentBinding.inflate(inflater, container, false)
         setCommentBackClickListener()
+        setLayoutCommentClickListener()
         setRvReCommentAdapter()
         setReplyListCollect()
         setEmojiListCollect()
@@ -69,6 +70,12 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         binding.btnCommentBack.setOnClickListener {
             requireView().findNavController()
                 .popBackStack()
+        }
+    }
+
+    private fun setLayoutCommentClickListener() {
+        binding.layoutCommentBackground.setOnClickListener {
+            HideKeyBoardUtil.hide(requireContext(), binding.etReply)
         }
     }
 
@@ -414,12 +421,17 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                     isPosted.collect { isPosted ->
                         if (isPosted) {
                             resetIsPosted()
+                            resetEtReplyText()
                             requestGetComments(args.id)
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun resetEtReplyText() {
+        binding.etReply.setText("")
     }
 
     private fun setNetworkErrorCollect() {
