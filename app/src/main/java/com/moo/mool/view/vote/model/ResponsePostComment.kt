@@ -1,4 +1,4 @@
-package com.moo.mool.view.vote
+package com.moo.mool.view.vote.model
 
 import com.google.gson.annotations.SerializedName
 

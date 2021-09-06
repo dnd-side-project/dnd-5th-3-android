@@ -24,9 +24,9 @@ import com.moo.mool.util.DeleteDialogUtil
 import com.moo.mool.util.FloatingAnimationUtil
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.util.TimeChangerUtil
-import com.moo.mool.view.ToastDefaultBlack
-import com.moo.mool.view.comment.Comment
+import com.moo.mool.view.comment.model.Comment
 import com.moo.mool.view.vote.adapter.VoteCommentAdapter
+import com.moo.mool.view.vote.model.ResponseFeedDetail
 import com.moo.mool.view.vote.viewmodel.VoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay

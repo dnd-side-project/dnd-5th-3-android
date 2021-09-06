@@ -4,8 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.view.ContextThemeWrapper
-import androidx.appcompat.widget.PopupMenu
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,9 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.moo.mool.BR
 import com.moo.mool.R
 import com.moo.mool.databinding.ItemCommentBinding
-import com.moo.mool.util.DeleteDialogUtil
-import com.moo.mool.view.comment.Comment
-import com.moo.mool.view.comment.Emoji
+import com.moo.mool.view.comment.model.Comment
+import com.moo.mool.view.comment.model.Emoji
 import com.moo.mool.view.vote.VoteFragmentDirections
 import com.moo.mool.view.vote.viewmodel.VoteViewModel
 
