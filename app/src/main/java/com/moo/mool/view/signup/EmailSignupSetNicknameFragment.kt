@@ -14,14 +14,21 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailSignupSetNicknameBinding
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.view.login.LoginActivity
 import com.moo.mool.viewmodel.SignupViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class EmailSignupSetNicknameFragment : Fragment() {
     private var _binding : FragmentEmailSignupSetNicknameBinding?= null
     private val binding get() = _binding!!
@@ -42,17 +49,11 @@ class EmailSignupSetNicknameFragment : Fragment() {
         signupViewModel.signupSuccess.observe(viewLifecycleOwner, Observer {
             if(it) { // 회원가입이 성공할 경우 자동 로그인
                 signupViewModel.login()
+                setRequestLoginCollect()
             }
         })
         signupViewModel.signupFailedMessage.observe(viewLifecycleOwner, Observer {
             Log.e("Signup Error", it.toString())
-        })
-
-        signupViewModel.loginSuccess.observe(viewLifecycleOwner, Observer {
-            if(it) { // 자동 로그인 성공시 바로 메인 화면으로 이동
-                requireView().findNavController().navigate(R.id.action_emailSignupSetNicknameFragment_to_mainActivity)
-                (activity as LoginActivity).finish()
-            }
         })
         signupViewModel.loginFailedMessage.observe(viewLifecycleOwner, Observer {
             Log.e("Login Error", it.toString())
@@ -155,6 +156,19 @@ class EmailSignupSetNicknameFragment : Fragment() {
             } else {
                 signupViewModel.setNickname(binding.etSignupEmailNickname.text.toString().trim())
                 signupViewModel.signup()
+            }
+        }
+    }
+
+    private fun setRequestLoginCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                signupViewModel.loginSuccess
+                    .collect { loginSuccess ->
+                        if (loginSuccess) { // 자동 로그인 성공시 바로 메인 화면으로 이동
+                            requireView().findNavController().navigate(R.id.action_emailSignupSetNicknameFragment_to_mainActivity)
+                            (activity as LoginActivity).finish()
+                        } }
             }
         }
     }

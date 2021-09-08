@@ -7,8 +7,9 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class SignupRepository() {
+class SignupRepository @Inject constructor() {
     interface SignupCallBack {
         fun onSuccess()
         fun onError(message: String?)

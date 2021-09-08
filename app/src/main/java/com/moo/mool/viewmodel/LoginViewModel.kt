@@ -2,59 +2,63 @@ package com.moo.mool.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.moo.mool.model.RequestLogin
 import com.moo.mool.repository.LoginRepository
-class LoginViewModelFactory(val loginRepository: LoginRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(loginRepository::class.java)
-            .newInstance(loginRepository)
-    }
-}
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(private val loginRepository: LoginRepository): ViewModel() {
-    val loginSuccess = MutableLiveData<Boolean>()
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val loginRepository: LoginRepository
+    ): ViewModel() {
+
+    private val _loginSuccess = MutableStateFlow(false)
+    val loginSuccess = _loginSuccess.asStateFlow()
+    val responseLogin = MutableLiveData<Boolean?>()
     val loginFailedMessage = MutableLiveData<String?>()
 
+    // private val _resetPasswordSuccess = MutableLiveData<Boolean?>(false)
+    // val resetPasswordSuccess = _resetPasswordSuccess.asStateFlow()
     val resetPasswordSuccess = MutableLiveData<Boolean>()
     val resetPasswordFailedMessage = MutableLiveData<String?>()
 
-    fun login(requestLogin: RequestLogin) {
-        loginRepository.loginUser(requestLogin, object : LoginRepository.LoginCallBack {
-            override fun onSuccess() {
-                loginSuccess.postValue(true)
-            }
+    private val _networkError = MutableStateFlow(false)
+    val networkError = _networkError.asStateFlow()
 
-            override fun onError(message: String?) {
-                loginSuccess.postValue(false)
-                loginFailedMessage.postValue(message)
-            }
-        })
+    fun login(requestLogin: RequestLogin) {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                loginRepository.loginUser(requestLogin)
+            }.getOrNull()?.let {
+                _loginSuccess.emit(true)
+                responseLogin.postValue(true)
+            } ?: responseLogin.postValue(true)
+        }
     }
 
     fun autoLogin() {
-        loginRepository.autoLogin(object : LoginRepository.LoginCallBack {
-            override fun onSuccess() {
-                loginSuccess.postValue(true)
-            }
-            override fun onError(message: String?) {
-                loginSuccess.postValue(false)
-                loginFailedMessage.postValue(message)
-            }
-        })
+        viewModelScope.launch(Dispatchers.Main) {
+            runCatching {
+                loginRepository.autoLogin()
+            }.getOrNull()?.let {
+                _loginSuccess.emit(true)
+                responseLogin.postValue(true)
+            } ?: responseLogin.postValue(true)
+        }
     }
 
     fun resetPassword(email: String) {
-        loginRepository.resetPassword(email, object : LoginRepository.LoginCallBack {
-            override fun onSuccess() {
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                loginRepository.resetPassword(email)
+            }.getOrNull()?.let {
                 resetPasswordSuccess.postValue(true)
-            }
-
-            override fun onError(message: String?) {
-                resetPasswordSuccess.postValue(false)
-                resetPasswordFailedMessage.postValue(message)
-            }
-        })
+            } ?: resetPasswordSuccess.postValue(false)
+        }
     }
-
 }

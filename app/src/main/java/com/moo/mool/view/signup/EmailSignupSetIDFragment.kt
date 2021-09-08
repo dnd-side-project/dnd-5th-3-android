@@ -20,7 +20,9 @@ import com.moo.mool.databinding.FragmentEmailSignupSetIdBinding
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.view.login.LoginActivity
 import com.moo.mool.viewmodel.SignupViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EmailSignupSetIDFragment : Fragment() {
     private var _binding : FragmentEmailSignupSetIdBinding?= null
     private val binding get() = _binding!!

@@ -15,21 +15,22 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.*
+import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailPasswordResetBinding
-import com.moo.mool.repository.LoginRepository
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.util.LoadingDialogUtil
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.viewmodel.LoginViewModel
-import com.moo.mool.viewmodel.LoginViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EmailPasswordResetFragment : Fragment() {
     private var _binding : FragmentEmailPasswordResetBinding?= null
     private val binding get() = _binding!!
-    private lateinit var loginViewModel : LoginViewModel
+    private val loginViewModel by viewModels<LoginViewModel>()
     private lateinit var loadingDialog : AlertDialog
 
     override fun onCreateView(
@@ -37,7 +38,10 @@ class EmailPasswordResetFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentEmailPasswordResetBinding.inflate(layoutInflater, container, false)
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(requireContext()))).get(LoginViewModel::class.java)
+        binding.apply {
+            lifecycleOwner = this@EmailPasswordResetFragment
+            vm = loginViewModel
+        }
 
         setToolbarDetail()
         textWatcherEditText()
@@ -52,7 +56,7 @@ class EmailPasswordResetFragment : Fragment() {
         mAlertDialog.setCancelable(false)
 
         loginViewModel.resetPasswordSuccess.observe(viewLifecycleOwner, Observer {
-            if(it){
+            if(it == true){
                 LoadingDialogUtil.hideLoadingIcon(loadingDialog)
                 // Dialog 제목 및 내용 설정
                 mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.reset_password_dialog_title)
@@ -135,6 +139,9 @@ class EmailPasswordResetFragment : Fragment() {
             } else {
                 loginViewModel.resetPassword(binding.etLoginEmailId.text.toString().trim())
                 loadingDialog = LoadingDialogUtil.showLoadingIcon(requireContext())
+                // TODO : 제대로 Observe 안되는 현상 임시 조치로 이메일 보낸 후 뒤로가기
+                (activity as LoginActivity).onBackPressed()
+                LoadingDialogUtil.hideLoadingIcon(loadingDialog)
             }
         }
     }

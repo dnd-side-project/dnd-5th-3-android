@@ -11,6 +11,9 @@ import com.moo.mool.network.comment.CommentServiceImpl
 import com.moo.mool.network.feed.FeedInterface
 import com.moo.mool.network.feed.FeedService
 import com.moo.mool.network.feed.FeedServiceImpl
+import com.moo.mool.network.login.LoginInterface
+import com.moo.mool.network.login.LoginService
+import com.moo.mool.network.login.LoginServiceImpl
 import com.moo.mool.network.mypage.MyPageInterface
 import com.moo.mool.network.vote.VoteInterface
 import com.moo.mool.network.vote.VoteService
@@ -38,6 +41,10 @@ object ServiceModule {
 
     @Provides
     @Singleton
+    fun provideLoginInterface(): LoginInterface = RequestToServer.loginInterface
+
+    @Provides
+    @Singleton
     fun provideFeedServiceImpl(feedInterface: FeedInterface): FeedService =
         FeedServiceImpl(feedInterface)
 
@@ -50,4 +57,9 @@ object ServiceModule {
     @Singleton
     fun provideCommentServiceImpl(commentInterface: CommentInterface): CommentService =
         CommentServiceImpl(commentInterface)
+
+    @Provides
+    @Singleton
+    fun provideLoginServiceImpl(loginInterface: LoginInterface): LoginService =
+        LoginServiceImpl(loginInterface)
 }

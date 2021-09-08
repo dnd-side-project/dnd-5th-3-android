@@ -6,8 +6,6 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface RequestInterface {
-    @POST("/api/v1/login")
-    fun requestLogin(@Body body : RequestLogin) : Call<ResponseLogin>
 
     @POST("/api/v1/member")
     fun requestMember(@Body body : RequestMember) : Call<ResponseMember>
@@ -21,17 +19,11 @@ interface RequestInterface {
     @POST("/api/v1/member/check/password")
     fun requestCheckOldPassword(@Header("Authorization") accessToken: String, @Body body : RequestOldPasswordCheck) : Call<String>
 
-    @PUT("/api/v1/member/token")
-    fun requestTokenRefresh(@Body body : RequestTokenRefresh) : Call<ResponseTokenRefresh>
-
     @GET("/api/v1/member/exists/{email}/email")
     fun requestDuplicateCheckEmail(@Path("email") email : String) : Call<String>
 
     @GET("/api/v1/member/exists/{name}/name")
     fun requestDuplicateCheckNickname(@Path("name") name : String) : Call<String>
-
-    @PUT("/api/v1/member/reset")
-    fun requestResetPassword(@Body body : RequestResetPassword) : Call<String>
 
     @Multipart
     @POST("/api/v1/posts")
