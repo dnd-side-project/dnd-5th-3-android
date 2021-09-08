@@ -14,33 +14,34 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.*
 import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailLoginBinding
 import com.moo.mool.model.RequestLogin
-import com.moo.mool.repository.LoginRepository
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.viewmodel.LoginViewModel
-import com.moo.mool.viewmodel.LoginViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class EmailLoginFragment : Fragment() {
     private var _binding : FragmentEmailLoginBinding?= null
     private val binding get() = _binding!!
-    private lateinit var loginViewModel : LoginViewModel
+    private val loginViewModel by viewModels<LoginViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentEmailLoginBinding.inflate(layoutInflater, container, false)
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(LoginRepository(requireContext()))).get(LoginViewModel::class.java)
-
-        val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-        val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
-        val mAlertDialog = mBuilder.create()
+        binding.apply {
+            lifecycleOwner = this@EmailLoginFragment
+            vm = loginViewModel
+        }
 
         setToolbarDetail()
         textWatcherEditText()
@@ -48,26 +49,6 @@ class EmailLoginFragment : Fragment() {
         setLoginEmailClickListener()
         setEmailPasswordResetClickListener()
 
-        loginViewModel.loginSuccess.observe(viewLifecycleOwner, Observer {
-            if(it) {
-                requireView().findNavController().navigate(R.id.action_emailLoginFragment_to_mainActivity)
-                (activity as LoginActivity).finish()
-            } else {
-                // Dialog 중복 실행 방지
-                if(mAlertDialog != null && !mAlertDialog.isShowing){
-                    mAlertDialog.show()
-
-                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.login_fail_dialog_title)
-                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.login_fail_dialog_description)
-
-                    val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
-                    mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
-                    confirmButton.setOnClickListener {
-                        mAlertDialog.dismiss()
-                    }
-                }
-            }
-        })
         loginViewModel.loginFailedMessage.observe(viewLifecycleOwner, Observer {
             Log.e("Login Error", it.toString())
         })
@@ -136,6 +117,7 @@ class EmailLoginFragment : Fragment() {
                 ToastDefaultBlack.createToast(requireContext(), "이메일과 비밀번호를 모두 입력하세요.")?.show()
             } else {
                 loginViewModel.login(RequestLogin(binding.etLoginEmailId.text.toString(), binding.etLoginEmailPassword.text.toString()))
+                setRequestLoginCollect()
             }
         }
     }
@@ -153,6 +135,47 @@ class EmailLoginFragment : Fragment() {
     private fun deactiveButtonLoginEmail() {
         binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
         binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
+    }
+
+    private fun setRequestLoginCollect() {
+        val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+        val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
+        val mAlertDialog = mBuilder.create()
+
+        loginViewModel.responseLogin.observe(viewLifecycleOwner, Observer {
+            if(it == true) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        loginViewModel.loginSuccess
+                            .collect { loginSuccess ->
+                                if (loginSuccess) {
+                                    requireView().findNavController()
+                                        .navigate(R.id.action_emailLoginFragment_to_mainActivity)
+                                    (activity as LoginActivity).finish()
+                                } else {
+                                    // Dialog 중복 실행 방지
+                                    if (mAlertDialog != null && !mAlertDialog.isShowing) {
+                                        mAlertDialog.show()
+
+                                        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
+                                            .setText(R.string.login_fail_dialog_title)
+                                        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
+                                            .setText(R.string.login_fail_dialog_description)
+
+                                        val confirmButton =
+                                            mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
+                                        mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility =
+                                            View.GONE
+                                        confirmButton.setOnClickListener {
+                                            mAlertDialog.dismiss()
+                                        }
+                                    }
+                                }
+                            }
+                    }
+                }
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

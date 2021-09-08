@@ -1,9 +1,12 @@
 package com.moo.mool.di
 
+import android.content.Context
 import com.moo.mool.network.comment.CommentServiceImpl
 import com.moo.mool.network.feed.FeedServiceImpl
+import com.moo.mool.network.login.LoginServiceImpl
 import com.moo.mool.network.mypage.MyPageServiceImpl
 import com.moo.mool.network.vote.VoteServiceImpl
+import com.moo.mool.repository.LoginRepository
 import com.moo.mool.view.comment.repository.CommentRepository
 import com.moo.mool.view.feed.repository.FeedRepository
 import com.moo.mool.view.mypage.repository.MyPageRepository
@@ -11,6 +14,7 @@ import com.moo.mool.view.vote.repository.VoteRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -36,4 +40,9 @@ object RepositoryModule {
     @Singleton
     fun provideMyPageRepository(myPageServiceImpl: MyPageServiceImpl): MyPageRepository =
         MyPageRepository(myPageServiceImpl)
+
+    @Provides
+    @Singleton
+    fun provideLoginRepository(loginServiceImpl: LoginServiceImpl, @ApplicationContext context: Context) : LoginRepository =
+        LoginRepository(loginServiceImpl, context)
 }

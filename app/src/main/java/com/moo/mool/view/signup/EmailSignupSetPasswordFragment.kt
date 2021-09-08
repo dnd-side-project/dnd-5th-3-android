@@ -17,8 +17,10 @@ import com.moo.mool.databinding.FragmentEmailSignupSetPasswordBinding
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.view.login.LoginActivity
 import com.moo.mool.viewmodel.SignupViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.regex.Pattern
 
+@AndroidEntryPoint
 class EmailSignupSetPasswordFragment : Fragment() {
     private var _binding : FragmentEmailSignupSetPasswordBinding?= null
     private val binding get() = _binding!!

@@ -4,7 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.moo.mool.database.PreferenceHelper.get
 import com.moo.mool.database.PreferenceHelper.set
-class SharedManager(context: Context) {
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+
+class SharedManager @Inject constructor(@ApplicationContext val context: Context) {
     private val prefs: SharedPreferences = PreferenceHelper.defaultPrefs(context)
 
     fun saveCurrentUser(user: User) {
