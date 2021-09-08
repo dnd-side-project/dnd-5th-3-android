@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide
 import com.moo.mool.R
 import com.moo.mool.database.SharedManager
 import com.moo.mool.view.feed.Feed
-import com.moo.mool.view.vote.ResponseFeedDetail
+import com.moo.mool.view.vote.model.ResponseFeedDetail
 
 object BindingAdapter {
     @BindingAdapter("feedTopTitleText")

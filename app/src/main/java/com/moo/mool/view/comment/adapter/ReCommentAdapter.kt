@@ -1,9 +1,9 @@
 package com.moo.mool.view.comment.adapter
 
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.view.ContextThemeWrapper
-import androidx.appcompat.widget.PopupMenu
+import android.widget.PopupMenu
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,8 +12,8 @@ import com.moo.mool.BR
 import com.moo.mool.R
 import com.moo.mool.databinding.ItemReCommentBinding
 import com.moo.mool.util.DeleteDialogUtil
-import com.moo.mool.view.comment.Comment
 import com.moo.mool.view.comment.CommentFragmentDirections
+import com.moo.mool.view.comment.model.Comment
 import com.moo.mool.view.comment.viewmodel.CommentViewModel
 
 class ReCommentAdapter(private val commentViewModel: CommentViewModel) :

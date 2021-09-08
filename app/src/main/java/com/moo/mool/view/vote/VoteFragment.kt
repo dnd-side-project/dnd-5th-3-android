@@ -4,8 +4,9 @@ import android.animation.Animator
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
-import android.view.inputmethod.EditorInfo
 import android.widget.PopupMenu
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -23,8 +24,10 @@ import com.moo.mool.util.DeleteDialogUtil
 import com.moo.mool.util.FloatingAnimationUtil
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.util.TimeChangerUtil
-import com.moo.mool.view.comment.Comment
+import com.moo.mool.view.ToastDefaultBlack
+import com.moo.mool.view.comment.model.Comment
 import com.moo.mool.view.vote.adapter.VoteCommentAdapter
+import com.moo.mool.view.vote.model.ResponseFeedDetail
 import com.moo.mool.view.vote.viewmodel.VoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -55,7 +58,8 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setVoteCommentAdapter()
         setFeedDetailCommentCollect()
         setEtVoteCommentFocusListener()
-        setEtVoteCommentEditorActionListener()
+        setEtVoteCommentListener()
+        setTvVoteCommentPostClickListener()
         setLayoutClickListener()
         setRequestPostCommentCollect()
         setFabVoteClickListener()
@@ -250,20 +254,36 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setEtVoteCommentEditorActionListener() {
-        binding.etVoteComment.setOnEditorActionListener { _, actionId, _ ->
-            when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    if (binding.etVoteComment.text.toString().isNotEmpty()) {
-                        HideKeyBoardUtil.hide(requireContext(), binding.etVoteComment)
-                        voteViewModel.requestPostComment(
-                            args.id,
-                            binding.etVoteComment.text.toString()
-                        )
-                    }
-                    true
+    private fun setEtVoteCommentListener() {
+        with(binding.etVoteComment) {
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
-                else -> false
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    if (text.length > 500) {
+                        text.delete(text.length - 1, text.length)
+                        ToastDefaultBlack.createToast(
+                            requireContext(),
+                            getString(R.string.comment_length_warning)
+                        )?.show()
+                    }
+                }
+            })
+        }
+    }
+
+    private fun setTvVoteCommentPostClickListener() {
+        binding.tvVoteCommentPost.setOnClickListener {
+            if (binding.etVoteComment.text.toString().isNotEmpty()) {
+                HideKeyBoardUtil.hide(requireContext(), binding.etVoteComment)
+                voteViewModel.requestPostComment(
+                    args.id,
+                    binding.etVoteComment.text.toString()
+                )
             }
         }
     }

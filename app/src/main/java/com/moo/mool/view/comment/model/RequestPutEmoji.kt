@@ -1,4 +1,4 @@
-package com.moo.mool.view.comment
+package com.moo.mool.view.comment.model
 
 import com.google.gson.annotations.SerializedName
 

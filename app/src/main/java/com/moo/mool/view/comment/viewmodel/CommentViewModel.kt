@@ -3,10 +3,10 @@ package com.moo.mool.view.comment.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.moo.mool.view.comment.*
+import com.moo.mool.view.comment.model.*
 import com.moo.mool.view.comment.repository.CommentRepository
-import com.moo.mool.view.commentupdate.RequestPutComment
-import com.moo.mool.view.vote.RequestCommentId
+import com.moo.mool.view.commentupdate.model.RequestPutComment
+import com.moo.mool.view.vote.model.RequestCommentId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

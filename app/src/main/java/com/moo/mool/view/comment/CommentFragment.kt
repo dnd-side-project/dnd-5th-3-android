@@ -2,11 +2,12 @@ package com.moo.mool.view.comment
 
 import android.animation.Animator
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
@@ -18,14 +19,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import dagger.hilt.android.AndroidEntryPoint
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentCommentBinding
 import com.moo.mool.util.DeleteDialogUtil
 import com.moo.mool.util.FloatingAnimationUtil
 import com.moo.mool.util.HideKeyBoardUtil
+import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.comment.adapter.ReCommentAdapter
+import com.moo.mool.view.comment.model.Comment
 import com.moo.mool.view.comment.viewmodel.CommentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -44,6 +47,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     ): View {
         _binding = FragmentCommentBinding.inflate(inflater, container, false)
         setCommentBackClickListener()
+        setLayoutCommentClickListener()
         setRvReCommentAdapter()
         setReplyListCollect()
         setEmojiListCollect()
@@ -54,7 +58,8 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setLayoutCommentClickListener(getLayoutReactionList())
         setLottieAnimationListener()
         setBtnCommentMoreClickListener()
-        setEtReplyEditorActionListener()
+        setEtReplyListener()
+        setTvReplyPostClickListener()
         setIsPostedCollect()
         //setNetworkErrorCollect()
         commentViewModel.initOpenEmoji(args.openEmoji)
@@ -66,6 +71,12 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         binding.btnCommentBack.setOnClickListener {
             requireView().findNavController()
                 .popBackStack()
+        }
+    }
+
+    private fun setLayoutCommentClickListener() {
+        binding.layoutCommentBackground.setOnClickListener {
+            HideKeyBoardUtil.hide(requireContext(), binding.etReply)
         }
     }
 
@@ -370,20 +381,36 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         else -> false
     }
 
-    private fun setEtReplyEditorActionListener() {
-        binding.etReply.setOnEditorActionListener { _, actionId, _ ->
-            when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    if (binding.etReply.text.toString().isNotEmpty()) {
-                        HideKeyBoardUtil.hide(requireContext(), binding.etReply)
-                        commentViewModel.requestPostReply(
-                            args.id,
-                            binding.etReply.text.toString()
-                        )
-                    }
-                    true
+    private fun setEtReplyListener() {
+        with(binding.etReply) {
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
-                else -> false
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    if (text.length > 500) {
+                        text.delete(text.length - 1, text.length)
+                        ToastDefaultBlack.createToast(
+                            requireContext(),
+                            getString(R.string.comment_length_warning)
+                        )?.show()
+                    }
+                }
+            })
+        }
+    }
+
+    private fun setTvReplyPostClickListener() {
+        binding.tvReplyPost.setOnClickListener {
+            if (binding.etReply.text.toString().isNotEmpty()) {
+                HideKeyBoardUtil.hide(requireContext(), binding.etReply)
+                commentViewModel.requestPostReply(
+                    args.id,
+                    binding.etReply.text.toString()
+                )
             }
         }
     }
@@ -395,12 +422,17 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                     isPosted.collect { isPosted ->
                         if (isPosted) {
                             resetIsPosted()
+                            resetEtReplyText()
                             requestGetComments(args.id)
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun resetEtReplyText() {
+        binding.etReply.setText("")
     }
 
     private fun setNetworkErrorCollect() {

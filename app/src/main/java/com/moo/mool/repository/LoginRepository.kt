@@ -38,6 +38,7 @@ class LoginRepository @Inject constructor(
             refreshToken = response!!.refreshToken
             nickname = response!!.name
             email = response!!.email
+
         }
         sharedManager.saveCurrentUser(currentUser) // SharedPreference에 저장
 
