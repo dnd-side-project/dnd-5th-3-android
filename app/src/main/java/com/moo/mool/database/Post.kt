@@ -27,6 +27,7 @@ data class TempPost (
     var title: String? = null,
     var content: String? = null,
     var productImage: String?= null, // String 형태로 형변환하여 이미지 저장
+    var productImageFileExtension: String?= null,
     var createdDate: String?= null
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true)

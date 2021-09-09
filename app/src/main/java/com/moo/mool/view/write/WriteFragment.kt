@@ -59,6 +59,8 @@ class WriteFragment : Fragment() {
     private var imagePath : String? = null
     private val imageFileTimeFormat = SimpleDateFormat("yyyy-MM-d-HH-mm-ss", Locale.KOREA)
     private val timeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
+    private val permitFileExtensionList = arrayListOf("jpg", "jpeg", "png", "webp")
+    private lateinit var fileExtension : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,7 +143,7 @@ class WriteFragment : Fragment() {
             if(binding.etWriteTitle.text.toString().trim().isNullOrBlank() || binding.etWriteContent.text.toString().trim().isNullOrBlank()) {
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_save_fail_empty_message))?.show()
             } else {
-                val tempPost = TempPost(binding.etWriteTitle.text.toString(), binding.etWriteContent.text.toString(), productImageUpload, timeFormat.format(Date(System.currentTimeMillis())).toString())
+                val tempPost = TempPost(binding.etWriteTitle.text.toString(), binding.etWriteContent.text.toString(), productImageUpload, fileExtension, timeFormat.format(Date(System.currentTimeMillis())).toString())
                 writeViewModel.addTempPost(tempPost)
                 ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_temp_save_success_meesage))?.show()
             }
@@ -197,6 +199,10 @@ class WriteFragment : Fragment() {
         binding.etWriteTitle.setText(tempPost?.title)
         binding.etWriteContent.setText(tempPost?.content)
         productImageUpload = tempPost?.productImage.toString()
+        fileExtension = tempPost?.productImageFileExtension.toString()
+        if(!fileExtension.isNullOrEmpty()) {
+            setUploadImagePath(fileExtension)
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.imgDetailPost.setImageBitmap(tempPost?.productImage?.toBitmap())
         }
@@ -264,13 +270,13 @@ class WriteFragment : Fragment() {
             // Glide를 사용하여 uri을 전달하여 보여준 뒤, Glide를 사용해 Uri -> Bitmap 변환
             // BitmapToString 확장함수를 사용하여 Bitmap -> String으로 변환하여 product_image_upload에 저장
 
-            val permitFileExtensionList = arrayListOf("jpg", "jpeg", "png", "webp")
-            val fileExtension = requireContext().contentResolver.getType(uri).toString().split("/")[1]
+            // 이미지 파일과 함께, 파일 확장자도 같이 저장
+            fileExtension = requireContext().contentResolver.getType(uri).toString().split("/")[1]
             if(permitFileExtensionList.contains(fileExtension)){
                 setUploadImagePath(fileExtension)
                 Glide.with(requireContext())
                     .load(uri)
-                    .listener(setBitmapListener())
+                    .listener(setBitmapListener()) // 이미지 파일 String 형태로 저장
                     .centerCrop()
                     .into(binding.imgDetailPost)
             } else {
@@ -329,7 +335,6 @@ class WriteFragment : Fragment() {
         val fileName = imageFileTimeFormat.format(Date(System.currentTimeMillis())).toString() + "." + fileExtension
         val cacheDir = requireContext().cacheDir.toString()
         imagePath = "$cacheDir/$fileName"
-        Log.e("IMGPATH", imagePath!!)
     }
 
     fun bitmapToFile(bitmap: Bitmap?, path: String?): File? {
