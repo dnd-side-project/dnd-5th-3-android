@@ -38,10 +38,11 @@
         android:layout_margin="20dp"
         android:hint="@string/title"
         android:textSize="20dp"
+        android:textStyle="bold"
         android:textColor="@color/bluegray100_F0F2F5"
         android:textColorHint="@color/bluegray500_878C96"
-        android:backgroundTint="@color/bluegray500_878C96"
-        android:textStyle="bold"/>
+        android:singleLine="true"
+        android:backgroundTint="@color/bluegray500_878C96"/>
     <androidx.core.widget.NestedScrollView
         android:id="@+id/layout_scroll_write_detail"
         android:layout_width="match_parent"
