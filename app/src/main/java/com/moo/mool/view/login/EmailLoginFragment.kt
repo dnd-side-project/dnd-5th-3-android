@@ -5,15 +5,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import androidx.navigation.findNavController
@@ -29,7 +27,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EmailLoginFragment : Fragment() {
-    private var _binding : FragmentEmailLoginBinding?= null
+    private var _binding: FragmentEmailLoginBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel by viewModels<LoginViewModel>()
 
@@ -61,11 +59,13 @@ class EmailLoginFragment : Fragment() {
         (activity as LoginActivity).onBackPressed()
         return true
     }
+
     private fun showBackButton() {
         (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
         this.setHasOptionsMenu(true)
     }
+
     private fun setToolbarDetail() {
         binding.toolbarLoginBoard.tvToolbarTitle.setText(R.string.login)
         (activity as LoginActivity).setSupportActionBar(binding.toolbarLoginBoard.toolbarBoard)
@@ -74,36 +74,50 @@ class EmailLoginFragment : Fragment() {
     }
 
     private fun textWatcherEditText() {
-        binding.etLoginEmailId.addTextChangedListener(object :TextWatcher{
+        binding.etLoginEmailId.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if(!s.isNullOrBlank() && !binding.etLoginEmailPassword.text.isNullOrBlank()){
+                if (!s.isNullOrBlank() && !binding.etLoginEmailPassword.text.isNullOrBlank()) {
                     activeButtonLoginEmail()
-                } else { deactiveButtonLoginEmail() }
+                } else {
+                    deactiveButtonLoginEmail()
+                }
 
-                if(!s.isNullOrBlank()){
+                if (!s.isNullOrBlank()) {
                     binding.btnDeleteEtEmailId.visibility = View.VISIBLE
-                } else { binding.btnDeleteEtEmailId.visibility = View.INVISIBLE }
+                } else {
+                    binding.btnDeleteEtEmailId.visibility = View.INVISIBLE
+                }
             }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                afterTextChanged(s as Editable?)
+            }
         })
-        binding.etLoginEmailPassword.addTextChangedListener(object :TextWatcher{
+        binding.etLoginEmailPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                if(!s.isNullOrBlank() && !binding.etLoginEmailId.text.isNullOrBlank()){
+                if (!s.isNullOrBlank() && !binding.etLoginEmailId.text.isNullOrBlank()) {
                     activeButtonLoginEmail()
-                } else { deactiveButtonLoginEmail() }
+                } else {
+                    deactiveButtonLoginEmail()
+                }
 
-                if(!s.isNullOrBlank()){
+                if (!s.isNullOrBlank()) {
                     binding.btnDeleteEtEmailPassword.visibility = View.VISIBLE
-                } else { binding.btnDeleteEtEmailPassword.visibility = View.INVISIBLE }
+                } else {
+                    binding.btnDeleteEtEmailPassword.visibility = View.INVISIBLE
+                }
             }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                afterTextChanged(s as Editable?)
+            }
         })
     }
 
     private fun setEtClearClickListener() {
-        binding.btnDeleteEtEmailId.setOnClickListener{
+        binding.btnDeleteEtEmailId.setOnClickListener {
             binding.etLoginEmailId.setText("")
         }
         binding.btnDeleteEtEmailPassword.setOnClickListener {
@@ -116,7 +130,12 @@ class EmailLoginFragment : Fragment() {
             if (binding.etLoginEmailId.text.isNullOrBlank() || binding.etLoginEmailPassword.text.isNullOrBlank()) {
                 ToastDefaultBlack.createToast(requireContext(), "이메일과 비밀번호를 모두 입력하세요.")?.show()
             } else {
-                loginViewModel.login(RequestLogin(binding.etLoginEmailId.text.toString(), binding.etLoginEmailPassword.text.toString()))
+                loginViewModel.login(
+                    RequestLogin(
+                        binding.etLoginEmailId.text.toString(),
+                        binding.etLoginEmailPassword.text.toString()
+                    )
+                )
                 setRequestLoginCollect()
             }
         }
@@ -124,26 +143,49 @@ class EmailLoginFragment : Fragment() {
 
     private fun setEmailPasswordResetClickListener() {
         binding.tvMessagePasswordReset.setOnClickListener {
-            requireView().findNavController().navigate(R.id.action_emailLoginFragment_to_emailPasswordResetFragment)
+            requireView().findNavController()
+                .navigate(R.id.action_emailLoginFragment_to_emailPasswordResetFragment)
         }
     }
 
     private fun activeButtonLoginEmail() {
-        binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_enable))
-        binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray50_F9FAFC, context?.theme))
+        binding.btnLoginEmail.setBackground(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.button_default_enable
+            )
+        )
+        binding.btnLoginEmail.setTextColor(
+            resources.getColorStateList(
+                R.color.bluegray50_F9FAFC,
+                context?.theme
+            )
+        )
     }
+
     private fun deactiveButtonLoginEmail() {
-        binding.btnLoginEmail.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
-        binding.btnLoginEmail.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
+        binding.btnLoginEmail.setBackground(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.button_default_disable
+            )
+        )
+        binding.btnLoginEmail.setTextColor(
+            resources.getColorStateList(
+                R.color.bluegray600_626670,
+                context?.theme
+            )
+        )
     }
 
     private fun setRequestLoginCollect() {
-        val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+        val mDialogView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
         val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
         val mAlertDialog = mBuilder.create()
 
         loginViewModel.responseLogin.observe(viewLifecycleOwner, Observer {
-            if(it == true) {
+            if (it == true) {
                 viewLifecycleOwner.lifecycleScope.launch {
                     viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         loginViewModel.loginSuccess
@@ -163,8 +205,8 @@ class EmailLoginFragment : Fragment() {
                                             .setText(R.string.login_fail_dialog_description)
 
                                         val confirmButton =
-                                            mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
-                                        mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility =
+                                            mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
+                                        mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility =
                                             View.GONE
                                         confirmButton.setOnClickListener {
                                             mAlertDialog.dismiss()

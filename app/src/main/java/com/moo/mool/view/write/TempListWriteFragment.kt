@@ -5,10 +5,8 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
-import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -101,8 +99,8 @@ class TempListWriteFragment : Fragment() {
                     .setView(mDialogView)
                 val mAlertDialog = mBuilder.show()
                 // Dialog 확인, 취소버튼 설정
-                val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
-                val cancelButton = mDialogView.findViewById<Button>(R.id.btn_dialog_cancel)
+                val confirmButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
+                val cancelButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel)
 
                 if(deletePost.isNotEmpty()){
                     mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.delete)
@@ -123,7 +121,7 @@ class TempListWriteFragment : Fragment() {
                     mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.write_temp_list_delete_empty_dialog_title)
                     mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_temp_list_delete_empty_dialog_description)
 
-                    mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
+                    mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility = View.GONE
                     confirmButton.setOnClickListener {
                         mAlertDialog.dismiss()
                     }

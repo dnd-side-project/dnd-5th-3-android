@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -46,8 +45,8 @@ class ProfileFragment : Fragment() {
         val mAlertDialog = mBuilder.create()
         mAlertDialog.setCancelable(false)
         // Dialog 확인, 취소버튼 설정
-        val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
-        val cancelButton = mDialogView.findViewById<Button>(R.id.btn_dialog_cancel)
+        val confirmButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
+        val cancelButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel)
         cancelButton.text = resources.getText(R.string.back)
 
         setEtChangePasswordClickListener()
@@ -88,8 +87,8 @@ class ProfileFragment : Fragment() {
                 mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
                     .setText(R.string.profile_change_nickname_success_dialog_description)
 
-                mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_confirm).visibility = View.VISIBLE
-                mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
+                mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm).visibility = View.VISIBLE
+                mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility = View.GONE
                 // Dialog 중복 실행 방지
                 if(mAlertDialog != null && !mAlertDialog.isShowing) {
                     mAlertDialog.show()
@@ -115,8 +114,8 @@ class ProfileFragment : Fragment() {
                 mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
                     .setText(R.string.profile_change_nickname_fail_dialog_description)
 
-                mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_confirm).visibility = View.GONE
-                mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.VISIBLE
+                mDialogView.findViewById<ConstraintLayout>(R.id.tv_dialog_confirm).visibility = View.GONE
+                mDialogView.findViewById<ConstraintLayout>(R.id.tv_dialog_cancel).visibility = View.VISIBLE
                 // Dialog 중복 실행 방지
                 if(mAlertDialog != null && !mAlertDialog.isShowing) {
                     mAlertDialog.show()
@@ -139,10 +138,10 @@ class ProfileFragment : Fragment() {
             // Dialog 제목 및 내용 설정
             mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.profile_change_all_success_dialog_title)
             mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.profile_change_all_success_dialog_description)
-            mDialogView.findViewById<ConstraintLayout>(R.id.layout_dialog_cancel).visibility = View.GONE
+            mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility = View.GONE
 
             // Dialog 확인, 취소버튼 설정
-            val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
+            val confirmButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
             mAlertDialog.show()
 
             // Dialog 확인 버튼을 클릭 한 경우

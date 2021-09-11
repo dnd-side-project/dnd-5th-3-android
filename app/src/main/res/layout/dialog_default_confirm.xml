@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.DialogDefaultConfirm"
-    >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center"
-        android:background="@color/bluegray900_13161f"
-        >
+    android:layout_height="wrap_content"
+    android:background="@color/black">
+
     <TextView
         android:id="@+id/tv_message_dialog_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="20dp"
         android:text="@string/dialog_title"
+        android:textColor="@color/bluegray50_F9FAFC"
         android:textSize="18dp"
         android:textStyle="bold"
-        android:textColor="@color/bluegray50_F9FAFC"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_message_dialog_description"
         android:layout_width="match_parent"
@@ -30,52 +25,40 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="24dp"
         android:text="@string/dialog_description"
+        android:textColor="@color/bluegray100_F0F2F5"
         android:textSize="16dp"
-        android:textColor="@color/bluegray100_F0F2F5"/>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_message_dialog_title" />
+
+    <TextView
+        android:id="@+id/tv_dialog_cancel"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_dialog_cancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/layout_dialog_confirm"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@color/bluegray600_626670"
-            android:visibility="visible">
-            <Button
-                android:id="@+id/btn_dialog_cancel"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:text="@string/cancel"
-                android:textSize="16dp"
-                android:textStyle="bold"
-                android:textColor="@color/bluegray50_F9FAFC" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_dialog_confirm"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/layout_dialog_cancel"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@color/moomool_pink_ff227c"
-            android:visibility="visible">
-            <Button
-                android:id="@+id/btn_dialog_confirm"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:text="@string/confirm"
-                android:textSize="16dp"
-                android:textStyle="bold"
-                android:textColor="@color/bluegray50_F9FAFC"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
-</LinearLayout>
+        android:layout_marginTop="20dp"
+        android:background="@color/bluegray600_626670"
+        android:gravity="center"
+        android:paddingVertical="16dp"
+        android:text="@string/cancel"
+        android:textColor="@color/bluegray50_F9FAFC"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/tv_dialog_confirm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_message_dialog_description" />
+
+    <TextView
+        android:id="@+id/tv_dialog_confirm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/moomool_pink_ff227c"
+        android:gravity="center"
+        android:paddingVertical="16dp"
+        android:text="@string/confirm"
+        android:textColor="@color/bluegray50_F9FAFC"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_dialog_cancel"
+        app:layout_constraintTop_toBottomOf="@id/tv_message_dialog_description" />
+</androidx.constraintlayout.widget.ConstraintLayout>

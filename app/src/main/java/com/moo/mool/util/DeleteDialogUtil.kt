@@ -17,11 +17,11 @@ object DeleteDialogUtil {
                 true -> context.getString(R.string.comment_delete_dialog)
                 false -> context.getString(R.string.vote_delete_dialog)
             }
-            btnDialogConfirm.setOnClickListener {
+            tvDialogConfirm.setOnClickListener {
                 onClick()
                 dialogBuilder.dismiss()
             }
-            btnDialogCancel.setOnClickListener {
+            tvDialogCancel.setOnClickListener {
                 dialogBuilder.dismiss()
             }
         }

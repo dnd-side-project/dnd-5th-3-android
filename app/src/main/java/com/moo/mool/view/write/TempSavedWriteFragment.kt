@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
-import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
@@ -92,8 +91,8 @@ class TempSavedWriteFragment : Fragment() {
             mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_temp_post_recall_dialog_description)
 
             // Dialog 확인, 취소버튼 설정
-            val confirmButton = mDialogView.findViewById<Button>(R.id.btn_dialog_confirm)
-            val cancelButton = mDialogView.findViewById<Button>(R.id.btn_dialog_cancel)
+            val confirmButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
+            val cancelButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel)
 
             // Dialog 확인 버튼을 클릭 한 경우
             confirmButton.setOnClickListener {
