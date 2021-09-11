@@ -93,6 +93,9 @@ class ChangePasswordFragment : Fragment() {
                         // binding.tvMessageChangePasswordCheckNewCheck.visibility = View.INVISIBLE
                         if(checkNewPasswordFormat(s.toString().trim())) { // 조건 2
                             binding.tvMessageChangePasswordCheckNew.visibility = View.INVISIBLE
+                        } else if(Pattern.matches("^[^\$@\$!%*#?&]*\$", s.toString().trim())){
+                            binding.tvMessageChangePasswordCheckNew.setText(R.string.fail_message_email_signup_password_format_character)
+                            binding.tvMessageChangePasswordCheckNew.visibility = View.VISIBLE
                         } else {
                             binding.tvMessageChangePasswordCheckNew.setText(R.string.change_password_fail_new_password_format)
                             binding.tvMessageChangePasswordCheckNew.visibility = View.VISIBLE
@@ -140,7 +143,12 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun checkNewPasswordFormat(newPassword : String) : Boolean {
-        return Pattern.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$", newPassword.trim()) && newPassword.length >= 8
+        if(Pattern.matches("^(?=.*[A-Za-z])(?=.*[\\d]).{8,}\$", newPassword.trim())) {
+            if(Pattern.matches("^[A-Za-z\\d\$@\$!%*#?&]*\$", newPassword.trim())) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun checkNewPassword(newPassword: String, checkPassword: String) : Boolean {

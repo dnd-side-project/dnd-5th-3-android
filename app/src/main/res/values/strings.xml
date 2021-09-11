@@ -55,6 +55,8 @@
     <string name="hint_password_format">비밀번호를 입력해주세요</string>
     <string name="hint_password_check">비밀번호 확인할게요 :)</string>
     <string name="fail_message_email_signup_password_format">조건에 맞게 비밀번호를 입력해주세요!</string>
+    <string name="fail_message_email_signup_password_format_length">8자리 이상 비밀번호를 입력해주세요!</string>
+    <string name="fail_message_email_signup_password_format_character">$, @, !, %, *, #, ?, &amp;외에 특수문자를 추가할 수 없어요!</string>
     <string name="fail_message_email_signup_password_empty">앗! 위에 비밀번호를 먼저 입력해주세요</string>
     <string name="fail_message_email_signup_password_check">헉! 비밀번호가 다른데요? 확인해 주시겠어요?</string>
     <string name="success_message_email_signup_password">좋은데요!</string>

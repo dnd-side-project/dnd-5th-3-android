@@ -70,26 +70,43 @@ class EmailSignupSetPasswordFragment : Fragment() {
                     binding.tvMessageSignupPasswordFormat.visibility = View.INVISIBLE
                 }
 
-                // 최소 하나의 문자 및 하나의 숫자를 포함한 8자리 이상 정규식 조건
-                if(Pattern.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$", s.toString().trim()) && s.toString().trim().length >= 8) {
-                    // 형식 검사 성공시
-                    binding.tvMessageSignupPasswordFormat.setText(getString(R.string.success_message_email_signup_password))
-                    binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
+                if(s.toString().trim().length >= 8) {
+                    if(Pattern.matches("^(?=.*[A-Za-z])(?=.*[\\d]).{8,}\$", s.toString().trim())) {
+                        if(Pattern.matches("^[A-Za-z\\d\$@\$!%*#?&]*\$", s.toString().trim())) {
+                            // 형식 검사 성공시
+                            binding.tvMessageSignupPasswordFormat.setText(getString(R.string.success_message_email_signup_password))
+                            binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
 
-                    // 비밀번호 확인 칸과 일치하는 경우
-                    // '비밀번호 확인 아래 안내메시지' 변경 및 '계속하기' 버튼 활성화
-                    if(s.toString().trim().equals(binding.etSignupEmailPasswordCheck.text.toString().trim())) {
-                        binding.tvMessageSignupPasswordCheck.setText(getString(R.string.success_message_email_signup_password_check))
-                        binding.tvMessageSignupPasswordCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
-                        activeButtonNext()
-                    } else { // 비밀번호 불일치
-                        binding.tvMessageSignupPasswordCheck.setText(getString(R.string.fail_message_email_signup_password_check))
-                        binding.tvMessageSignupPasswordCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                            // 비밀번호 확인 칸과 일치하는 경우
+                            // '비밀번호 확인 아래 안내메시지' 변경 및 '계속하기' 버튼 활성화
+                            binding.tvMessageSignupPasswordCheck.visibility = View.VISIBLE
+                            if(s.toString().trim().equals(binding.etSignupEmailPasswordCheck.text.toString().trim())) {
+                                binding.tvMessageSignupPasswordCheck.setText(getString(R.string.success_message_email_signup_password_check))
+                                binding.tvMessageSignupPasswordCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
+                                activeButtonNext()
+                            } else { // 비밀번호 불일치
+                                binding.tvMessageSignupPasswordCheck.setText(getString(R.string.fail_message_email_signup_password_check))
+                                binding.tvMessageSignupPasswordCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                                deactiveButtonNext()
+                            }
+                        } else {
+                            // 특수문자 형식 검사 실패시
+                            binding.tvMessageSignupPasswordCheck.visibility = View.INVISIBLE
+                            binding.tvMessageSignupPasswordFormat.setText(getString(R.string.fail_message_email_signup_password_format_character))
+                            binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                            deactiveButtonNext()
+                        }
+                    } else {
+                        // 영문자 및 숫자 조건 검사 실패시
+                        binding.tvMessageSignupPasswordCheck.visibility = View.INVISIBLE
+                        binding.tvMessageSignupPasswordFormat.setText(getString(R.string.fail_message_email_signup_password_format))
+                        binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
                         deactiveButtonNext()
                     }
                 } else {
-                    // 형식 검사 실패시
-                    binding.tvMessageSignupPasswordFormat.setText(getString(R.string.fail_message_email_signup_password_format))
+                    // 자리수 조건 형식 검사 실패시
+                    binding.tvMessageSignupPasswordCheck.visibility = View.INVISIBLE
+                    binding.tvMessageSignupPasswordFormat.setText(getString(R.string.fail_message_email_signup_password_format_length))
                     binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
                     deactiveButtonNext()
                 }
@@ -110,26 +127,43 @@ class EmailSignupSetPasswordFragment : Fragment() {
                     binding.tvMessageSignupPasswordCheck.visibility = View.INVISIBLE
                 }
 
-                // 최소 하나의 문자 및 하나의 숫자를 포함한 8자리 이상 정규식 조건
-                if(Pattern.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$", binding.etSignupEmailPassword.text.toString().trim()) && binding.etSignupEmailPassword.text.toString().trim().length >= 8) {
-                    // 형식 검사 성공시
-                    binding.tvMessageSignupPasswordFormat.setText(getString(R.string.success_message_email_signup_password))
-                    binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
+                if(binding.etSignupEmailPassword.text.toString().trim().length >= 8) {
+                    if(Pattern.matches("^(?=.*[A-Za-z])(?=.*[\\d]).{8,}\$", binding.etSignupEmailPassword.text.toString().trim())) {
+                        if(Pattern.matches("^[A-Za-z\\d\$@\$!%*#?&]*\$", binding.etSignupEmailPassword.text.toString().trim())) {
+                            // 형식 검사 성공시
+                            binding.tvMessageSignupPasswordFormat.setText(getString(R.string.success_message_email_signup_password))
+                            binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
 
-                    // 비밀번호 확인 칸과 일치하는 경우
-                    // '비밀번호 확인 아래 안내메시지' 변경 및 '계속하기' 버튼 활성화
-                    if(s.toString().trim().equals(binding.etSignupEmailPassword.text.toString().trim())) {
-                        binding.tvMessageSignupPasswordCheck.setText(getString(R.string.success_message_email_signup_password_check))
-                        binding.tvMessageSignupPasswordCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
-                        activeButtonNext()
-                    } else { // 비밀번호 불일치
-                        binding.tvMessageSignupPasswordCheck.setText(getString(R.string.fail_message_email_signup_password_check))
-                        binding.tvMessageSignupPasswordCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                            // 비밀번호 확인 칸과 일치하는 경우
+                            // '비밀번호 확인 아래 안내메시지' 변경 및 '계속하기' 버튼 활성화
+                            binding.tvMessageSignupPasswordCheck.visibility = View.VISIBLE
+                            if(s.toString().trim().equals(binding.etSignupEmailPassword.text.toString().trim())) {
+                                binding.tvMessageSignupPasswordCheck.setText(getString(R.string.success_message_email_signup_password_check))
+                                binding.tvMessageSignupPasswordCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
+                                activeButtonNext()
+                            } else { // 비밀번호 불일치
+                                binding.tvMessageSignupPasswordCheck.setText(getString(R.string.fail_message_email_signup_password_check))
+                                binding.tvMessageSignupPasswordCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                                deactiveButtonNext()
+                            }
+                        } else {
+                            // 특수문자 형식 검사 실패시
+                            binding.tvMessageSignupPasswordCheck.visibility = View.INVISIBLE
+                            binding.tvMessageSignupPasswordFormat.setText(getString(R.string.fail_message_email_signup_password_format_character))
+                            binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                            deactiveButtonNext()
+                        }
+                    } else {
+                        // 영문자 및 숫자 조건 검사 실패시
+                        binding.tvMessageSignupPasswordCheck.visibility = View.INVISIBLE
+                        binding.tvMessageSignupPasswordFormat.setText(getString(R.string.fail_message_email_signup_password_format))
+                        binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
                         deactiveButtonNext()
                     }
                 } else {
-                    // 형식 검사 실패시
-                    binding.tvMessageSignupPasswordFormat.setText(getString(R.string.fail_message_email_signup_password_format))
+                    // 자리수 조건 형식 검사 실패시
+                    binding.tvMessageSignupPasswordCheck.visibility = View.INVISIBLE
+                    binding.tvMessageSignupPasswordFormat.setText(getString(R.string.fail_message_email_signup_password_format_length))
                     binding.tvMessageSignupPasswordFormat.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
                     deactiveButtonNext()
                 }
