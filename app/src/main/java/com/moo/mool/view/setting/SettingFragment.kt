@@ -13,33 +13,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import com.moo.mool.BuildConfig
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentSettingBinding
-import com.moo.mool.repository.SettingRepository
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.login.LoginActivity
 import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.SettingViewModel
-import com.moo.mool.viewmodel.SettingViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingFragment : Fragment() {
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = requireNotNull(_binding)
-    private lateinit var settingViewModel: SettingViewModel
+    private val settingViewModel by activityViewModels<SettingViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSettingBinding.inflate(layoutInflater)
-        settingViewModel = ViewModelProvider(
-            this,
-            SettingViewModelFactory(SettingRepository(requireContext()))
-        ).get(SettingViewModel::class.java)
         setToolbarDetail()
         setLogoutClickListener()
         setDeleteAccountClickListener()
@@ -132,6 +128,7 @@ class SettingFragment : Fragment() {
                 }
                 confirmButton.setOnClickListener {
                     deleteSharedPreferencesInfo()
+                    settingViewModel.deleteTempPostAll()
                     val loginIntent = Intent(activity, LoginActivity::class.java)
                     startActivity(loginIntent)
                     (activity as MainActivity).finish()
@@ -164,6 +161,7 @@ class SettingFragment : Fragment() {
                 }
                 confirmButton.setOnClickListener {
                     settingViewModel.deleteAccount()
+                    settingViewModel.deleteTempPostAll()
                     mAlertDialog.dismiss()
                     mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
                         .setText(R.string.setting_delete_account_complete)
