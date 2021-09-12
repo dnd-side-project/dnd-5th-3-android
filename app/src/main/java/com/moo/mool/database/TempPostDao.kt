@@ -16,4 +16,7 @@ interface TempPostDao {
 
     @Query("SELECT * FROM TempPost")
     fun getAllTempList() : LiveData<List<TempPost>>
+
+    @Query("DELETE FROM TempPost")
+    suspend fun deleteAll()
 }

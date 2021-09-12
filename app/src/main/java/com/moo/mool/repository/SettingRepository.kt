@@ -5,12 +5,14 @@ import com.moo.mool.database.SharedManager
 import com.moo.mool.model.RequestDeleteAccount
 import com.moo.mool.model.ResponseMember
 import com.moo.mool.network.RequestToServer
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class SettingRepository(private val context: Context) {
+class SettingRepository @Inject constructor(@ApplicationContext val context: Context) {
     private val sharedManager : SharedManager by lazy { SharedManager(context) }
     interface SettingCallBack {
         fun onSuccess()

@@ -1,17 +1,30 @@
 package com.moo.mool.viewmodel
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import android.content.Context
+import androidx.lifecycle.*
+import com.moo.mool.database.TempPost
+import com.moo.mool.database.TempPostDatabase
 import com.moo.mool.repository.SettingRepository
+import com.moo.mool.repository.TempPostRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SettingViewModelFactory(val settingRepository: SettingRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(settingRepository::class.java).newInstance(settingRepository)
+@HiltViewModel
+class SettingViewModel @Inject constructor(
+    private val settingRepository: SettingRepository,
+    @ApplicationContext val context: Context
+): ViewModel() {
+    private var tempPostRepository : TempPostRepository
+
+    val getAllTempList : LiveData<List<TempPost>>
+    init {
+        val tempPostDao = TempPostDatabase.getDatabase(context)!!.tempPostDao()
+        tempPostRepository = TempPostRepository(tempPostDao)
+        getAllTempList = tempPostRepository.getAllTempList
     }
-}
-
-class SettingViewModel(private val settingRepository: SettingRepository) : ViewModel() {
 
     val deleteAccountSuccess = MutableLiveData<Boolean>()
     val deleteAccountFailedMessage = MutableLiveData<String?>()
@@ -26,6 +39,12 @@ class SettingViewModel(private val settingRepository: SettingRepository) : ViewM
                 deleteAccountFailedMessage.postValue(message)
             }
         })
+    }
+
+    fun deleteTempPostAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+            tempPostRepository.deleteAll()
+        }
     }
 
     fun setHideEmojiMotion() = settingRepository.setHideEmojiMotion()

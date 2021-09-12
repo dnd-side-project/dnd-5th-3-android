@@ -7,6 +7,7 @@ import com.moo.mool.network.login.LoginServiceImpl
 import com.moo.mool.network.mypage.MyPageServiceImpl
 import com.moo.mool.network.vote.VoteServiceImpl
 import com.moo.mool.repository.LoginRepository
+import com.moo.mool.repository.SettingRepository
 import com.moo.mool.view.comment.repository.CommentRepository
 import com.moo.mool.view.feed.repository.FeedRepository
 import com.moo.mool.view.mypage.repository.MyPageRepository
@@ -45,4 +46,9 @@ object RepositoryModule {
     @Singleton
     fun provideLoginRepository(loginServiceImpl: LoginServiceImpl, @ApplicationContext context: Context) : LoginRepository =
         LoginRepository(loginServiceImpl, context)
+
+    @Provides
+    @Singleton
+    fun provideSettingRepository(@ApplicationContext context: Context) : SettingRepository =
+        SettingRepository(context)
 }
