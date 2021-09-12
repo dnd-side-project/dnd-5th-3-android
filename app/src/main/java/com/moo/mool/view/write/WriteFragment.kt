@@ -113,6 +113,7 @@ class WriteFragment : Fragment() {
                     mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility = View.GONE
                     confirmButton.setOnClickListener {
                         mAlertDialog.dismiss()
+                        activeButtonSave()
                     }
                 }
             }
