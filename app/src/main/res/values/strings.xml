@@ -21,6 +21,7 @@
     <string name="recall">불러오기</string>
     <string name="change">변경하기</string>
     <string name="back">뒤로가기</string>
+    <string name="start">시작하기</string>
 
     <!-- Dialog -->
     <string name="dialog_title">다이얼로그 타이틀입니다.</string>
@@ -67,6 +68,8 @@
     <string name="fail_message_email_signup_nickname_format">8글자를 넘지않게 적어주세요</string>
     <string name="fail_message_email_signup_nickname_duplicate">어라? 이미 있는 아이디네요?</string>
     <string name="success_message_email_signup_nickname">세상에..너무 멋진 닉네임이에요!</string>
+    <string name="message_email_signup_information_tos">시작하면 <b><u>서비스 이용약관, </u></b></string>
+    <string name="message_email_signup_information_privacy"><b><u>개인 정보 보호 약관</u></b>에 동의하게 됩니다.</string>
 
     <!-- Feed -->
     <string name="feed_empty">더이상 게시물이 없어요 ㅠ.ㅠ\n당신의 고민을 올려주세요!</string>
