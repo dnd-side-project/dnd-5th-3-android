@@ -22,6 +22,7 @@ import androidx.navigation.fragment.navArgs
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentCommentBinding
 import com.moo.mool.util.DeleteDialogUtil
+import com.moo.mool.util.EdittextCount
 import com.moo.mool.util.FloatingAnimationUtil
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.view.ToastDefaultBlack
@@ -391,7 +392,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
-                    if (text.length > 500) {
+                    if (EdittextCount.getGraphemeCount(text.toString()) > 500) {
                         text.delete(text.length - 1, text.length)
                         ToastDefaultBlack.createToast(
                             requireContext(),

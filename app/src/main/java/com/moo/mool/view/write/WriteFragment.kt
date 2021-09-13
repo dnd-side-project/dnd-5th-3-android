@@ -35,6 +35,7 @@ import com.moo.mool.R
 import com.moo.mool.database.TempPost
 import com.moo.mool.database.TempPostDatabase
 import com.moo.mool.databinding.FragmentWriteBinding
+import com.moo.mool.util.EdittextCount
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.WriteViewModel
@@ -271,16 +272,10 @@ class WriteFragment : Fragment() {
     private fun setWriteCompleteClickListener() {
         // 글 작성 완료 버튼을 눌렀을 때 서버와의 연동 확인 방식으로 변경
         binding.fabWriteToComplete.setOnClickListener { view ->
-            if (binding.etWriteTitle.text.toString().length > 20) {
-                ToastDefaultBlack.createToast(
-                    requireContext(),
-                    getString(R.string.write_save_fail_toast_length_exceed_title)
-                )?.show()
-            } else if (binding.etWriteContent.text.toString().length > 1000) {
-                ToastDefaultBlack.createToast(
-                    requireContext(),
-                    getString(R.string.write_save_fail_toast_length_exceed_content)
-                )?.show()
+            if (EdittextCount.getGraphemeCount(binding.etWriteTitle.text.toString()) > 20) {
+                ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_save_fail_toast_length_exceed_title))?.show()
+            } else if (EdittextCount.getGraphemeCount(binding.etWriteContent.text.toString()) > 1000) {
+                ToastDefaultBlack.createToast(requireContext(), getString(R.string.write_save_fail_toast_length_exceed_content))?.show()
             } else {
                 writeViewModel.uploadPost(
                     binding.etWriteTitle.text.toString(),

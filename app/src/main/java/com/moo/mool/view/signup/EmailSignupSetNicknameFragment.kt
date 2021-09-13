@@ -21,6 +21,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailSignupSetNicknameBinding
+import com.moo.mool.util.EdittextCount
 import com.moo.mool.util.HideKeyBoardUtil
 import com.moo.mool.view.login.LoginActivity
 import com.moo.mool.viewmodel.SignupViewModel
@@ -93,7 +94,7 @@ class EmailSignupSetNicknameFragment : Fragment() {
                 }
 
                 // TODO : 닉네임 형식 확인 코드 작성
-                if(s.toString().trim().length <= 8 && !s.toString().trim().isNullOrBlank()) {
+                if(EdittextCount.getGraphemeCount(s.toString().trim()) <= 8 && !s.toString().trim().isNullOrBlank()) {
                     signupViewModel.duplicateCheckNickname(s.toString().trim())
                     signupViewModel.duplicateCheckNicknameSuccess.observe(viewLifecycleOwner, Observer {
                         if(it) { /** 중복계정 확인 구문 **/
