@@ -1,18 +1,17 @@
 package com.moo.mool.view.signup
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -46,6 +45,7 @@ class EmailSignupSetNicknameFragment : Fragment() {
         setEtClearClickListener()
         setEtEditorActionListener(binding.etSignupEmailNickname)
         setNextClickListener()
+        setPolicyInformationClickListener()
 
         signupViewModel.signupSuccess.observe(viewLifecycleOwner, Observer {
             if(it) { // 회원가입이 성공할 경우 자동 로그인
@@ -171,6 +171,19 @@ class EmailSignupSetNicknameFragment : Fragment() {
                             (activity as LoginActivity).finish()
                         } }
             }
+        }
+    }
+
+    private fun setPolicyInformationClickListener() {
+        lateinit var browserIntent : Intent
+        binding.tvMessageEmailInformationTos.setOnClickListener {
+            browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/"))
+            startActivity(browserIntent)
+        }
+
+        binding.tvMessageEmailInformationPrivacy.setOnClickListener {
+            browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.naver.com/"))
+            startActivity(browserIntent)
         }
     }
 
