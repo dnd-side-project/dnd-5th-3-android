@@ -149,8 +149,8 @@ class ProfileFragment : Fragment() {
                 mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
                     .setText(R.string.profile_change_nickname_fail_dialog_description)
 
-                mDialogView.findViewById<ConstraintLayout>(R.id.tv_dialog_confirm).visibility = View.GONE
-                mDialogView.findViewById<ConstraintLayout>(R.id.tv_dialog_cancel).visibility = View.VISIBLE
+                mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm).visibility = View.GONE
+                mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility = View.VISIBLE
                 // Dialog 중복 실행 방지
                 if(mAlertDialog != null && !mAlertDialog.isShowing) {
                     mAlertDialog.show()

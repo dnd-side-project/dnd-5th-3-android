@@ -22,10 +22,8 @@ class LoginViewModel @Inject constructor(
     val responseLogin = MutableLiveData<Boolean?>()
     val loginFailedMessage = MutableLiveData<String?>()
 
-    // private val _resetPasswordSuccess = MutableLiveData<Boolean?>(false)
-    // val resetPasswordSuccess = _resetPasswordSuccess.asStateFlow()
-    val resetPasswordSuccess = MutableLiveData<Boolean>()
-    val resetPasswordFailedMessage = MutableLiveData<String?>()
+    private val _resetPasswordSuccess = MutableStateFlow(false)
+    val resetPasswordSuccess = _resetPasswordSuccess.asStateFlow()
 
     private val _networkError = MutableStateFlow(false)
     val networkError = _networkError.asStateFlow()
@@ -53,12 +51,12 @@ class LoginViewModel @Inject constructor(
     }
 
     fun resetPassword(email: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             runCatching {
                 loginRepository.resetPassword(email)
             }.getOrNull()?.let {
-                resetPasswordSuccess.postValue(true)
-            } ?: resetPasswordSuccess.postValue(false)
+                _resetPasswordSuccess.emit(false) // 별도의 응답이 오는 경우는, 오류메시지의 경우임
+            } ?: _resetPasswordSuccess.emit(true)
         }
     }
 }

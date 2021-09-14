@@ -22,6 +22,8 @@ import com.moo.mool.util.LoadingDialogUtil
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EmailPasswordResetFragment : Fragment() {
@@ -44,37 +46,7 @@ class EmailPasswordResetFragment : Fragment() {
         textWatcherEditText()
         setEtClearClickListener()
         setResetPasswordClickListener()
-
-        // TODO : Dialog 띄우기 코드 개선 필요
-        val mDialogView =
-            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-        val mBuilder = AlertDialog.Builder(requireContext())
-            .setView(mDialogView)
-        val mAlertDialog = mBuilder.create()
-        mAlertDialog.setCancelable(false)
-
-        loginViewModel.resetPasswordSuccess.observe(viewLifecycleOwner, Observer {
-            if (it == true) {
-                LoadingDialogUtil.hideLoadingIcon(loadingDialog)
-                // Dialog 제목 및 내용 설정
-                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
-                    .setText(R.string.reset_password_dialog_title)
-                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
-                    .setText(R.string.reset_password_dialog_description)
-
-                // Dialog 확인, 취소버튼 설정
-                val confirmButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
-                mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility = View.GONE
-
-                // Dialog 확인 버튼을 클릭 한 경우
-                confirmButton.setOnClickListener {
-                    mAlertDialog.dismiss()
-                    // 비밀번호 초기화 화면을 그냥 바로 빠져나가기 위해서 onBackPressed()
-                    (activity as LoginActivity).onBackPressed()
-                }
-                mAlertDialog.show()
-            }
-        })
+        setResetPasswordCollect()
 
         setEditTextEditorActionListener(binding.etLoginEmailId)
 
@@ -150,9 +122,6 @@ class EmailPasswordResetFragment : Fragment() {
             } else {
                 loginViewModel.resetPassword(binding.etLoginEmailId.text.toString().trim())
                 loadingDialog = LoadingDialogUtil.showLoadingIcon(requireContext())
-                // TODO : 제대로 Observe 안되는 현상 임시 조치로 이메일 보낸 후 뒤로가기
-                (activity as LoginActivity).onBackPressed()
-                LoadingDialogUtil.hideLoadingIcon(loadingDialog)
             }
         }
     }
@@ -199,6 +168,42 @@ class EmailPasswordResetFragment : Fragment() {
         }
     }
 
+    private fun setResetPasswordCollect() {
+
+        // TODO : Dialog 띄우기 코드 개선 필요
+        val mDialogView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
+        val mBuilder = AlertDialog.Builder(requireContext())
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.create()
+        mAlertDialog.setCancelable(false)
+
+        this.lifecycleScope.launch {
+            this@EmailPasswordResetFragment.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
+                with(loginViewModel){
+                    resetPasswordSuccess.collect() { resetPasswordSuccess ->
+                        if(resetPasswordSuccess){
+                            LoadingDialogUtil.hideLoadingIcon(loadingDialog)
+                            // Dialog 제목 및 내용 설정
+                            mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.reset_password_dialog_title)
+                            mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.reset_password_dialog_description)
+                            // Dialog 확인, 취소버튼 설정
+                            val confirmButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
+                            mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility = View.GONE
+                            // Dialog 확인 버튼을 클릭 한 경우
+                            confirmButton.setOnClickListener {
+                                mAlertDialog.dismiss()
+                                // 비밀번호 초기화 화면을 그냥 바로 빠져나가기 위해서 onBackPressed()
+                                (activity as LoginActivity).onBackPressed()
+                            }
+                            mAlertDialog.show()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         HideKeyBoardUtil.hideTouchDisplay(requireActivity(), view)
@@ -206,6 +211,7 @@ class EmailPasswordResetFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        LoadingDialogUtil.hideLoadingIcon(loadingDialog)
         _binding = null
     }
 }
