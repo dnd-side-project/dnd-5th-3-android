@@ -27,6 +27,7 @@ class LoginMainFragment : Fragment() {
     ): View? {
         _binding = FragmentLoginMainBinding.inflate(inflater, container, false)
         // setGoogleLoginClickListener()
+        binding.layoutGoogleLogin.visibility = View.INVISIBLE // 구글 로그인 미구현으로 인한 숨김처리
         setEmailLoginClickListener()
         setEmailSignupClickListener()
 

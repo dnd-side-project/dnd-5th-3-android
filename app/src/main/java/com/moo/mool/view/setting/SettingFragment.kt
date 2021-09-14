@@ -39,6 +39,7 @@ class SettingFragment : Fragment() {
         setToolbarDetail()
         setLogoutClickListener()
         setDeleteAccountClickListener()
+        setHideUnusedFeature()
         setNotificationSettingClickListener()
         setMotionSettingClickListener()
         setInquiryClickListener()
@@ -57,6 +58,13 @@ class SettingFragment : Fragment() {
         (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         (activity as MainActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
         this.setHasOptionsMenu(true)
+    }
+
+    private fun setHideUnusedFeature() { // TODO: Hide 처리된 기능들 구현
+        binding.tvMessageSetting.visibility = View.GONE
+        binding.btnSettingNotification.visibility = View.GONE
+        binding.btnSettingMotion.visibility = View.GONE
+        binding.btnSettingInformationNotice.visibility = View.GONE
     }
 
     private fun setToolbarDetail() {
