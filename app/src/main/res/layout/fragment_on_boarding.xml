@@ -51,6 +51,7 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="40dp"
         android:backgroundTint="@color/moomool_pink_ff227c"
+        android:letterSpacing="0"
         android:paddingVertical="12dp"
         android:text="@string/on_boarding_start"
         android:textColor="@color/bluegray50_F9FAFC"
