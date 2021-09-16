@@ -92,7 +92,7 @@ class SettingFragment : Fragment() {
         binding.btnSettingInformationInquiry.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:") // only email apps should handle this
-                putExtra(Intent.EXTRA_EMAIL, arrayOf("moomool.official1@gmail.com"))
+                putExtra(Intent.EXTRA_EMAIL, arrayOf("moomool.official@gmail.com"))
                 putExtra(Intent.EXTRA_SUBJECT, "[문의사항]")
                 putExtra(
                     Intent.EXTRA_TEXT, String.format(
