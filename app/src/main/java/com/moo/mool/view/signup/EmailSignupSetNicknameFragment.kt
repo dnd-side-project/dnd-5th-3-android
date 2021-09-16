@@ -177,12 +177,12 @@ class EmailSignupSetNicknameFragment : Fragment() {
     private fun setPolicyInformationClickListener() {
         lateinit var browserIntent : Intent
         binding.tvMessageEmailInformationTos.setOnClickListener {
-            browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/"))
+            browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/e52905d447194a25ae20ab6f5f3322ed"))
             startActivity(browserIntent)
         }
 
         binding.tvMessageEmailInformationPrivacy.setOnClickListener {
-            browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.naver.com/"))
+            browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.notion.so/6c40dee8c16e491f83507438d5de1493"))
             startActivity(browserIntent)
         }
     }
