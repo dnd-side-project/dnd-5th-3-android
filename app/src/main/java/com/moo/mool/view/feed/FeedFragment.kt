@@ -9,26 +9,23 @@ import android.widget.PopupMenu
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentFeedBinding
 import com.moo.mool.network.RequestToServer
+import com.moo.mool.util.autoCleared
+import com.moo.mool.util.navigate
+import com.moo.mool.util.repeatOnLifecycle
 import com.moo.mool.view.feed.adapter.FeedBottomAdapter
 import com.moo.mool.view.feed.adapter.FeedTopAdapter
 import com.moo.mool.view.feed.viewmodel.FeedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
-    private var _binding: FragmentFeedBinding? = null
-    private val binding get() = requireNotNull(_binding)
+    private var binding by autoCleared<FragmentFeedBinding>()
     private val feedViewModel by activityViewModels<FeedViewModel>()
 
     override fun onCreateView(
@@ -36,7 +33,7 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFeedBinding.inflate(inflater, container, false)
+        binding = FragmentFeedBinding.inflate(inflater, container, false)
         RequestToServer.initAccessToken(requireContext())
         setFabWriteClickListener()
         setSwipeRefreshListener()
@@ -47,14 +44,12 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setRvFeedBottomAdapter()
         setFeedTopListCollect()
         setFeedBottomListCollect()
-        //setNetworkErrorCollect()
         return binding.root
     }
 
     private fun setFabWriteClickListener() {
         binding.fabFeedToWrite.setOnClickListener {
-            requireView().findNavController()
-                .navigate(R.id.action_feedFragment_to_writeFragment)
+            navigate(R.id.action_feedFragment_to_writeFragment)
         }
     }
 
@@ -106,12 +101,10 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setToggleCategoryCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                feedViewModel.toggleCategory.collect { category ->
-                    setTvToggleText(category)
-                    feedViewModel.requestBottomFeedList(getToggleText(category))
-                }
+        repeatOnLifecycle {
+            feedViewModel.toggleCategory.collect { category ->
+                setTvToggleText(category)
+                feedViewModel.requestBottomFeedList(getToggleText(category))
             }
         }
     }
@@ -163,14 +156,12 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setFeedTopListCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                feedViewModel.feedTopList.collect { feedList ->
-                    feedList?.let {
-                        with(binding.rvFeedTop.adapter as FeedTopAdapter) {
-                            submitList(feedList) {
-                                binding.rvFeedTop.scrollToPosition(0)
-                            }
+        repeatOnLifecycle {
+            feedViewModel.feedTopList.collect { feedList ->
+                feedList?.let {
+                    with(binding.rvFeedTop.adapter as FeedTopAdapter) {
+                        submitList(feedList) {
+                            binding.rvFeedTop.scrollToPosition(0)
                         }
                     }
                 }
@@ -179,37 +170,14 @@ class FeedFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setFeedBottomListCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                feedViewModel.feedBottomList.collect { feedList ->
-                    feedList?.let {
-                        with(binding.rvFeedBottom.adapter as FeedBottomAdapter) {
-                            submitList(feedList)
-                        }
+        repeatOnLifecycle {
+            feedViewModel.feedBottomList.collect { feedList ->
+                feedList?.let {
+                    with(binding.rvFeedBottom.adapter as FeedBottomAdapter) {
+                        submitList(feedList)
                     }
                 }
             }
         }
-    }
-
-    private fun setNetworkErrorCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                with(feedViewModel) {
-                    networkError.collect { networkError ->
-                        if (networkError) {
-                            requireView().findNavController()
-                                .navigate(R.id.action_feedFragment_to_networkErrorFragment)
-                            resetNetworkError()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

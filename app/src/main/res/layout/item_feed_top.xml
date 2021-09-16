@@ -7,15 +7,11 @@
 
         <variable
             name="feed"
-            type="com.moo.mool.view.feed.Feed" />
+            type="com.moo.mool.view.feed.model.Feed" />
 
         <variable
             name="remainTime"
             type="long" />
-
-        <variable
-            name="position"
-            type="int" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +22,6 @@
 
         <TextView
             android:id="@+id/tv_feed_top_category"
-            feedTopTitleText="@{position}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/bluegray200_E1E3E8"
