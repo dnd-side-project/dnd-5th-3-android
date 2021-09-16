@@ -1,4 +1,4 @@
-package com.moo.mool.view.feed
+package com.moo.mool.view.feed.model
 
 import com.google.gson.annotations.SerializedName
 

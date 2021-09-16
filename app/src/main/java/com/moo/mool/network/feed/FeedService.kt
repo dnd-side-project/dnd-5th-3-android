@@ -1,6 +1,6 @@
 package com.moo.mool.network.feed
 
-import com.moo.mool.view.feed.ResponseMainFeed
+import com.moo.mool.view.feed.model.ResponseMainFeed
 
 interface FeedService {
     suspend fun requestTopFeedList(): ResponseMainFeed

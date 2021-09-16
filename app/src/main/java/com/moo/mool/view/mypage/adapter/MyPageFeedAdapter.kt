@@ -3,14 +3,14 @@ package com.moo.mool.view.mypage.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.moo.mool.BR
 import com.moo.mool.databinding.ItemFeedBottomBinding
 import com.moo.mool.util.TimeChangerUtil
-import com.moo.mool.view.feed.Feed
+import com.moo.mool.util.navigateWithData
+import com.moo.mool.view.feed.model.Feed
 import com.moo.mool.view.mypage.MyPageFragmentDirections
 
 class MyPageFeedAdapter :
@@ -44,15 +44,15 @@ class MyPageFeedAdapter :
             with(binding) {
                 setVariable(BR.feed, feed)
                 setVariable(BR.remainTime, TimeChangerUtil.getRemainTime(feed.voteDeadline))
-                setVariable(BR.position, adapterPosition)
+                executePendingBindings()
             }
         }
 
         private fun setRootClickListener(feedId: Int) {
-            binding.root.setOnClickListener { view ->
-                Navigation.findNavController(view).navigate(
+            binding.root.setOnClickListener {
+                it.navigateWithData(
                     MyPageFragmentDirections.actionMyPageFragmentToVoteFragment(
-                        feedId,
+                        feedId
                     )
                 )
             }

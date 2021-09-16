@@ -3,15 +3,15 @@ package com.moo.mool.view.feed.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.moo.mool.BR
 import com.moo.mool.databinding.ItemFeedBottomBinding
 import com.moo.mool.util.TimeChangerUtil
-import com.moo.mool.view.feed.Feed
+import com.moo.mool.util.navigateWithData
 import com.moo.mool.view.feed.FeedFragmentDirections
+import com.moo.mool.view.feed.model.Feed
 
 class FeedBottomAdapter :
     ListAdapter<Feed, FeedBottomAdapter.FeedBottomViewHolder>(FEED_DIFF_UTIL) {
@@ -44,16 +44,13 @@ class FeedBottomAdapter :
             with(binding) {
                 setVariable(BR.feed, feed)
                 setVariable(BR.remainTime, TimeChangerUtil.getRemainTime(feed.voteDeadline))
+                executePendingBindings()
             }
         }
 
         private fun setRootClickListener(feedId: Int) {
-            binding.root.setOnClickListener { view ->
-                Navigation.findNavController(view).navigate(
-                    FeedFragmentDirections.actionFeedFragmentToVoteFragment(
-                        feedId,
-                    )
-                )
+            binding.root.setOnClickListener {
+                it.navigateWithData(FeedFragmentDirections.actionFeedFragmentToVoteFragment(feedId))
             }
         }
 

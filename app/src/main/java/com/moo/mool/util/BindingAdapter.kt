@@ -15,23 +15,10 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.moo.mool.R
 import com.moo.mool.database.SharedManager
-import com.moo.mool.view.feed.Feed
+import com.moo.mool.view.feed.model.Feed
 import com.moo.mool.view.vote.model.ResponseFeedDetail
 
 object BindingAdapter {
-    @BindingAdapter("feedTopTitleText")
-    @JvmStatic
-    fun feedTopTitleText(textView: TextView, position: Int) {
-        textView.text = when (position) {
-            0 -> textView.context.getString(R.string.feed_item_title1)
-            1 -> textView.context.getString(R.string.feed_item_title2)
-            2 -> textView.context.getString(R.string.feed_item_title3)
-            3 -> textView.context.getString(R.string.feed_item_title4)
-            4 -> textView.context.getString(R.string.feed_item_title5)
-            else -> throw IndexOutOfBoundsException()
-        }
-    }
-
     @BindingAdapter("feedGlide")
     @JvmStatic
     fun feedGlide(imageView: ImageView, imageUrl: String?) {

@@ -2,12 +2,12 @@ package com.moo.mool.view.feed.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.moo.mool.view.feed.Feed
+import com.moo.mool.view.feed.model.Feed
 import com.moo.mool.view.feed.repository.FeedRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,24 +40,22 @@ class FeedViewModel @Inject constructor(
     }
 
     fun requestTopFeedList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                feedRepository.requestTopFeedList()
-            }.getOrNull()?.let { feedList ->
-                _feedTopList.emit(feedList.posts.filter { feed ->
-                    (feed.id != -1)
-                })
-            } ?: _networkError.emit(true)
+        viewModelScope.launch {
+            feedRepository.requestTopFeedList().collect { feedList ->
+                feedList?.let {
+                    _feedTopList.emit(feedList)
+                }
+            }
         }
     }
 
     fun requestBottomFeedList(sorted: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                feedRepository.requestBottomFeedList(sorted)
-            }.getOrNull()?.let { feedList ->
-                _feedBottomList.emit(feedList.posts)
-            } ?: _networkError.emit(true)
+        viewModelScope.launch {
+            feedRepository.requestBottomFeedList(sorted).collect { feedList ->
+                feedList?.let {
+                    _feedBottomList.emit(feedList)
+                }
+            }
         }
     }
 }

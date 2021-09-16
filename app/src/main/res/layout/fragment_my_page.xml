@@ -1,167 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.mypage.MyPageFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageButton
-        android:id="@+id/btn_my_page_setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_feed_setting"
-        app:layout_constraintBottom_toBottomOf="@id/tv_my_page_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_my_page_title"
-        tools:ignore="ContentDescription" />
+    <data>
 
-    <TextView
-        android:id="@+id/tv_my_page_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingVertical="14dp"
-        android:text="@string/my_page"
-        android:textColor="@color/bluegray50_F9FAFC"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <import type="android.view.View" />
 
-    <ImageView
-        android:id="@+id/img_my_page_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="36dp"
-        android:src="@drawable/ic_my_page_profile_image"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_my_page_title"
-        tools:ignore="ContentDescription" />
+        <variable
+            name="category"
+            type="int" />
 
-    <TextView
-        android:id="@+id/tv_my_page_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:textColor="@color/bluegray100_F0F2F5"
-        android:textSize="20dp"
-        app:layout_constraintStart_toEndOf="@id/img_my_page_profile"
-        app:layout_constraintTop_toTopOf="@id/img_my_page_profile" />
+        <variable
+            name="feedListSize"
+            type="int" />
+    </data>
 
-    <TextView
-        android:id="@+id/tv_my_page_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/bluegray300_CBCFD6"
-        android:textSize="12dp"
-        app:layout_constraintStart_toStartOf="@id/tv_my_page_nickname"
-        app:layout_constraintTop_toBottomOf="@id/tv_my_page_nickname" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.mypage.MyPageFragment">
 
-    <TextView
-        android:id="@+id/tv_my_page_profile_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:drawablePadding="4dp"
-        android:includeFontPadding="false"
-        android:text="@string/my_page_profile_update"
-        android:textColor="@color/bluegray300_CBCFD6"
-        android:textSize="12dp"
-        app:drawableEndCompat="@drawable/ic_my_page_profile_update"
-        app:layout_constraintStart_toStartOf="@id/tv_my_page_nickname"
-        app:layout_constraintTop_toBottomOf="@id/tv_my_page_email" />
-
-    <View
-        android:id="@+id/view_my_page_divider"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="22dp"
-        android:background="@color/bluegray500_878C96"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_my_page_profile" />
-
-    <TextView
-        android:id="@+id/tv_my_page_my_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="@string/my_page_my_content"
-        android:textColor="@color/bluegray300_CBCFD6"
-        android:textSize="14dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/img_my_page_profile"
-        app:layout_constraintTop_toBottomOf="@id/view_my_page_divider" />
-
-    <LinearLayout
-        android:id="@+id/layout_my_page_content_filter"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="8dp"
-        android:weightSum="2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_my_page_my_content">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_my_page_my_write"
-            android:layout_width="0dp"
+        <ImageButton
+            android:id="@+id/btn_my_page_setting"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:letterSpacing="0"
-            android:padding="8dp"
-            android:stateListAnimator="@null"
-            android:text="@string/my_page_my_write"
-            android:textSize="14dp"
-            app:cornerRadius="10dp"
-            app:rippleColor="@android:color/transparent" />
+            android:layout_marginStart="20dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_feed_setting"
+            app:layout_constraintBottom_toBottomOf="@id/tv_my_page_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_my_page_title"
+            tools:ignore="ContentDescription" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_my_page_my_participate"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tv_my_page_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="14dp"
+            android:text="@string/my_page"
+            android:textColor="@color/bluegray50_F9FAFC"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_my_page_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="36dp"
+            android:src="@drawable/ic_my_page_profile_image"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_title"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_my_page_nickname"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:letterSpacing="0"
-            android:padding="8dp"
-            android:stateListAnimator="@null"
-            android:text="@string/my_page_my_participate"
+            android:textColor="@color/bluegray100_F0F2F5"
+            android:textSize="20dp"
+            app:layout_constraintStart_toEndOf="@id/img_my_page_profile"
+            app:layout_constraintTop_toTopOf="@id/img_my_page_profile" />
+
+        <TextView
+            android:id="@+id/tv_my_page_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/bluegray300_CBCFD6"
+            android:textSize="12dp"
+            app:layout_constraintStart_toStartOf="@id/tv_my_page_nickname"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_nickname" />
+
+        <TextView
+            android:id="@+id/tv_my_page_profile_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:drawablePadding="4dp"
+            android:includeFontPadding="false"
+            android:text="@string/my_page_profile_update"
+            android:textColor="@color/bluegray300_CBCFD6"
+            android:textSize="12dp"
+            app:drawableEndCompat="@drawable/ic_my_page_profile_update"
+            app:layout_constraintStart_toStartOf="@id/tv_my_page_nickname"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_email" />
+
+        <View
+            android:id="@+id/view_my_page_divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="22dp"
+            android:background="@color/bluegray500_878C96"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_my_page_profile" />
+
+        <TextView
+            android:id="@+id/tv_my_page_my_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/my_page_my_content"
+            android:textColor="@color/bluegray300_CBCFD6"
             android:textSize="14dp"
-            app:cornerRadius="10dp"
-            app:rippleColor="@android:color/transparent" />
-    </LinearLayout>
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/img_my_page_profile"
+            app:layout_constraintTop_toBottomOf="@id/view_my_page_divider" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_my_page_content"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:visibility="invisible"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_my_page_content_filter"
-        tools:listitem="@layout/item_feed_bottom" />
+        <LinearLayout
+            android:id="@+id/layout_my_page_content_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="8dp"
+            android:weightSum="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_page_my_content">
 
-    <TextView
-        android:id="@+id/tv_my_page_content_empty"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:textColor="@color/bluegray500_878C96"
-        android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_my_page_content_filter" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_my_page_my_write"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@{category == 0 ? @color/bluegray100_F0F2F5 : @color/bluegray700_4D535E}"
+                android:gravity="center"
+                android:letterSpacing="0"
+                android:padding="8dp"
+                android:stateListAnimator="@null"
+                android:text="@string/my_page_my_write"
+                android:textColor="@{category == 0 ? @color/bluegray800_303540 : @color/bluegray500_878C96}"
+                android:textSize="14dp"
+                app:cornerRadius="10dp"
+                app:rippleColor="@android:color/transparent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_my_page_my_participate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:backgroundTint="@{category == 1 ? @color/bluegray100_F0F2F5 : @color/bluegray700_4D535E}"
+                android:gravity="center"
+                android:letterSpacing="0"
+                android:padding="8dp"
+                android:stateListAnimator="@null"
+                android:text="@string/my_page_my_participate"
+                android:textColor="@{category == 1 ? @color/bluegray800_303540 : @color/bluegray500_878C96}"
+                android:textSize="14dp"
+                app:cornerRadius="10dp"
+                app:rippleColor="@android:color/transparent" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_my_page_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:visibility="@{feedListSize == 0 ? View.INVISIBLE : View.VISIBLE}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_my_page_content_filter"
+            tools:listitem="@layout/item_feed_bottom" />
+
+        <TextView
+            android:id="@+id/tv_my_page_content_empty"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="@{category == 0 ? @string/my_page_my_write_empty : @string/my_page_my_participate_empty}"
+            android:textColor="@color/bluegray500_878C96"
+            android:textSize="16dp"
+            android:visibility="@{feedListSize == 0 ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_my_page_content_filter" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
