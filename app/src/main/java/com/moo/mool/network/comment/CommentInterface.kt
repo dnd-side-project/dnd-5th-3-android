@@ -8,7 +8,7 @@ import retrofit2.http.*
 
 interface CommentInterface {
     @GET("/api/v1/comment/{id}")
-    suspend fun requestCommentReply(
+    suspend fun requestGetReply(
         @Path("id") id: Int,
     ): ResponseComment
 
@@ -19,12 +19,12 @@ interface CommentInterface {
     ): ResponsePostComment
 
     @PUT("/api/v1/comment")
-    suspend fun requestCommentUpdate(
+    suspend fun requestUpdateComment(
         @Body body: RequestPutComment,
     ): ResponsePostComment
 
     @HTTP(method = "DELETE", path = "/api/v1/comment", hasBody = true)
-    suspend fun requestCommentDelete(
+    suspend fun requestDeleteComment(
         @Body body: RequestCommentId
     ): ResponsePostComment
 

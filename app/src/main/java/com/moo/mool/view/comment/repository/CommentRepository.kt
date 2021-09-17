@@ -6,21 +6,50 @@ import com.moo.mool.view.comment.model.RequestPostReComment
 import com.moo.mool.view.comment.model.RequestPutEmoji
 import com.moo.mool.view.commentupdate.model.RequestPutComment
 import com.moo.mool.view.vote.model.RequestCommentId
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class CommentRepository @Inject constructor(
     private val commentServiceImpl: CommentServiceImpl
 ) {
-    suspend fun requestCommentReply(id: Int) = commentServiceImpl.requestCommentReply(id)
+    suspend fun requestGetReply(id: Int) = flow {
+        runCatching {
+            commentServiceImpl.requestGetReply(id)
+        }.getOrNull()?.let { commentReply ->
+            emit(commentReply.commentList.filterIndexed { index, comment ->
+                (index == 0 || !comment.deleted)
+            })
+        } ?: emit(null)
+    }
 
-    suspend fun requestPostReComment(id: Int, body: RequestPostReComment) =
-        commentServiceImpl.requestPostReComment(id, body)
+    suspend fun requestPostReply(id: Int, content: String) = flow {
+        runCatching {
+            commentServiceImpl.requestPostReply(id, RequestPostReComment(content = content))
+        }.getOrNull()?.let {
+            emit(true)
+        } ?: emit(true)
+    }
 
-    suspend fun requestCommentUpdate(body: RequestPutComment) =
-        commentServiceImpl.requestCommentUpdate(body)
+    suspend fun requestUpdateComment(id: Int, content: String) = flow {
+        runCatching {
+            commentServiceImpl.requestUpdateComment(
+                RequestPutComment(
+                    commentId = id,
+                    content = content
+                )
+            )
+        }.getOrNull()?.let {
+            emit(true)
+        } ?: emit(false)
+    }
 
-    suspend fun requestCommentDelete(body: RequestCommentId) =
-        commentServiceImpl.requestCommentDelete(body)
+    suspend fun requestDeleteComment(id: Int) = flow {
+        runCatching {
+            commentServiceImpl.requestDeleteComment(RequestCommentId(id))
+        }.getOrNull()?.let {
+            emit(true)
+        } ?: emit(false)
+    }
 
     suspend fun requestPostEmoji(body: RequestPostEmoji) =
         commentServiceImpl.requestPostEmoji(body)

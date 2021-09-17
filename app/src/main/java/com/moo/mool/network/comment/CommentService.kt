@@ -6,13 +6,13 @@ import com.moo.mool.view.vote.model.RequestCommentId
 import com.moo.mool.view.vote.model.ResponsePostComment
 
 interface CommentService {
-    suspend fun requestCommentReply(id: Int): ResponseComment
+    suspend fun requestGetReply(id: Int): ResponseComment
 
-    suspend fun requestPostReComment(id: Int, body: RequestPostReComment): ResponsePostComment
+    suspend fun requestPostReply(id: Int, body: RequestPostReComment): ResponsePostComment
 
-    suspend fun requestCommentUpdate(body: RequestPutComment): ResponsePostComment
+    suspend fun requestUpdateComment(body: RequestPutComment): ResponsePostComment
 
-    suspend fun requestCommentDelete(body: RequestCommentId): ResponsePostComment
+    suspend fun requestDeleteComment(body: RequestCommentId): ResponsePostComment
 
     suspend fun requestPostEmoji(body: RequestPostEmoji): ResponseEmoji
 

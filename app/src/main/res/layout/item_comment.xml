@@ -30,11 +30,11 @@
 
             <ImageView
                 android:id="@+id/img_comment_profile"
-                commentVoteType="@{comment.voteType}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
+                android:src="@{comment.voteType.equals(`PERMIT`) ? @drawable/ic_comments_agree : comment.voteType.equals(`REJECT`) ? @drawable/ic_comments_disagree : @drawable/ic_comments_none}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription" />

@@ -8,52 +8,49 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentCommentUpdateBinding
 import com.moo.mool.util.HideKeyBoardUtil
+import com.moo.mool.util.autoCleared
+import com.moo.mool.util.popBackStack
+import com.moo.mool.util.repeatOnLifecycle
 import com.moo.mool.view.ToastDefaultBlack
-import com.moo.mool.view.comment.viewmodel.CommentViewModel
+import com.moo.mool.view.commentupdate.viewmodel.CommentUpdateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CommentUpdateFragment : Fragment() {
-    private var _binding: FragmentCommentUpdateBinding? = null
-    private val binding get() = requireNotNull(_binding)
-    private val commentViewModel by viewModels<CommentViewModel>()
+    private var binding by autoCleared<FragmentCommentUpdateBinding>()
+    private val commentUpdateViewModel by viewModels<CommentUpdateViewModel>()
     private val args by navArgs<CommentUpdateFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCommentUpdateBinding.inflate(inflater, container, false)
+        binding = FragmentCommentUpdateBinding.inflate(inflater, container, false)
         setCommentUpdateBackClickListener()
         setRootClickListener()
         setEtCommentUpdateListener()
         setEtCommentUpdateText()
         setTvUpdateRequestClickListener()
         setIsUpdatedCollect()
-        //setNetworkErrorCollect()
         return binding.root
     }
 
     private fun setCommentUpdateBackClickListener() {
         binding.btnCommentUpdateBack.setOnClickListener {
-            requireView().findNavController()
-                .popBackStack()
+            popBackStack()
         }
     }
 
     private fun setRootClickListener() {
-        binding.root.setOnClickListener {
-            HideKeyBoardUtil.hide(requireContext(), binding.etCommentUpdate)
+        with(binding) {
+            root.setOnClickListener {
+                HideKeyBoardUtil.hide(requireContext(), etCommentUpdate)
+            }
         }
     }
 
@@ -103,41 +100,20 @@ class CommentUpdateFragment : Fragment() {
 
     private fun setTvUpdateRequestClickListener() {
         binding.tvCommentUpdateRequest.setOnClickListener {
-            commentViewModel.requestCommentUpdate(args.id, binding.etCommentUpdate.text.toString())
+            commentUpdateViewModel.requestCommentUpdate(
+                args.id,
+                binding.etCommentUpdate.text.toString()
+            )
         }
     }
 
     private fun setIsUpdatedCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                commentViewModel.isUpdated.collect { isUpdated ->
-                    if (isUpdated) {
-                        requireView().findNavController()
-                            .popBackStack()
-                    }
+        repeatOnLifecycle {
+            commentUpdateViewModel.isUpdated.collect { isUpdated ->
+                when (isUpdated) {
+                    true -> popBackStack()
                 }
             }
         }
-    }
-
-    private fun setNetworkErrorCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                with(commentViewModel) {
-                    networkError.collect { networkError ->
-                        if (networkError) {
-                            requireView().findNavController()
-                                .navigate(R.id.action_commentUpdateFragment_to_networkErrorFragment)
-                            resetNetworkError()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

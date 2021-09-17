@@ -17,14 +17,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentCommentBinding
-import com.moo.mool.util.DeleteDialogUtil
-import com.moo.mool.util.EdittextCount
-import com.moo.mool.util.FloatingAnimationUtil
-import com.moo.mool.util.HideKeyBoardUtil
+import com.moo.mool.util.*
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.comment.adapter.ReCommentAdapter
 import com.moo.mool.view.comment.model.Comment
@@ -36,8 +32,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
-    private var _binding: FragmentCommentBinding? = null
-    private val binding get() = requireNotNull(_binding)
+    private var binding by autoCleared<FragmentCommentBinding>()
     private val commentViewModel by viewModels<CommentViewModel>()
     private val args by navArgs<CommentFragmentArgs>()
 
@@ -46,7 +41,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCommentBinding.inflate(inflater, container, false)
+        binding = FragmentCommentBinding.inflate(inflater, container, false)
         setCommentBackClickListener()
         setLayoutCommentClickListener()
         setRvReCommentAdapter()
@@ -62,22 +57,22 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setEtReplyListener()
         setTvReplyPostClickListener()
         setIsPostedCollect()
-        //setNetworkErrorCollect()
         commentViewModel.initOpenEmoji(args.openEmoji)
-        commentViewModel.requestGetComments(args.id)
+        commentViewModel.requestGetReply(args.id)
         return binding.root
     }
 
     private fun setCommentBackClickListener() {
         binding.btnCommentBack.setOnClickListener {
-            requireView().findNavController()
-                .popBackStack()
+            popBackStack()
         }
     }
 
     private fun setLayoutCommentClickListener() {
-        binding.layoutCommentBackground.setOnClickListener {
-            HideKeyBoardUtil.hide(requireContext(), binding.etReply)
+        with(binding) {
+            layoutCommentBackground.setOnClickListener {
+                HideKeyBoardUtil.hide(requireContext(), etReply)
+            }
         }
     }
 
@@ -86,16 +81,11 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setReplyListCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                commentViewModel.replyList.collect { replyList ->
-                    replyList?.let {
-                        if (replyList.isNotEmpty()) {
-                            submitCommentList(replyList)
-                            setLayoutCommentBinding(replyList[0])
-                            initEmojiList(replyList[0])
-                        }
-                    }
+        repeatOnLifecycle {
+            commentViewModel.replyList.collect { replyList ->
+                replyList?.let {
+                    submitCommentList(replyList)
+                    setLayoutCommentBinding(replyList[0])
                 }
             }
         }
@@ -113,14 +103,10 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         binding.layoutComment.comment = comment
     }
 
-    private fun initEmojiList(comment: Comment) {
-        commentViewModel.initEmojiList(comment.emojiList)
-    }
-
     private fun setEmojiListCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                commentViewModel.emojiList.collect { emojiList ->
+        repeatOnLifecycle {
+            commentViewModel.emojiList.collect { emojiList ->
+                if (emojiList.isNotEmpty()) {
                     commentViewModel.setEmptyCommentReactVisibility()
                     emojiList.indices.forEach { index ->
                         with(emojiList[index]) {
@@ -138,11 +124,9 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setEmptyReactCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                commentViewModel.emptyEmoji.collect { isEmpty ->
-                    setBtnReactionEmptyVisibility(isEmpty)
-                }
+        repeatOnLifecycle {
+            commentViewModel.emptyEmoji.collect { isEmpty ->
+                setBtnReactionEmptyVisibility(isEmpty)
             }
         }
     }
@@ -365,12 +349,12 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     override fun onMenuItemClick(item: MenuItem) = when (item.itemId) {
         R.id.menu_comment_update -> {
-            requireView().findNavController()
-                .navigate(
-                    CommentFragmentDirections.actionCommentFragmentToCommentUpdateFragment(
-                        args.id, binding.layoutComment.tvCommentContent.text.toString()
-                    )
+            navigateWithData(
+                CommentFragmentDirections.actionCommentFragmentToCommentUpdateFragment(
+                    args.id,
+                    binding.layoutComment.tvCommentContent.text.toString()
                 )
+            )
             true
         }
         R.id.menu_comment_delete -> {
@@ -417,15 +401,13 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setIsPostedCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                with(commentViewModel) {
-                    isPosted.collect { isPosted ->
-                        if (isPosted) {
-                            resetIsPosted()
-                            resetEtReplyText()
-                            requestGetComments(args.id)
-                        }
+        repeatOnLifecycle {
+            with(commentViewModel) {
+                isPosted.collect { isPosted ->
+                    if (isPosted) {
+                        resetIsPosted()
+                        resetEtReplyText()
+                        requestGetReply(args.id)
                     }
                 }
             }
@@ -434,26 +416,5 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun resetEtReplyText() {
         binding.etReply.setText("")
-    }
-
-    private fun setNetworkErrorCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                with(commentViewModel) {
-                    networkError.collect { networkError ->
-                        if (networkError) {
-                            requireView().findNavController()
-                                .navigate(R.id.action_commentFragment_to_networkErrorFragment)
-                            resetNetworkError()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

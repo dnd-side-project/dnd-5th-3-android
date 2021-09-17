@@ -10,16 +10,16 @@ import javax.inject.Inject
 class CommentServiceImpl @Inject constructor(
     private val commentInterface: CommentInterface
 ) : CommentService {
-    override suspend fun requestCommentReply(id: Int) = commentInterface.requestCommentReply(id)
+    override suspend fun requestGetReply(id: Int) = commentInterface.requestGetReply(id)
 
-    override suspend fun requestPostReComment(id: Int, body: RequestPostReComment) =
+    override suspend fun requestPostReply(id: Int, body: RequestPostReComment) =
         commentInterface.requestPostReply(id, body)
 
-    override suspend fun requestCommentUpdate(body: RequestPutComment) =
-        commentInterface.requestCommentUpdate(body)
+    override suspend fun requestUpdateComment(body: RequestPutComment) =
+        commentInterface.requestUpdateComment(body)
 
-    override suspend fun requestCommentDelete(body: RequestCommentId) =
-        commentInterface.requestCommentDelete(body)
+    override suspend fun requestDeleteComment(body: RequestCommentId) =
+        commentInterface.requestDeleteComment(body)
 
     override suspend fun requestPostEmoji(body: RequestPostEmoji) =
         commentInterface.requestPostEmoji(body)
