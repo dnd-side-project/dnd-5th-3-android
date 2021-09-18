@@ -3,6 +3,7 @@ package com.moo.mool.network
 import android.content.Context
 import com.moo.mool.database.SharedManager
 import com.moo.mool.network.comment.CommentInterface
+import com.moo.mool.network.emoji.EmojiInterface
 import com.moo.mool.network.feed.FeedInterface
 import com.moo.mool.network.login.LoginInterface
 import com.moo.mool.network.mypage.MyPageInterface
@@ -56,6 +57,7 @@ object RequestToServer {
     val feedInterface: FeedInterface = retrofit.create(FeedInterface::class.java)
     val voteInterface: VoteInterface = retrofit.create(VoteInterface::class.java)
     val commentInterface: CommentInterface = retrofit.create(CommentInterface::class.java)
+    val emojiInterface: EmojiInterface = retrofit.create(EmojiInterface::class.java)
     val myPageInterface: MyPageInterface = retrofit.create(MyPageInterface::class.java)
     val loginInterface: LoginInterface = retrofit.create(LoginInterface::class.java)
 }

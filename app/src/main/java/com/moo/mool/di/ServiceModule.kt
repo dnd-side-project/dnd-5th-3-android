@@ -1,13 +1,12 @@
 package com.moo.mool.di
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import com.moo.mool.network.RequestToServer
 import com.moo.mool.network.comment.CommentInterface
 import com.moo.mool.network.comment.CommentService
 import com.moo.mool.network.comment.CommentServiceImpl
+import com.moo.mool.network.emoji.EmojiInterface
+import com.moo.mool.network.emoji.EmojiService
+import com.moo.mool.network.emoji.EmojiServiceImpl
 import com.moo.mool.network.feed.FeedInterface
 import com.moo.mool.network.feed.FeedService
 import com.moo.mool.network.feed.FeedServiceImpl
@@ -18,6 +17,10 @@ import com.moo.mool.network.mypage.MyPageInterface
 import com.moo.mool.network.vote.VoteInterface
 import com.moo.mool.network.vote.VoteService
 import com.moo.mool.network.vote.VoteServiceImpl
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
@@ -34,6 +37,10 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideCommentInterface(): CommentInterface = RequestToServer.commentInterface
+
+    @Provides
+    @Singleton
+    fun provideEmojiInterface(): EmojiInterface = RequestToServer.emojiInterface
 
     @Provides
     @Singleton
@@ -57,6 +64,11 @@ object ServiceModule {
     @Singleton
     fun provideCommentServiceImpl(commentInterface: CommentInterface): CommentService =
         CommentServiceImpl(commentInterface)
+
+    @Provides
+    @Singleton
+    fun provideEmojiServiceImpl(emojiInterface: EmojiInterface): EmojiService =
+        EmojiServiceImpl(emojiInterface)
 
     @Provides
     @Singleton

@@ -20,10 +20,7 @@ import androidx.navigation.fragment.navArgs
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentVoteBinding
 import com.moo.mool.network.RequestToServer
-import com.moo.mool.util.DeleteDialogUtil
-import com.moo.mool.util.FloatingAnimationUtil
-import com.moo.mool.util.HideKeyBoardUtil
-import com.moo.mool.util.TimeChangerUtil
+import com.moo.mool.util.*
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.comment.model.Comment
 import com.moo.mool.view.vote.adapter.VoteCommentAdapter
@@ -67,7 +64,6 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         setLayoutVoteClickListener(getLayoutVoteList())
         setRequestVoteCollect()
         setLottieAnimationListener()
-        //setNetworkErrorCollect()
         voteViewModel.closeVote()
         voteViewModel.requestVoteFeedDetail(args.id)
         voteViewModel.requestVoteFeedComment(args.id)
@@ -135,14 +131,16 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 voteViewModel.feedDetail.collect { feedDetail ->
                     feedDetail?.let {
                         timer = setCountDownTimer(feedDetail.voteDeadline).start()
-                        binding.apply {
+                        with(binding) {
                             feed = feedDetail
                             remainTime = TimeChangerUtil.getRemainTime(feedDetail.voteDeadline)
-                            setTvFeedAgreeText(feedDetail)
-                            setTvFeedDisAgreeText(feedDetail)
-                            setSeekBarProgress(feedDetail)
-                            setImageVoteCompleteImage(feedDetail.currentMemberVoteResult)
+                            isMine = getIsMineUtil(requireContext(), feedDetail.name)
+                            executePendingBindings()
                         }
+                        setTvFeedAgreeText(feedDetail)
+                        setTvFeedDisAgreeText(feedDetail)
+                        setSeekBarProgress(feedDetail)
+                        setImageVoteCompleteImage(feedDetail.currentMemberVoteResult)
                     }
                 }
             }
@@ -489,22 +487,6 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 layoutVoteAgree
             )
         }
-
-    private fun setNetworkErrorCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                with(voteViewModel) {
-                    networkError.collect { networkError ->
-                        if (networkError) {
-                            requireView().findNavController()
-                                .navigate(R.id.action_voteFragment_to_networkErrorFragment)
-                            resetNetworkError()
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     override fun onStop() {
         super.onStop()
