@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.onStart
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
     private val profileRepository = ProfileRepository(getApplication<Application>().applicationContext)
 
+    val checkSocialEmailSuccess = MutableLiveData<Boolean?>()
+    val checkSocialEmailFailedMessage = MutableLiveData<String?>()
+
     val duplicateCheckNicknameSuccess = MutableLiveData<Boolean?>()
     val duplicateCheckNicknameFailedMessage = MutableLiveData<String?>()
     val updateNicknameSuccess = MutableLiveData<Boolean?>()
@@ -89,6 +92,19 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             override fun onError(message: String?) {
                 checkNewPasswordSuccess.postValue(false)
                 checkNewPasswordFailedMessage.postValue(message)
+            }
+        })
+    }
+
+    fun checkSocialEmail() {
+        profileRepository.checkSocialEmail(object : ProfileRepository.ProfileCallBack {
+            override fun onSuccess() {
+                checkSocialEmailSuccess.postValue(true)
+            }
+
+            override fun onError(message: String?) {
+                checkSocialEmailSuccess.postValue(false)
+                checkSocialEmailFailedMessage.postValue(message)
             }
         })
     }

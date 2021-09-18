@@ -139,4 +139,25 @@ class ProfileRepository(private val context: Context) {
         })
     }
 
+    fun checkSocialEmail(profileCallBack: ProfileCallBack) {
+        RequestToServer.service.requestSocialEmail(sharedManager.getCurrentUser().accessToken.toString(),
+            sharedManager.getCurrentUser().email.toString())
+            .enqueue(object : Callback<String> {
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    profileCallBack.onError(t.localizedMessage)
+                }
+                override fun onResponse(call: Call<String>, response: Response<String>) { // 소셜 계정이 아닌 경우
+                    if (response.isSuccessful && response.body().toString() == "false") {
+                        profileCallBack.onSuccess()
+                    } else {
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            profileCallBack.onError(jObjError.getString("user_msg"))
+                        } catch (e: Exception) {
+                            profileCallBack.onError(e.message)
+                        }
+                    }
+                }
+            })
+    }
 }

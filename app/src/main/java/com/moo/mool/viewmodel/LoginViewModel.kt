@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moo.mool.model.RequestLogin
+import com.moo.mool.model.ResponseLogin
 import com.moo.mool.repository.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +37,17 @@ class LoginViewModel @Inject constructor(
                 _loginSuccess.emit(true)
                 responseLogin.postValue(true)
             } ?: responseLogin.postValue(true)
+        }
+    }
+
+    fun setGoogleLoginResponse(response: ResponseLogin){
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                loginRepository.setGoogleLoginResponse(response)
+            }.getOrNull()?.let {
+                _loginSuccess.emit(true)
+            } ?: _loginSuccess.emit(false)
+
         }
     }
 

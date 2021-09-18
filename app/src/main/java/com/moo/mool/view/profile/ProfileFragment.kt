@@ -20,6 +20,7 @@ import com.moo.mool.R
 import com.moo.mool.database.SharedManager
 import com.moo.mool.databinding.FragmentProfileBinding
 import com.moo.mool.util.EdittextCount
+import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.ProfileViewModel
 
@@ -88,9 +89,16 @@ class ProfileFragment : Fragment() {
 
     private fun setEtChangePasswordClickListener() {
         binding.etProfilePassword.setOnClickListener {
-            requireView().findNavController()
-                .navigate(R.id.action_profileFragment_to_changePasswordFragment)
+            profileViewModel.checkSocialEmail()
         }
+
+        profileViewModel.checkSocialEmailSuccess.observe(viewLifecycleOwner, Observer {
+            if(it == true){
+                requireView().findNavController().navigate(R.id.action_profileFragment_to_changePasswordFragment)
+            } else {
+                ToastDefaultBlack.createToast(requireContext(), "소셜 계정은 비밀번호 변경이 불가합니다")?.show()
+            }
+        })
     }
 
     private fun setCheckPasswordChanged() {

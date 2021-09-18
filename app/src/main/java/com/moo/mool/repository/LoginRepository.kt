@@ -49,4 +49,14 @@ class LoginRepository @Inject constructor(
 
     suspend fun resetPassword(email: String) =
         loginServiceImpl.requestResetPassword(RequestResetPassword(email))
+
+    suspend fun setGoogleLoginResponse(response: ResponseLogin) {
+        val currentUser = User().apply {
+            accessToken = response.accessToken
+            refreshToken = response.refreshToken
+            nickname = response.name
+            email = response.email
+        }
+        sharedManager.saveCurrentUser(currentUser)
+    }
 }
