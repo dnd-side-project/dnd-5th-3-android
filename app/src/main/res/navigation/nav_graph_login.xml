@@ -20,6 +20,9 @@
             app:destination="@id/EmailSignupSetIDFragment"
             app:popUpTo="@id/nav_graph_login"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginMainFragment_to_mainActivity"
+            app:destination="@id/main_activity" />
     </fragment>
 
     <fragment

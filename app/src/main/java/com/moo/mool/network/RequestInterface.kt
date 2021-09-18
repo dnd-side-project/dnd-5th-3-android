@@ -25,6 +25,9 @@ interface RequestInterface {
     @GET("/api/v1/member/exists/{name}/name")
     fun requestDuplicateCheckNickname(@Path("name") name : String) : Call<String>
 
+    @GET("/api/v1/member/check/{email}/social")
+    fun requestSocialEmail(@Header("Authorization") accessToken: String, @Path("email") email : String) : Call<String>
+
     @Multipart
     @POST("/api/v1/posts")
     fun requestUploadPost(@Part("title") title: String, @Part("content") content: String, @Part file: MultipartBody.Part?) : Call<ResponseUploadPost>
