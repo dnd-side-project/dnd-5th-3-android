@@ -1,12 +1,11 @@
 package com.moo.mool.view.vote.adapter
 
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.navigation.Navigation
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,13 +13,16 @@ import com.moo.mool.BR
 import com.moo.mool.R
 import com.moo.mool.databinding.ItemCommentBinding
 import com.moo.mool.util.DeleteDialogUtil
+import com.moo.mool.util.TimeChangerUtil
+import com.moo.mool.util.getIsMineUtil
+import com.moo.mool.util.navigateWithData
 import com.moo.mool.view.comment.model.Comment
 import com.moo.mool.view.comment.model.Emoji
 import com.moo.mool.view.vote.VoteFragmentDirections
 import com.moo.mool.view.vote.viewmodel.VoteViewModel
 
 class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
-    ListAdapter<Comment, VoteCommentAdapter.VoteCommentViewHolder>(COMMENT_DIFF_UTIL) {
+    ListAdapter<Comment, VoteCommentAdapter.VoteCommentViewHolder>(commentDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -29,7 +31,7 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
             LayoutInflater.from(parent.context),
             parent,
             false
-        ), voteViewModel
+        ), parent, voteViewModel
     )
 
     override fun onBindViewHolder(
@@ -41,12 +43,18 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
 
     class VoteCommentViewHolder(
         private val binding: ItemCommentBinding,
+        private val parent: ViewGroup,
         private val voteViewModel: VoteViewModel
     ) : RecyclerView.ViewHolder(binding.root) {
         private var emojiList: MutableList<Emoji> = mutableListOf()
 
         fun bind(comment: Comment) {
-            binding.setVariable(BR.comment, comment)
+            with(binding) {
+                setVariable(BR.comment, comment)
+                setVariable(BR.isMine, getIsMineUtil(parent.context, comment.writerName))
+                executePendingBindings()
+            }
+            setCreatedAtText(comment.createdDate)
             setRootClickListener(comment.commentId)
             setBtnReactionEmptyListener(comment.commentId)
             setBtnMoreClickListener(comment)
@@ -54,9 +62,13 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
             initTvEmoji(comment.emojiList)
         }
 
+        private fun setCreatedAtText(createdAt: String) {
+            binding.tvCommentTime.text = TimeChangerUtil.timeChange(parent.context, createdAt)
+        }
+
         private fun setRootClickListener(commentId: Int) {
             binding.root.setOnClickListener { view ->
-                Navigation.findNavController(view).navigate(
+                view.navigateWithData(
                     VoteFragmentDirections.actionVoteFragmentToCommentFragment(
                         commentId,
                     )
@@ -65,20 +77,54 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
         }
 
         private fun setBtnReactionEmptyListener(commentId: Int) {
-            binding.btnReactionEmpty.setOnClickListener { view ->
-                Navigation.findNavController(view).navigate(
+            binding.btnEmojiEmpty.setOnClickListener { view ->
+                view.navigateWithData(
                     VoteFragmentDirections.actionVoteFragmentToCommentFragment(
                         commentId,
-                        1
+                        "OPEN"
                     )
                 )
             }
         }
 
-        private fun initEmojiList(responseEmojiList: List<Emoji>) {
-            responseEmojiList.forEach { responseEmoji ->
-                emojiList.add(responseEmoji)
+        private fun setBtnMoreClickListener(comment: Comment) {
+            with(binding.btnCommentMore) {
+                setOnClickListener {
+                    PopupMenu(
+                        ContextThemeWrapper(
+                            context,
+                            R.style.feed_toggle_popup_menu
+                        ),
+                        this
+                    ).apply {
+                        setOnMenuItemClickListener { item ->
+                            when (item.itemId) {
+                                R.id.menu_comment_update -> {
+                                    navigateWithData(
+                                        VoteFragmentDirections.actionVoteFragmentToCommentUpdateFragment(
+                                            comment.commentId, comment.content
+                                        )
+                                    )
+                                    true
+                                }
+                                R.id.menu_comment_delete -> {
+                                    DeleteDialogUtil.showDeleteDialog(context, true) {
+                                        voteViewModel.requestDeleteComment(comment.commentId)
+                                    }
+                                    true
+                                }
+                                else -> false
+                            }
+                        }
+                        inflate(R.menu.menu_comment)
+                        show()
+                    }
+                }
             }
+        }
+
+        private fun initEmojiList(responseEmojiList: List<Emoji>) {
+            emojiList.addAll(responseEmojiList)
         }
 
         private fun initTvEmoji(emojiList: List<Emoji>) {
@@ -98,7 +144,7 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
         }
 
         private fun setEmptyCommentReactVisibility(sum: Int) {
-            binding.btnReactionEmpty.visibility = when (sum) {
+            binding.btnEmojiEmpty.visibility = when (sum) {
                 0 -> View.VISIBLE
                 else -> View.GONE
             }
@@ -107,11 +153,11 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
         private fun getLayoutEmoji(emojiId: Int): TextView {
             with(binding) {
                 return when (emojiId) {
-                    1 -> tvCommentReactionBrown
-                    2 -> tvCommentReactionBlue
-                    3 -> tvCommentReactionGreen
-                    4 -> tvCommentReactionRed
-                    5 -> tvCommentReactionYellow
+                    1 -> tvCommentEmojiBrown
+                    2 -> tvCommentEmojiBlue
+                    3 -> tvCommentEmojiGreen
+                    4 -> tvCommentEmojiRed
+                    5 -> tvCommentEmojiYellow
                     else -> throw IndexOutOfBoundsException()
                 }
             }
@@ -155,51 +201,14 @@ class VoteCommentAdapter(private val voteViewModel: VoteViewModel) :
 
         private fun TextView.setTvCommentReactionBackground(checked: Boolean) {
             when (checked) {
-                true -> this.setBackgroundResource(R.drawable.background_small_emoji_voted_round_20)
+                true -> this.setBackgroundResource(R.drawable.background_small_emoji_checked_round_20)
                 false -> this.setBackgroundResource(R.drawable.background_small_emoji_round_20)
-            }
-        }
-
-        private fun setBtnMoreClickListener(comment: Comment) {
-            with(binding.btnCommentMore) {
-                setOnClickListener {
-                    PopupMenu(
-                        ContextThemeWrapper(
-                            context,
-                            R.style.feed_toggle_popup_menu
-                        ),
-                        this
-                    ).apply {
-                        setOnMenuItemClickListener { item ->
-                            when (item.itemId) {
-                                R.id.menu_comment_update -> {
-                                    Navigation.findNavController(binding.btnCommentMore)
-                                        .navigate(
-                                            VoteFragmentDirections.actionVoteFragmentToCommentUpdateFragment(
-                                                comment.commentId, comment.content
-                                            )
-                                        )
-                                    true
-                                }
-                                R.id.menu_comment_delete -> {
-                                    DeleteDialogUtil.showDeleteDialog(context, true) {
-                                        voteViewModel.requestDeleteComment(comment.commentId)
-                                    }
-                                    true
-                                }
-                                else -> false
-                            }
-                        }
-                        inflate(R.menu.menu_comment)
-                        show()
-                    }
-                }
             }
         }
     }
 
     companion object {
-        private val COMMENT_DIFF_UTIL = object : DiffUtil.ItemCallback<Comment>() {
+        private val commentDiffUtil = object : DiffUtil.ItemCallback<Comment>() {
             override fun areItemsTheSame(oldItem: Comment, newItem: Comment) =
                 oldItem.commentId == newItem.commentId
 

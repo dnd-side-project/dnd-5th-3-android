@@ -14,7 +14,7 @@ import com.moo.mool.view.feed.FeedFragmentDirections
 import com.moo.mool.view.feed.model.Feed
 
 class FeedBottomAdapter :
-    ListAdapter<Feed, FeedBottomAdapter.FeedBottomViewHolder>(FEED_DIFF_UTIL) {
+    ListAdapter<Feed, FeedBottomAdapter.FeedBottomViewHolder>(feedDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -65,7 +65,7 @@ class FeedBottomAdapter :
     }
 
     companion object {
-        private val FEED_DIFF_UTIL = object : DiffUtil.ItemCallback<Feed>() {
+        private val feedDiffUtil = object : DiffUtil.ItemCallback<Feed>() {
             override fun areItemsTheSame(oldItem: Feed, newItem: Feed) =
                 oldItem.id == newItem.id
 

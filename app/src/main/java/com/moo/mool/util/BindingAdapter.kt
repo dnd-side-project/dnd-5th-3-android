@@ -5,8 +5,6 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.view.View
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -14,7 +12,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.moo.mool.R
-import com.moo.mool.database.SharedManager
 import com.moo.mool.view.feed.model.Feed
 import com.moo.mool.view.vote.model.ResponseFeedDetail
 
@@ -202,77 +199,6 @@ object BindingAdapter {
                 feed.name,
                 TimeChangerUtil.timeChange(textView.context, feed.createdDate)
             )
-        }
-    }
-
-    @BindingAdapter("commentVoteType")
-    @JvmStatic
-    fun commentVoteType(imageView: ImageView, voteType: String?) {
-        voteType?.let {
-            when (voteType) {
-                "PERMIT" -> {
-                    imageView.setImageDrawable(
-                        AppCompatResources.getDrawable(
-                            imageView.context,
-                            R.drawable.ic_comments_agree
-                        )
-                    )
-                }
-                "REJECT" -> {
-                    imageView.setImageDrawable(
-                        AppCompatResources.getDrawable(
-                            imageView.context,
-                            R.drawable.ic_comments_disagree
-                        )
-                    )
-                }
-                else -> {
-                    imageView.setImageDrawable(
-                        AppCompatResources.getDrawable(
-                            imageView.context,
-                            R.drawable.ic_comments_none
-                        )
-                    )
-                }
-            }
-        }
-    }
-
-    @BindingAdapter("commentCreateTime")
-    @JvmStatic
-    fun commentCreateTime(textView: TextView, createdAt: String?) {
-        createdAt?.let {
-            textView.text =
-                TimeChangerUtil.timeChange(textView.context, createdAt)
-        }
-    }
-
-    @BindingAdapter("isMineVisibility")
-    @JvmStatic
-    fun isMineVisibility(view: View, name: String?) {
-        name?.let {
-            view.visibility = when (name == SharedManager(view.context).getCurrentUser().nickname) {
-                true -> View.VISIBLE
-                false -> View.INVISIBLE
-            }
-        }
-    }
-
-    @BindingAdapter("isDeletedVisibility", "isNotDeletedVisibility")
-    @JvmStatic
-    fun isDeletedVisibility(imageButton: ImageButton, isDeleted: Boolean?, name: String?) {
-        name?.let {
-            isDeleted?.let {
-                imageButton.visibility = when (isDeleted) {
-                    true -> View.INVISIBLE
-                    false -> {
-                        when (name == SharedManager(imageButton.context).getCurrentUser().nickname) {
-                            true -> View.VISIBLE
-                            false -> View.INVISIBLE
-                        }
-                    }
-                }
-            }
         }
     }
 }

@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.moo.mool.view.comment.model.Comment
 import com.moo.mool.view.comment.model.Emoji
-import com.moo.mool.view.comment.model.RequestPostEmoji
-import com.moo.mool.view.comment.model.RequestPutEmoji
 import com.moo.mool.view.comment.repository.CommentRepository
+import com.moo.mool.view.comment.repository.EmojiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,10 +16,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CommentViewModel @Inject constructor(
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
+    private val emojiRepository: EmojiRepository
 ) : ViewModel() {
-    private val _openReact = MutableStateFlow(0)
-    val openReact = _openReact.asStateFlow()
+    private val _openEmoji = MutableStateFlow("CLOSE")
+    val openEmoji = _openEmoji.asStateFlow()
 
     private val _emptyEmoji = MutableStateFlow(0)
     val emptyEmoji = _emptyEmoji.asStateFlow()
@@ -48,20 +48,16 @@ class CommentViewModel @Inject constructor(
     )
     val emojiList = _emojiList.asStateFlow()
 
-    fun initOpenEmoji(value: Int) {
-        _openReact.value = value
+    fun initOpenEmoji(value: String) {
+        _openEmoji.value = value
     }
 
     fun setOpenOrNotOpenReact() {
-        _openReact.value = when (_openReact.value) {
-            0 -> 1
-            1 -> 0
+        _openEmoji.value = when (_openEmoji.value) {
+            "CLOSE" -> "OPEN"
+            "OPEN" -> "CLOSE"
             else -> throw IllegalAccessException()
         }
-    }
-
-    fun resetIsPosted() {
-        _isPosted.value = false
     }
 
     fun requestGetReply(id: Int) {
@@ -69,6 +65,7 @@ class CommentViewModel @Inject constructor(
             commentRepository.requestGetReply(id).collect { replyList ->
                 replyList?.let {
                     _replyList.emit(replyList)
+                    _isPosted.emit(false)
                     initEmojiList(replyList[0].emojiList)
                 }
             }
@@ -120,6 +117,16 @@ class CommentViewModel @Inject constructor(
         }
     }
 
+    fun setEmptyCommentEmojiVisibility() {
+        viewModelScope.launch {
+            var sum = 0
+            _emojiList.value.forEach { emoji ->
+                sum += emoji.emojiCount
+            }
+            _emptyEmoji.emit(sum)
+        }
+    }
+
     fun requestEmoji(index: Int, id: Int) {
         when (_emojiList.value[index].commentEmojiId) {
             -1 -> requestPostEmoji(index, id)
@@ -128,32 +135,30 @@ class CommentViewModel @Inject constructor(
     }
 
     private fun requestPostEmoji(index: Int, id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                commentRepository.requestPostEmoji(
-                    RequestPostEmoji(
-                        emojiId = _emojiList.value[index].emojiId,
-                        commentId = id
-                    )
-                )
-            }.getOrNull()?.let {
-                setCommentEmojiCount(index)
-            } ?: _networkError.emit(true)
+        viewModelScope.launch {
+            emojiRepository.requestPostEmoji(_emojiList.value[index].emojiId, id)
+                .collect { result ->
+                    when (result) {
+                        true -> {
+                            setCommentEmojiCount(index)
+                        }
+                    }
+                }
         }
     }
 
     private fun requestPutEmoji(index: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                commentRepository.requestPutEmoji(
-                    RequestPutEmoji(
-                        commentEmojiId = _emojiList.value[index].commentEmojiId,
-                        isChecked = !_emojiList.value[index].checked
-                    )
-                )
-            }.getOrNull()?.let {
-                setCommentEmojiCount(index)
-            } ?: _networkError.emit(true)
+        viewModelScope.launch {
+            emojiRepository.requestPutEmoji(
+                _emojiList.value[index].commentEmojiId,
+                !_emojiList.value[index].checked
+            ).collect { result ->
+                when (result) {
+                    true -> {
+                        setCommentEmojiCount(index)
+                    }
+                }
+            }
         }
     }
 
@@ -175,15 +180,5 @@ class CommentViewModel @Inject constructor(
     private fun setEmojiCount(emoji: Emoji) = when (emoji.checked) {
         true -> emoji.emojiCount - 1
         false -> emoji.emojiCount + 1
-    }
-
-    fun setEmptyCommentReactVisibility() {
-        viewModelScope.launch(Dispatchers.IO) {
-            var sum = 0
-            _emojiList.value.forEach { emoji ->
-                sum += emoji.emojiCount
-            }
-            _emptyEmoji.emit(sum)
-        }
     }
 }

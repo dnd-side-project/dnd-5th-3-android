@@ -9,26 +9,21 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentCommentBinding
 import com.moo.mool.util.*
 import com.moo.mool.view.ToastDefaultBlack
-import com.moo.mool.view.comment.adapter.ReCommentAdapter
+import com.moo.mool.view.comment.adapter.ReplyAdapter
 import com.moo.mool.view.comment.model.Comment
 import com.moo.mool.view.comment.viewmodel.CommentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
@@ -42,19 +37,19 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCommentBinding.inflate(inflater, container, false)
+        binding.commentViewModel = commentViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         setCommentBackClickListener()
         setLayoutCommentClickListener()
         setRvReCommentAdapter()
         setReplyListCollect()
         setEmojiListCollect()
-        setEmptyReactCollect()
-        setBtnEmptyEmojiClickListener()
-        setFabCommentReactClickListener()
-        setOpenReactCollect()
+        setEmptyEmojiCollect()
+        setOpenEmojiCollect()
         setLayoutCommentClickListener(getLayoutReactionList())
         setLottieAnimationListener()
         setBtnCommentMoreClickListener()
-        setEtReplyListener()
+        setEtReplyTextChangedListener()
         setTvReplyPostClickListener()
         setIsPostedCollect()
         commentViewModel.initOpenEmoji(args.openEmoji)
@@ -77,53 +72,46 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setRvReCommentAdapter() {
-        binding.rvReComment.adapter = ReCommentAdapter(commentViewModel)
+        binding.rvReComment.adapter = ReplyAdapter(commentViewModel)
     }
 
     private fun setReplyListCollect() {
         repeatOnLifecycle {
             commentViewModel.replyList.collect { replyList ->
                 replyList?.let {
-                    submitCommentList(replyList)
                     setLayoutCommentBinding(replyList[0])
+                    submitCommentList(replyList.subList(1, replyList.size))
                 }
             }
         }
     }
 
-    private fun submitCommentList(commentList: List<Comment>) {
-        with(binding.rvReComment.adapter as ReCommentAdapter) {
-            submitList(commentList.subList(1, commentList.size)) {
+    private fun setLayoutCommentBinding(mainComment: Comment) {
+        with(binding) {
+            comment = mainComment
+            isMine = getIsMineUtil(requireContext(), mainComment.writerName)
+            executePendingBindings()
+        }
+    }
+
+    private fun submitCommentList(replyList: List<Comment>) {
+        with(binding.rvReComment.adapter as ReplyAdapter) {
+            submitList(replyList) {
                 binding.rvReComment.scrollToPosition(itemCount - 1)
             }
         }
     }
 
-    private fun setLayoutCommentBinding(comment: Comment) {
-        binding.layoutComment.comment = comment
-    }
-
     private fun setEmojiListCollect() {
         repeatOnLifecycle {
             commentViewModel.emojiList.collect { emojiList ->
-                if (emojiList.isNotEmpty()) {
-                    commentViewModel.setEmptyCommentReactVisibility()
-                    emojiList.indices.forEach { index ->
-                        with(emojiList[index]) {
-                            getLayoutEmoji(emojiId).apply {
-                                setTvCommentReactVisibility(emojiCount)
-                                setTvCommentReactCount(emojiCount)
-                                setTvCommentReactClickListener(index)
-                                setTvCommentReactionBackground(checked)
-                            }
-                        }
-                    }
-                }
+                binding.emojiList = emojiList
+                commentViewModel.setEmptyCommentEmojiVisibility()
             }
         }
     }
 
-    private fun setEmptyReactCollect() {
+    private fun setEmptyEmojiCollect() {
         repeatOnLifecycle {
             commentViewModel.emptyEmoji.collect { isEmpty ->
                 setBtnReactionEmptyVisibility(isEmpty)
@@ -132,119 +120,47 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setBtnReactionEmptyVisibility(isEmpty: Int) {
-        binding.layoutComment.btnReactionEmpty.visibility = when (isEmpty) {
+        binding.btnEmojiEmpty.visibility = when (isEmpty) {
             0 -> View.VISIBLE
             else -> View.GONE
         }
     }
 
-    private fun setBtnEmptyEmojiClickListener() {
-        binding.layoutComment.btnReactionEmpty.setOnClickListener {
-            commentViewModel.setOpenOrNotOpenReact()
-        }
-    }
-
-    private fun getLayoutEmoji(emojiId: Int): TextView {
-        with(binding.layoutComment) {
-            return when (emojiId) {
-                1 -> tvCommentReactionBrown
-                2 -> tvCommentReactionBlue
-                3 -> tvCommentReactionGreen
-                4 -> tvCommentReactionRed
-                5 -> tvCommentReactionYellow
-                else -> throw IndexOutOfBoundsException()
-            }
-        }
-    }
-
-    private fun TextView.setTvCommentReactVisibility(emojiCount: Int) {
-        this.visibility = when (emojiCount) {
-            0 -> View.GONE
-            else -> View.VISIBLE
-        }
-    }
-
-    private fun TextView.setTvCommentReactCount(emojiCount: Int) {
-        this.text = emojiCount.toString()
-    }
-
-    private fun TextView.setTvCommentReactClickListener(index: Int) {
-        this.setOnClickListener {
-            commentViewModel.requestEmoji(index, args.id)
-        }
-    }
-
-    private fun TextView.setTvCommentReactionBackground(checked: Boolean) {
-        when (checked) {
-            true -> this.setBackgroundResource(R.drawable.background_small_emoji_voted_round_20)
-            false -> this.setBackgroundResource(R.drawable.background_small_emoji_round_20)
-        }
-    }
-
-    private fun setFabCommentReactClickListener() {
-        binding.fabCommentReaction.setOnClickListener {
-            commentViewModel.setOpenOrNotOpenReact()
-        }
-    }
-
-    private fun setOpenReactCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                commentViewModel.openReact.collect { isOpen ->
-                    when (isOpen) {
-                        0 -> {
-                            setLottieCancelAnimation()
-                            setLayoutAlpha(1f)
-                            setFabCommentReactionCloseBackground()
-                            setLayoutCommentCloseAnimation(getLayoutReactionList())
-                            delay(300)
-                            setLayoutCommentCloseInvisible(getLayoutReactionList())
-                        }
-                        1 -> {
-                            setLayoutAlpha(0.2f)
-                            setFabCommentReactionOpenBackground()
-                            setLayoutCommentColorVisible(getLayoutReactionList())
-                        }
+    private fun setOpenEmojiCollect() {
+        repeatOnLifecycle {
+            commentViewModel.openEmoji.collect { isOpen ->
+                binding.isOpen = isOpen
+                when (isOpen) {
+                    "CLOSE" -> {
+                        setLottieCancelAnimation()
+                        setLayoutCommentEmojiClose(getLayoutReactionList())
+                        delay(300)
+                        setLayoutCommentEmojiInvisible(getLayoutReactionList())
+                    }
+                    "OPEN" -> {
+                        setLayoutCommentEmojiVisible(getLayoutReactionList())
                     }
                 }
             }
         }
     }
 
-    private fun setLayoutAlpha(alpha: Float) {
-        binding.layoutCommentBackground.alpha = alpha
-    }
-
-    private fun setFabCommentReactionCloseBackground() {
-        with(binding.fabCommentReaction) {
-            backgroundTintList = requireContext().getColorStateList(R.color.bluegray200_E1E3E8)
-            setImageResource(R.drawable.ic_feed_logo)
-        }
-    }
-
-    private fun setFabCommentReactionOpenBackground() {
-        with(binding.fabCommentReaction) {
-            backgroundTintList = requireContext().getColorStateList(R.color.bluegray700_4D535E)
-            setImageResource(R.drawable.ic_x_sign)
-        }
-    }
-
-    private fun setLayoutCommentColorVisible(list: List<ConstraintLayout>) {
+    private fun setLayoutCommentEmojiVisible(list: List<ConstraintLayout>) {
         list.indices.forEach { index ->
-            list[index].apply {
+            with(list[index]) {
                 visibility = View.VISIBLE
                 FloatingAnimationUtil.setAnimation(this, -(76 * (index + 1)).toFloat())
             }
         }
     }
 
-    private fun setLayoutCommentCloseAnimation(list: List<ConstraintLayout>) {
+    private fun setLayoutCommentEmojiClose(list: List<ConstraintLayout>) {
         list.forEach { layout ->
             FloatingAnimationUtil.setAnimation(layout, 0f)
         }
     }
 
-    private fun setLayoutCommentCloseInvisible(list: List<ConstraintLayout>) {
+    private fun setLayoutCommentEmojiInvisible(list: List<ConstraintLayout>) {
         list.forEach { layout ->
             layout.visibility = View.INVISIBLE
         }
@@ -260,24 +176,22 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setLayoutCommentSelect(selected: Int, list: List<ConstraintLayout>) {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            list.indices.forEach { index ->
-                when (selected) {
-                    index -> {
-                        FloatingAnimationUtil.setAnimation(list[index], -76f)
-                    }
-                    else -> {
-                        FloatingAnimationUtil.setAnimation(list[index], 0f)
-                        list[index].visibility = View.INVISIBLE
-                    }
+        list.indices.forEach { index ->
+            when (selected) {
+                index -> {
+                    FloatingAnimationUtil.setAnimation(list[index], -76f)
+                }
+                else -> {
+                    FloatingAnimationUtil.setAnimation(list[index], 0f)
+                    list[index].visibility = View.INVISIBLE
                 }
             }
-            setLottiePlayAnimation(selected)
         }
+        setLottiePlayAnimation(selected)
     }
 
     private fun setLottieAnimationListener() {
-        binding.imgReactionLottie.apply {
+        binding.imgEmojiLottie.apply {
             addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(p0: Animator?) {
                 }
@@ -297,7 +211,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setLottiePlayAnimation(selected: Int) {
-        binding.imgReactionLottie.apply {
+        with(binding.imgEmojiLottie) {
             setAnimation(getLottieRaw(selected))
             visibility = View.VISIBLE
             playAnimation()
@@ -305,7 +219,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setLottieCancelAnimation() {
-        binding.imgReactionLottie.apply {
+        with(binding.imgEmojiLottie) {
             visibility = View.INVISIBLE
             cancelAnimation()
         }
@@ -332,13 +246,13 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
 
     private fun setBtnCommentMoreClickListener() {
-        binding.layoutComment.btnCommentMore.setOnClickListener {
+        binding.btnCommentMore.setOnClickListener {
             PopupMenu(
                 ContextThemeWrapper(
                     requireContext(),
                     R.style.feed_toggle_popup_menu
                 ),
-                binding.layoutComment.btnCommentMore
+                binding.btnCommentMore
             ).apply {
                 setOnMenuItemClickListener(this@CommentFragment)
                 inflate(R.menu.menu_comment)
@@ -352,7 +266,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             navigateWithData(
                 CommentFragmentDirections.actionCommentFragmentToCommentUpdateFragment(
                     args.id,
-                    binding.layoutComment.tvCommentContent.text.toString()
+                    binding.tvCommentContent.text.toString()
                 )
             )
             true
@@ -366,13 +280,14 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         else -> false
     }
 
-    private fun setEtReplyListener() {
+    private fun setEtReplyTextChangedListener() {
         with(binding.etReply) {
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    setTvReplyPostClickable(text.toString().length)
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
@@ -388,15 +303,20 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
+    private fun setTvReplyPostClickable(length: Int) {
+        binding.tvReplyPost.isClickable = when (length) {
+            0 -> false
+            else -> true
+        }
+    }
+
     private fun setTvReplyPostClickListener() {
         binding.tvReplyPost.setOnClickListener {
-            if (binding.etReply.text.toString().isNotEmpty()) {
-                HideKeyBoardUtil.hide(requireContext(), binding.etReply)
-                commentViewModel.requestPostReply(
-                    args.id,
-                    binding.etReply.text.toString()
-                )
-            }
+            HideKeyBoardUtil.hide(requireContext(), binding.etReply)
+            commentViewModel.requestPostReply(
+                args.id,
+                binding.etReply.text.toString()
+            )
         }
     }
 
@@ -405,9 +325,8 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
             with(commentViewModel) {
                 isPosted.collect { isPosted ->
                     if (isPosted) {
-                        resetIsPosted()
-                        resetEtReplyText()
                         requestGetReply(args.id)
+                        resetEtReplyText()
                     }
                 }
             }

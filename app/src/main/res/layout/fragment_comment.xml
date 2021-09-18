@@ -1,314 +1,532 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.comment.CommentFragment">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="java.util.List" />
+
+        <variable
+            name="commentViewModel"
+            type="com.moo.mool.view.comment.viewmodel.CommentViewModel" />
+
+        <variable
+            name="comment"
+            type="com.moo.mool.view.comment.model.Comment" />
+
+        <variable
+            name="emojiList"
+            type="List&lt;com.moo.mool.view.comment.model.Emoji>" />
+
+        <variable
+            name="isMine"
+            type="boolean" />
+
+        <variable
+            name="isOpen"
+            type="String" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_comment_background"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/layout_reply"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        tools:context=".view.comment.CommentFragment">
 
-        <ImageButton
-            android:id="@+id/btn_comment_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_back"
-            app:layout_constraintBottom_toBottomOf="@id/tv_comment_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_comment_title"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:id="@+id/tv_comment_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingVertical="14dp"
-            android:text="@string/comment_title"
-            android:textColor="@color/bluegray50_F9FAFC"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/layout_comment"
-            layout="@layout/item_comment"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_comment_background"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_comment_title" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_re_comment"
-            android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:alpha="@{isOpen.equals(`CLOSE`) ? 1f : 0.2f}"
+            app:layout_constraintBottom_toTopOf="@id/layout_reply"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btn_comment_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="@id/tv_comment_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_comment_title"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tv_comment_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="14dp"
+                android:text="@string/comment_title"
+                android:textColor="@color/bluegray50_F9FAFC"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_comment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:background="@color/bluegray900_13161f"
+                android:paddingBottom="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_comment_title">
+
+                <ImageView
+                    android:id="@+id/img_comment_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@{comment.voteType.equals(`PERMIT`) ? @drawable/ic_comments_agree : (comment.voteType.equals(`REJECT`) ? @drawable/ic_comments_disagree : @drawable/ic_comments_none)}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tv_comment_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@{comment.writerName}"
+                    android:textColor="@color/bluegray100_F0F2F5"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/img_comment_profile"
+                    app:layout_constraintTop_toTopOf="@id/img_comment_profile" />
+
+                <ImageView
+                    android:id="@+id/img_comment_mine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_notification_not_read"
+                    android:visibility="@{isMine == true ? View.VISIBLE : View.INVISIBLE}"
+                    app:layout_constraintStart_toEndOf="@+id/tv_comment_nickname"
+                    app:layout_constraintTop_toTopOf="@id/tv_comment_nickname"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tv_comment_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:textColor="@color/bluegray500_878C96"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_comment_nickname"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_comment_nickname" />
+
+                <TextView
+                    android:id="@+id/tv_comment_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@{comment.deleted == true ? @string/comment_deleted_content : comment.content}"
+                    android:textColor="@color/bluegray100_F0F2F5"
+                    android:textSize="14dp"
+                    app:layout_constraintEnd_toEndOf="@id/tv_comment_time"
+                    app:layout_constraintStart_toStartOf="@id/tv_comment_nickname"
+                    app:layout_constraintTop_toBottomOf="@id/tv_comment_nickname" />
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/layout_comment_emoji"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:alignContent="space_between"
+                    app:alignItems="stretch"
+                    app:dividerDrawable="@drawable/background_flexbox_divider"
+                    app:flexWrap="wrap"
+                    app:layout_constraintEnd_toEndOf="@id/tv_comment_time"
+                    app:layout_constraintStart_toStartOf="@+id/tv_comment_content"
+                    app:layout_constraintTop_toBottomOf="@id/tv_comment_content"
+                    app:showDivider="middle">
+
+                    <ImageButton
+                        android:id="@+id/btn_emoji_empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:background="@android:color/transparent"
+                        android:onClick="@{() -> commentViewModel.setOpenOrNotOpenReact()}"
+                        android:src="@drawable/ic_comment_reaction_empty"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_emoji_yellow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:background="@{emojiList[4].checked == true ? @drawable/background_small_emoji_checked_round_20 : @drawable/background_small_emoji_round_20}"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:onClick="@{() -> commentViewModel.requestEmoji(4, comment.commentId)}"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="@{String.valueOf(emojiList[4].emojiCount)}"
+                        android:textColor="@color/bluegray50_F9FAFC"
+                        android:textStyle="bold"
+                        android:visibility="@{emojiList[4].emojiCount == 0 ? View.GONE : View.VISIBLE}"
+                        app:drawableStartCompat="@drawable/ic_emoji_small_oh" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_emoji_red"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:background="@{emojiList[3].checked == true ? @drawable/background_small_emoji_checked_round_20 : @drawable/background_small_emoji_round_20}"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:onClick="@{() -> commentViewModel.requestEmoji(3, comment.commentId)}"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="@{String.valueOf(emojiList[3].emojiCount)}"
+                        android:textColor="@color/bluegray50_F9FAFC"
+                        android:textStyle="bold"
+                        android:visibility="@{emojiList[3].emojiCount == 0 ? View.GONE : View.VISIBLE}"
+                        app:drawableStartCompat="@drawable/ic_emoji_small_wow" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_emoji_green"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:background="@{emojiList[2].checked == true ? @drawable/background_small_emoji_checked_round_20 : @drawable/background_small_emoji_round_20}"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:onClick="@{() -> commentViewModel.requestEmoji(2, comment.commentId)}"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="@{String.valueOf(emojiList[2].emojiCount)}"
+                        android:textColor="@color/bluegray50_F9FAFC"
+                        android:textStyle="bold"
+                        android:visibility="@{emojiList[2].emojiCount == 0 ? View.GONE : View.VISIBLE}"
+                        app:drawableStartCompat="@drawable/ic_emoji_small_funny" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_emoji_blue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:background="@{emojiList[1].checked == true ? @drawable/background_small_emoji_checked_round_20 : @drawable/background_small_emoji_round_20}"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:onClick="@{() -> commentViewModel.requestEmoji(1, comment.commentId)}"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="@{String.valueOf(emojiList[1].emojiCount)}"
+                        android:textColor="@color/bluegray50_F9FAFC"
+                        android:textStyle="bold"
+                        android:visibility="@{emojiList[1].emojiCount == 0 ? View.GONE : View.VISIBLE}"
+                        app:drawableStartCompat="@drawable/ic_emoji_small_sad" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_emoji_brown"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@{emojiList[0].checked == true ? @drawable/background_small_emoji_checked_round_20 : @drawable/background_small_emoji_round_20}"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:onClick="@{() -> commentViewModel.requestEmoji(0, comment.commentId)}"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="@{String.valueOf(emojiList[0].emojiCount)}"
+                        android:textColor="@color/bluegray50_F9FAFC"
+                        android:textStyle="bold"
+                        android:visibility="@{emojiList[0].emojiCount == 0 ? View.GONE : View.VISIBLE}"
+                        app:drawableStartCompat="@drawable/ic_emoji_small_umm" />
+                </com.google.android.flexbox.FlexboxLayout>
+
+                <TextView
+                    android:id="@+id/tv_comment_replay_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="@{@string/comment_replay_count(comment.replyCount)}"
+                    android:textColor="@color/bluegray500_878C96"
+                    android:textSize="14dp"
+                    android:visibility="@{comment.replyCount == 0 ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintStart_toStartOf="@id/layout_comment_emoji"
+                    app:layout_constraintTop_toBottomOf="@id/layout_comment_emoji" />
+
+                <ImageButton
+                    android:id="@+id/btn_comment_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_more_horizontal"
+                    android:visibility="@{comment.deleted == true ? View.INVISIBLE : (isMine == true ? View.VISIBLE : View.INVISIBLE)}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:ignore="ContentDescription" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_re_comment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_comment"
+                tools:listitem="@layout/item_re_comment" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_comment_yellow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/fab_comment_emoji"
+            app:layout_constraintTop_toTopOf="@id/fab_comment_emoji">
+
+            <TextView
+                android:id="@+id/tv_comment_yellow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:background="@drawable/background_reaction_fab_round_16"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:singleLine="true"
+                android:text="@string/comment_reaction_yellow"
+                android:textColor="@color/bluegray900_13161f"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="@id/img_comment_yellow"
+                app:layout_constraintEnd_toStartOf="@id/img_comment_yellow"
+                app:layout_constraintTop_toTopOf="@id/img_comment_yellow"
+                app:layout_constraintWidth_percent="0.45" />
+
+            <ImageView
+                android:id="@+id/img_comment_yellow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_comment_yellow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_comment_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/fab_comment_emoji"
+            app:layout_constraintTop_toTopOf="@id/fab_comment_emoji">
+
+            <TextView
+                android:id="@+id/tv_comment_red"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:background="@drawable/background_reaction_fab_round_16"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:singleLine="true"
+                android:text="@string/comment_reaction_red"
+                android:textColor="@color/bluegray900_13161f"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="@id/img_comment_red"
+                app:layout_constraintEnd_toStartOf="@id/img_comment_red"
+                app:layout_constraintTop_toTopOf="@id/img_comment_red"
+                app:layout_constraintWidth_percent="0.45" />
+
+            <ImageView
+                android:id="@+id/img_comment_red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_comment_red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_comment_green"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/fab_comment_emoji"
+            app:layout_constraintTop_toTopOf="@id/fab_comment_emoji">
+
+            <TextView
+                android:id="@+id/tv_comment_green"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:background="@drawable/background_reaction_fab_round_16"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:singleLine="true"
+                android:text="@string/comment_reaction_green"
+                android:textColor="@color/bluegray900_13161f"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="@id/img_comment_green"
+                app:layout_constraintEnd_toStartOf="@id/img_comment_green"
+                app:layout_constraintTop_toTopOf="@id/img_comment_green"
+                app:layout_constraintWidth_percent="0.45" />
+
+            <ImageView
+                android:id="@+id/img_comment_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_comment_green"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_comment_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/fab_comment_emoji"
+            app:layout_constraintTop_toTopOf="@id/fab_comment_emoji">
+
+            <TextView
+                android:id="@+id/tv_comment_blue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:background="@drawable/background_reaction_fab_round_16"
+                android:gravity="center"
+                android:padding="6dp"
+                android:singleLine="true"
+                android:text="@string/comment_reaction_blue"
+                android:textColor="@color/bluegray900_13161f"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="@id/img_comment_blue"
+                app:layout_constraintEnd_toStartOf="@id/img_comment_blue"
+                app:layout_constraintTop_toTopOf="@id/img_comment_blue"
+                app:layout_constraintWidth_percent="0.45" />
+
+            <ImageView
+                android:id="@+id/img_comment_blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/ic_comment_blue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_comment_brown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/fab_comment_emoji"
+            app:layout_constraintTop_toTopOf="@id/fab_comment_emoji">
+
+            <TextView
+                android:id="@+id/tv_comment_brown"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:background="@drawable/background_reaction_fab_round_16"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:singleLine="true"
+                android:text="@string/comment_reaction_brown"
+                android:textColor="@color/bluegray900_13161f"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="@id/img_comment_brown"
+                app:layout_constraintEnd_toStartOf="@id/img_comment_brown"
+                app:layout_constraintTop_toTopOf="@id/img_comment_brown"
+                app:layout_constraintWidth_percent="0.45" />
+
+            <ImageView
+                android:id="@+id/img_comment_brown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_comment_brown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/img_emoji_lottie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
+            android:layout_marginBottom="48dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/fab_comment_emoji"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_comment"
-            tools:listitem="@layout/item_re_comment" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:lottie_loop="false" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_comment_yellow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@id/fab_comment_reaction"
-        app:layout_constraintTop_toTopOf="@id/fab_comment_reaction">
-
-        <TextView
-            android:id="@+id/tv_comment_yellow"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:background="@drawable/background_reaction_fab_round_16"
-            android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:singleLine="true"
-            android:text="@string/comment_reaction_yellow"
-            android:textColor="@color/bluegray900_13161f"
-            android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="@id/btn_comment_yellow"
-            app:layout_constraintEnd_toStartOf="@id/btn_comment_yellow"
-            app:layout_constraintTop_toTopOf="@id/btn_comment_yellow"
-            app:layout_constraintWidth_percent="0.45" />
-
-        <ImageButton
-            android:id="@+id/btn_comment_yellow"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_comment_emoji"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:clickable="false"
-            android:src="@drawable/ic_comment_yellow"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@{isOpen.equals(`CLOSE`) ? @color/bluegray200_E1E3E8 : @color/bluegray700_4D535E}"
+            android:onClick="@{() -> commentViewModel.setOpenOrNotOpenReact()}"
+            android:src="@{isOpen.equals(`CLOSE`) ? @drawable/ic_feed_logo : @drawable/ic_x_sign}"
+            app:borderWidth="0dp"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toTopOf="@id/layout_reply"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@null"
             tools:ignore="ContentDescription" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_comment_red"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@id/fab_comment_reaction"
-        app:layout_constraintTop_toTopOf="@id/fab_comment_reaction">
-
-        <TextView
-            android:id="@+id/tv_comment_red"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:background="@drawable/background_reaction_fab_round_16"
-            android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:singleLine="true"
-            android:text="@string/comment_reaction_red"
-            android:textColor="@color/bluegray900_13161f"
-            android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="@id/btn_comment_red"
-            app:layout_constraintEnd_toStartOf="@id/btn_comment_red"
-            app:layout_constraintTop_toTopOf="@id/btn_comment_red"
-            app:layout_constraintWidth_percent="0.45" />
-
-        <ImageButton
-            android:id="@+id/btn_comment_red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:clickable="false"
-            android:src="@drawable/ic_comment_red"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_comment_green"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@id/fab_comment_reaction"
-        app:layout_constraintTop_toTopOf="@id/fab_comment_reaction">
-
-        <TextView
-            android:id="@+id/tv_comment_green"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:background="@drawable/background_reaction_fab_round_16"
-            android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:singleLine="true"
-            android:text="@string/comment_reaction_green"
-            android:textColor="@color/bluegray900_13161f"
-            android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="@id/btn_comment_green"
-            app:layout_constraintEnd_toStartOf="@id/btn_comment_green"
-            app:layout_constraintTop_toTopOf="@id/btn_comment_green"
-            app:layout_constraintWidth_percent="0.45" />
-
-        <ImageButton
-            android:id="@+id/btn_comment_green"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:clickable="false"
-            android:src="@drawable/ic_comment_green"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_comment_blue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@id/fab_comment_reaction"
-        app:layout_constraintTop_toTopOf="@id/fab_comment_reaction">
-
-        <TextView
-            android:id="@+id/tv_comment_blue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:background="@drawable/background_reaction_fab_round_16"
-            android:gravity="center"
-            android:padding="6dp"
-            android:singleLine="true"
-            android:text="@string/comment_reaction_blue"
-            android:textColor="@color/bluegray900_13161f"
-            android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="@id/btn_comment_blue"
-            app:layout_constraintEnd_toStartOf="@id/btn_comment_blue"
-            app:layout_constraintTop_toTopOf="@id/btn_comment_blue"
-            app:layout_constraintWidth_percent="0.45" />
-
-        <ImageButton
-            android:id="@+id/btn_comment_blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@android:color/transparent"
-            android:clickable="false"
-            android:src="@drawable/ic_comment_blue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_comment_brown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@id/fab_comment_reaction"
-        app:layout_constraintTop_toTopOf="@id/fab_comment_reaction">
-
-        <TextView
-            android:id="@+id/tv_comment_brown"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:background="@drawable/background_reaction_fab_round_16"
-            android:gravity="center"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:singleLine="true"
-            android:text="@string/comment_reaction_brown"
-            android:textColor="@color/bluegray900_13161f"
-            android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="@id/btn_comment_brown"
-            app:layout_constraintEnd_toStartOf="@id/btn_comment_brown"
-            app:layout_constraintTop_toTopOf="@id/btn_comment_brown"
-            app:layout_constraintWidth_percent="0.45" />
-
-        <ImageButton
-            android:id="@+id/btn_comment_brown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:clickable="false"
-            android:src="@drawable/ic_comment_brown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/img_reaction_lottie"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginBottom="48dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/fab_comment_reaction"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:lottie_loop="false" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_comment_reaction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        app:borderWidth="0dp"
-        app:elevation="0dp"
-        app:layout_constraintBottom_toTopOf="@id/layout_reply"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@null"
-        tools:ignore="ContentDescription" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_reply"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bluegray800_303540"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <EditText
-            android:id="@+id/et_reply"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_reply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:hint="@string/vote_reply_hint"
-            android:inputType="textMultiLine"
-            android:paddingVertical="16dp"
-            android:paddingEnd="60dp"
-            android:textColor="@color/bluegray50_F9FAFC"
-            android:textColorHint="@color/bluegray600_626670"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="Autofill" />
+            android:background="@color/bluegray800_303540"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/tv_reply_post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="2dp"
-            android:text="@string/comment_post"
-            android:textColor="@color/moomool_pink_ff227c"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="@id/et_reply"
-            app:layout_constraintEnd_toEndOf="@id/et_reply" />
+            <EditText
+                android:id="@+id/et_reply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:hint="@string/vote_reply_hint"
+                android:inputType="textMultiLine"
+                android:paddingVertical="16dp"
+                android:paddingEnd="60dp"
+                android:textColor="@color/bluegray50_F9FAFC"
+                android:textColorHint="@color/bluegray600_626670"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="Autofill" />
+
+            <TextView
+                android:id="@+id/tv_reply_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:text="@string/comment_post"
+                android:textColor="@color/moomool_pink_ff227c"
+                android:textSize="16dp"
+                app:layout_constraintBottom_toBottomOf="@id/et_reply"
+                app:layout_constraintEnd_toEndOf="@id/et_reply" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

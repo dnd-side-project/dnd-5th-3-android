@@ -14,7 +14,7 @@ import com.moo.mool.view.feed.model.Feed
 import com.moo.mool.view.mypage.MyPageFragmentDirections
 
 class MyPageFeedAdapter :
-    ListAdapter<Feed, MyPageFeedAdapter.MyPageFeedViewHolder>(FEED_DIFF_UTIL) {
+    ListAdapter<Feed, MyPageFeedAdapter.MyPageFeedViewHolder>(feedDiffUtil) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -69,7 +69,7 @@ class MyPageFeedAdapter :
     }
 
     companion object {
-        private val FEED_DIFF_UTIL = object : DiffUtil.ItemCallback<Feed>() {
+        private val feedDiffUtil = object : DiffUtil.ItemCallback<Feed>() {
             override fun areItemsTheSame(oldItem: Feed, newItem: Feed) =
                 oldItem.id == newItem.id
 

@@ -5,9 +5,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="comment"
             type="com.moo.mool.view.comment.model.Comment" />
+
+        <variable
+            name="isMine"
+            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,18 +45,17 @@
 
         <ImageView
             android:id="@+id/img_re_comment_mine"
-            isMineVisibility="@{comment.writerName}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:src="@drawable/ic_notification_not_read"
+            android:visibility="@{isMine == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintStart_toEndOf="@+id/tv_re_comment_nickname"
             app:layout_constraintTop_toTopOf="@id/tv_re_comment_nickname"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tv_re_comment_time"
-            commentCreateTime="@{comment.createdDate}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/bluegray500_878C96"
@@ -74,15 +79,14 @@
 
         <ImageButton
             android:id="@+id/btn_re_comment_more"
-            isMineVisibility="@{comment.writerName}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_more_horizontal"
+            android:visibility="@{isMine == true ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_comment_content"
             tools:ignore="ContentDescription" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

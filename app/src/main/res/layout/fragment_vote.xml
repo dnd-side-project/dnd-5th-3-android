@@ -14,6 +14,10 @@
         <variable
             name="remainTime"
             type="long" />
+
+        <variable
+            name="isMine"
+            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,12 +58,12 @@
 
             <ImageButton
                 android:id="@+id/btn_vote_more"
-                isMineVisibility="@{feed.name}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_more_horizontal"
+                android:visibility="@{isMine == true ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@id/tv_vote_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_vote_title"
