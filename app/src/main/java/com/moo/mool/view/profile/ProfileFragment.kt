@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.database.SharedManager
@@ -23,6 +24,8 @@ import com.moo.mool.util.EdittextCount
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.ProfileViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
@@ -88,19 +91,22 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setEtChangePasswordClickListener() {
+        profileViewModel.checkSocialEmail()
         binding.etProfilePassword.setOnClickListener {
-            profileViewModel.checkSocialEmail()
+            setRequestCheckSocialEmailCollect()
         }
-
-        profileViewModel.checkSocialEmailSuccess.observe(viewLifecycleOwner, Observer {
-            if(it == true){
-                requireView().findNavController().navigate(R.id.action_profileFragment_to_changePasswordFragment)
-            } else {
-                ToastDefaultBlack.createToast(requireContext(), "소셜 계정은 비밀번호 변경이 불가합니다")?.show()
-            }
-        })
     }
-
+    private fun setRequestCheckSocialEmailCollect() {
+        viewLifecycleOwner.lifecycleScope.launch {
+                profileViewModel.checkSocialEmailSuccess.collect{ socialEmailCheck ->
+                    if(socialEmailCheck) {
+                        requireView().findNavController().navigate(R.id.action_profileFragment_to_changePasswordFragment)
+                    } else {
+                        ToastDefaultBlack.createToast(requireContext(), "소셜 계정은 비밀번호 변경이 불가합니다")?.show()
+                    }
+                }
+        }
+    }
     private fun setCheckPasswordChanged() {
         if(profileViewModel.checkPasswordChanged)
             binding.tvMessageChangeCheckEmailPassword.visibility = View.VISIBLE
