@@ -12,14 +12,10 @@
         tools:layout="@layout/fragment_login_main">
         <action
             android:id="@+id/action_loginMainFragment_to_emailLoginFragment"
-            app:destination="@id/emailLoginFragment"
-            app:popUpTo="@id/nav_graph_login"
-            app:popUpToInclusive="true" />
+            app:destination="@id/emailLoginFragment" />
         <action
             android:id="@+id/action_loginMainFragment_to_emailSignupSetIDFragment"
-            app:destination="@id/EmailSignupSetIDFragment"
-            app:popUpTo="@id/nav_graph_login"
-            app:popUpToInclusive="true" />
+            app:destination="@id/EmailSignupSetIDFragment" />
         <action
             android:id="@+id/action_loginMainFragment_to_mainActivity"
             app:destination="@id/main_activity" />

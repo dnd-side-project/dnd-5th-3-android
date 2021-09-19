@@ -3,13 +3,19 @@ package com.moo.mool.viewmodel
 import android.app.Application
 import androidx.lifecycle.*
 import com.moo.mool.repository.ProfileRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
     private val profileRepository = ProfileRepository(getApplication<Application>().applicationContext)
 
-    val checkSocialEmailSuccess = MutableLiveData<Boolean?>()
+
+    private val _checkSocialEmailSuccess = MutableStateFlow(false)
+    val checkSocialEmailSuccess = _checkSocialEmailSuccess.asStateFlow()
     val checkSocialEmailFailedMessage = MutableLiveData<String?>()
 
     val duplicateCheckNicknameSuccess = MutableLiveData<Boolean?>()
@@ -97,15 +103,21 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun checkSocialEmail() {
-        profileRepository.checkSocialEmail(object : ProfileRepository.ProfileCallBack {
-            override fun onSuccess() {
-                checkSocialEmailSuccess.postValue(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching {
+                profileRepository.checkSocialEmail(object : ProfileRepository.ProfileCallBack {
+                    override fun onSuccess() {
+                        viewModelScope.launch {
+                            _checkSocialEmailSuccess.emit(true)
+                        }
+                    }
+                    override fun onError(message: String?) {
+                        viewModelScope.launch {
+                            _checkSocialEmailSuccess.emit(false)
+                        }
+                    }
+                })
             }
-
-            override fun onError(message: String?) {
-                checkSocialEmailSuccess.postValue(false)
-                checkSocialEmailFailedMessage.postValue(message)
-            }
-        })
+        }
     }
 }

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentChangePasswordBinding
 import com.moo.mool.view.main.MainActivity
@@ -36,9 +37,16 @@ class ChangePasswordFragment : Fragment() {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        (activity as MainActivity).onBackPressed()
+        requireView().findNavController().popBackStack()
         return true
     }
+
+    private fun showBackButton() {
+        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        (activity as MainActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
+        this.setHasOptionsMenu(true)
+    }
+
     private fun setToolbarDetail() {
         binding.toolbarChangePasswordBoard.tvToolbarTitle.setText(R.string.change_password)
         (activity as MainActivity).setSupportActionBar(binding.toolbarChangePasswordBoard.toolbarBoard)
@@ -47,7 +55,6 @@ class ChangePasswordFragment : Fragment() {
     }
 
     private fun textWatcherEditText() {
-
         profileViewModel.enableChange.observe(viewLifecycleOwner, Observer {
             if(it==true &&
                 checkNewPasswordFormat(binding.etChangePasswordNew.text.toString().trim()) &&// 조건 2
@@ -183,14 +190,10 @@ class ChangePasswordFragment : Fragment() {
             binding.etChangePasswordNew.isEnabled = false
             binding.etChangePasswordOld.isEnabled = false
             deactiveButtonChange()
+            requireView().findNavController().popBackStack()
         }
     }
 
-    private fun showBackButton() {
-        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
-        this.setHasOptionsMenu(true)
-    }
     private fun activeButtonChange() {
         binding.btnChange.isEnabled = true
         binding.btnChange.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_enable))
