@@ -12,10 +12,6 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentVoteBinding
@@ -24,12 +20,10 @@ import com.moo.mool.util.*
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.comment.model.Comment
 import com.moo.mool.view.vote.adapter.VoteCommentAdapter
-import com.moo.mool.view.vote.model.ResponseFeedDetail
 import com.moo.mool.view.vote.viewmodel.VoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
@@ -72,8 +66,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun setVoteBackClickListener() {
         binding.btnVoteBack.setOnClickListener {
-            requireView().findNavController()
-                .popBackStack()
+            popBackStack()
         }
     }
 
@@ -96,7 +89,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     override fun onMenuItemClick(item: MenuItem) = when (item.itemId) {
         R.id.feed_delete -> {
             DeleteDialogUtil.showDeleteDialog(requireContext(), false) {
-                voteViewModel.requestVoteDelete(args.id)
+                voteViewModel.requestVoteFeedDelete(args.id)
             }
             true
         }
@@ -114,35 +107,37 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
 
     private fun setRequestDeleteCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                voteViewModel.requestDelete.collect { requestDelete ->
-                    if (requestDelete) {
-                        requireView().findNavController().popBackStack()
-                    }
+        repeatOnLifecycle {
+            voteViewModel.requestDelete.collect { requestDelete ->
+                when (requestDelete) {
+                    true -> popBackStack()
                 }
             }
         }
     }
 
     private fun setFeedDetailCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                voteViewModel.feedDetail.collect { feedDetail ->
-                    feedDetail?.let {
-                        timer = setCountDownTimer(feedDetail.voteDeadline).start()
-                        with(binding) {
-                            feed = feedDetail
-                            remainTime = TimeChangerUtil.getRemainTime(feedDetail.voteDeadline)
-                            isMine = getIsMineUtil(requireContext(), feedDetail.name)
-                            executePendingBindings()
-                        }
-                        setTvFeedAgreeText(feedDetail)
-                        setTvFeedDisAgreeText(feedDetail)
-                        setSeekBarProgress(feedDetail)
-                        setImageVoteCompleteImage(feedDetail.currentMemberVoteResult)
+        repeatOnLifecycle {
+            voteViewModel.feedDetail.collect { feedDetail ->
+                feedDetail?.let {
+                    timer = setCountDownTimer(feedDetail.voteDeadline).start()
+                    with(binding) {
+                        feed = feedDetail
+                        remainTime = TimeChangerUtil.getRemainTime(feedDetail.voteDeadline)
+                        isMine = getIsMineUtil(requireContext(), feedDetail.name)
+                        executePendingBindings()
                     }
+                    setImageVoteCompleteImage(feedDetail.currentMemberVoteResult)
                 }
+            }
+        }
+    }
+
+    private fun setImageVoteCompleteImage(currentMemberVoteResult: String) {
+        with(binding.imgVoteSelected) {
+            when (currentMemberVoteResult) {
+                "PERMIT" -> setImageResource(R.drawable.ic_vote_complete_agree)
+                "REJECT" -> setImageResource(R.drawable.ic_vote_complete_disagree)
             }
         }
     }
@@ -173,62 +168,24 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setTvFeedAgreeText(feed: ResponseFeedDetail) {
-        binding.tvFeedAgree.text = when (feed.permitCount + feed.rejectCount) {
-            0 -> String.format(getString(R.string.feed_item_percent), 0)
-            else -> String.format(
-                getString(R.string.feed_item_percent),
-                feed.permitCount * 100 / (feed.permitCount + feed.rejectCount)
-            )
-        }
-    }
-
-    private fun setTvFeedDisAgreeText(feed: ResponseFeedDetail) {
-        binding.tvFeedDisagree.text = when (feed.permitCount + feed.rejectCount) {
-            0 -> String.format(getString(R.string.feed_item_percent), 0)
-            else -> String.format(
-                getString(R.string.feed_item_percent),
-                feed.rejectCount * 100 / (feed.permitCount + feed.rejectCount)
-            )
-        }
-    }
-
-    private fun setSeekBarProgress(feed: ResponseFeedDetail) {
-        binding.progressVoteItem.progress = when (feed.permitCount + feed.rejectCount) {
-            0 -> 0
-            else -> feed.permitCount * 100 / (feed.permitCount + feed.rejectCount)
-        }
-    }
-
-    private fun setImageVoteCompleteImage(currentMemberVoteResult: String) {
-        with(binding.imgVoteSelected) {
-            when (currentMemberVoteResult) {
-                "PERMIT" -> setImageResource(R.drawable.ic_vote_complete_agree)
-                "REJECT" -> setImageResource(R.drawable.ic_vote_complete_disagree)
-            }
-        }
-    }
-
     private fun setVoteCommentAdapter() {
         binding.rvVoteComment.adapter = VoteCommentAdapter(voteViewModel)
     }
 
     private fun setFeedDetailCommentCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                voteViewModel.feedDetailComment.collect { commentList ->
-                    commentList?.let {
-                        submitCommentList(commentList)
-                        setTvVoteCommentCountText(commentList.size)
-                    }
+        repeatOnLifecycle {
+            voteViewModel.feedDetailComments.collect { feedDetailComments ->
+                feedDetailComments?.let {
+                    submitCommentList(feedDetailComments)
+                    setTvVoteCommentCountText(feedDetailComments.size)
                 }
             }
         }
     }
 
-    private fun submitCommentList(commentList: List<Comment>) {
+    private fun submitCommentList(feedDetailComments: List<Comment>) {
         with(binding.rvVoteComment.adapter as VoteCommentAdapter) {
-            submitList(commentList)
+            submitList(feedDetailComments)
         }
     }
 
@@ -276,7 +233,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun setTvVoteCommentPostClickListener() {
         binding.tvVoteCommentPost.setOnClickListener {
-            if (binding.etVoteComment.text.toString().isNotEmpty()) {
+            if (binding.etVoteComment.text.toString().isNotBlank()) {
                 HideKeyBoardUtil.hide(requireContext(), binding.etVoteComment)
                 voteViewModel.requestPostComment(
                     args.id,
@@ -287,23 +244,23 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setLayoutClickListener() {
-        binding.layoutVote.setOnClickListener {
-            HideKeyBoardUtil.hide(requireContext(), binding.etVoteComment)
+        with(binding) {
+            layoutVote.setOnClickListener {
+                HideKeyBoardUtil.hide(requireContext(), etVoteComment)
+            }
         }
     }
 
     private fun setRequestPostCommentCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                with(voteViewModel) {
-                    requestPostComment.collect { isPosted ->
-                        if (isPosted) {
-                            resetIsPosted()
-                            requestVoteFeedComment(args.id)
-                            delay(500)
-                            afterPostedScroll()
-                            resetEtVoteCommentText()
-                        }
+        repeatOnLifecycle {
+            with(voteViewModel) {
+                requestPostComment.collect { isPosted ->
+                    if (isPosted) {
+                        resetIsPosted()
+                        requestVoteFeedComment(args.id)
+                        delay(500)
+                        afterPostedScroll()
+                        resetEtVoteCommentText()
                     }
                 }
             }
@@ -325,36 +282,20 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setOpenVoteCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                voteViewModel.openVote.collect { isOpen ->
-                    when (isOpen) {
-                        0 -> {
-                            setLayoutAlpha(1f)
-                            setFabVoteCloseBackground()
-                            setLayoutVoteCloseAnimation(getLayoutVoteList())
-                            delay(300)
-                            setLayoutVoteCloseInvisible(getLayoutVoteList())
-                        }
-                        1 -> {
-                            setLayoutAlpha(0.2f)
-                            setFabVoteOpenBackground()
-                            setLayoutVoteColorVisible(getLayoutVoteList())
-                        }
+        repeatOnLifecycle {
+            voteViewModel.openVote.collect { isOpen ->
+                binding.isOpen = isOpen
+                when (isOpen) {
+                    "CLOSE" -> {
+                        setLayoutVoteCloseAnimation(getLayoutVoteList())
+                        delay(300)
+                        setLayoutVoteCloseInvisible(getLayoutVoteList())
+                    }
+                    "OPEN" -> {
+                        setLayoutVoteColorVisible(getLayoutVoteList())
                     }
                 }
             }
-        }
-    }
-
-    private fun setLayoutAlpha(alpha: Float) {
-        binding.layoutVote.alpha = alpha
-    }
-
-    private fun setFabVoteCloseBackground() {
-        with(binding.fabVote) {
-            backgroundTintList = requireContext().getColorStateList(R.color.bluegray50_F9FAFC)
-            setImageResource(R.drawable.ic_judge)
         }
     }
 
@@ -370,16 +311,9 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setFabVoteOpenBackground() {
-        with(binding.fabVote) {
-            backgroundTintList = requireContext().getColorStateList(R.color.bluegray700_4D535E)
-            setImageResource(R.drawable.ic_x_sign)
-        }
-    }
-
     private fun setLayoutVoteColorVisible(list: List<ConstraintLayout>) {
         list.indices.forEach { index ->
-            list[index].apply {
+            with(list[index]) {
                 visibility = View.VISIBLE
                 FloatingAnimationUtil.setAnimation(this, (-(76 * (index + 1)).toFloat()))
             }
@@ -389,7 +323,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     private fun setLayoutVoteClickListener(list: List<ConstraintLayout>) {
         list.indices.forEach { index ->
             list[index].setOnClickListener {
-                voteViewModel.requestVote(index, args.id, getVoteResponse(index))
+                voteViewModel.requestVote(args.id, getVoteResponse(index))
             }
         }
     }
@@ -401,42 +335,37 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setRequestVoteCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                with(voteViewModel) {
-                    requestVote.collect { index ->
-                        index?.let {
-                            resetRequestVote()
-                            requestVoteFeedComment(args.id)
-                            setLayoutCommentSelectClose(index, getLayoutVoteList())
-                        }
+        repeatOnLifecycle {
+            with(voteViewModel) {
+                requestVote.collect { voted ->
+                    if (voted.isNotEmpty()) {
+                        requestVoteFeedComment(args.id)
+                        setLayoutCommentSelectClose(voted, getLayoutVoteList())
                     }
                 }
             }
         }
     }
 
-    private fun setLayoutCommentSelectClose(selected: Int, list: List<ConstraintLayout>) {
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            list.indices.forEach { index ->
-                FloatingAnimationUtil.setAnimation(list[index], 0f)
-                list[index].visibility = View.INVISIBLE
-                setVoteCompleteAction(selected)
-            }
+    private fun setLayoutCommentSelectClose(voted: String, list: List<ConstraintLayout>) {
+        list.forEach { layout ->
+            FloatingAnimationUtil.setAnimation(layout, 0f)
+            layout.visibility = View.INVISIBLE
+            setVoteCompleteAction(voted)
         }
     }
 
-    private fun setVoteCompleteAction(selected: Int) {
-        binding.imgVoteComplete.apply {
-            setAnimation(getLottieRaw(selected))
+    private fun setVoteCompleteAction(voted: String) {
+        with(binding.imgVoteComplete) {
+            setAnimation(getLottieRaw(voted))
             visibility = View.VISIBLE
             playAnimation()
-            setImgVoteSelectedImage(selected)
+            setImageVoteCompleteImage(voted)
         }
     }
 
     private fun setLottieAnimationListener() {
-        binding.imgVoteComplete.apply {
+        with(binding.imgVoteComplete) {
             addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(p0: Animator?) {
                 }
@@ -445,7 +374,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                     visibility = View.INVISIBLE
                     binding.fabVote.visibility = View.INVISIBLE
                     setVoteSelectedVisibility()
-                    setLayoutAlpha(1f)
+                    voteViewModel.closeVote()
                 }
 
                 override fun onAnimationCancel(p0: Animator?) {
@@ -457,10 +386,6 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setImgVoteSelectedImage(selected: Int) {
-        binding.imgVoteSelected.setImageResource(getCompleteImage(selected))
-    }
-
     private fun setVoteSelectedVisibility() {
         with(binding) {
             tvVoteSelected.visibility = View.VISIBLE
@@ -468,15 +393,9 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun getLottieRaw(selected: Int) = when (selected) {
-        0 -> R.raw.lottie_disagree
-        1 -> R.raw.lottie_agree
-        else -> throw IndexOutOfBoundsException()
-    }
-
-    private fun getCompleteImage(selected: Int) = when (selected) {
-        0 -> R.drawable.ic_vote_complete_disagree
-        1 -> R.drawable.ic_vote_complete_agree
+    private fun getLottieRaw(voted: String) = when (voted) {
+        "REJECT" -> R.raw.lottie_disagree
+        "PERMIT" -> R.raw.lottie_agree
         else -> throw IndexOutOfBoundsException()
     }
 

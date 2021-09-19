@@ -191,7 +191,7 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
     }
 
     private fun setLottieAnimationListener() {
-        binding.imgEmojiLottie.apply {
+        with(binding.imgEmojiLottie) {
             addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationRepeat(p0: Animator?) {
                 }
@@ -287,7 +287,6 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
                 }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    setTvReplyPostClickable(text.toString().length)
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
@@ -303,20 +302,15 @@ class CommentFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         }
     }
 
-    private fun setTvReplyPostClickable(length: Int) {
-        binding.tvReplyPost.isClickable = when (length) {
-            0 -> false
-            else -> true
-        }
-    }
-
     private fun setTvReplyPostClickListener() {
         binding.tvReplyPost.setOnClickListener {
-            HideKeyBoardUtil.hide(requireContext(), binding.etReply)
-            commentViewModel.requestPostReply(
-                args.id,
-                binding.etReply.text.toString()
-            )
+            if (binding.etReply.text.toString().isNotBlank()) {
+                HideKeyBoardUtil.hide(requireContext(), binding.etReply)
+                commentViewModel.requestPostReply(
+                    args.id,
+                    binding.etReply.text.toString()
+                )
+            }
         }
     }
 

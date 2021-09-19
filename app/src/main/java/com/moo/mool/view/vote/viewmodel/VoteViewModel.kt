@@ -2,34 +2,34 @@ package com.moo.mool.view.vote.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import com.moo.mool.view.comment.model.Comment
-import com.moo.mool.view.comment.model.RequestPutEmoji
-import com.moo.mool.view.vote.model.RequestCommentId
-import com.moo.mool.view.vote.model.RequestPostComment
-import com.moo.mool.view.vote.model.RequestVote
+import com.moo.mool.view.comment.repository.CommentRepository
+import com.moo.mool.view.comment.repository.EmojiRepository
 import com.moo.mool.view.vote.model.ResponseFeedDetail
 import com.moo.mool.view.vote.repository.VoteRepository
-import kotlinx.coroutines.Dispatchers
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class VoteViewModel @Inject constructor(
-    private val voteRepository: VoteRepository
+    private val voteRepository: VoteRepository,
+    private val commentRepository: CommentRepository,
+    private val emojiRepository: EmojiRepository
 ) : ViewModel() {
-    private val _openVote = MutableStateFlow(0)
+    private val _openVote = MutableStateFlow("CLOSE")
     val openVote = _openVote.asStateFlow()
 
     private val _feedDetail = MutableStateFlow<ResponseFeedDetail?>(null)
     val feedDetail = _feedDetail.asStateFlow()
 
-    private val _feedDetailComment = MutableStateFlow<List<Comment>?>(null)
-    val feedDetailComment = _feedDetailComment.asStateFlow()
+    private val _feedDetailComments = MutableStateFlow<List<Comment>?>(null)
+    val feedDetailComments = _feedDetailComments.asStateFlow()
 
-    private val _requestVote = MutableStateFlow<Int?>(null)
+    private val _requestVote = MutableStateFlow("")
     val requestVote = _requestVote.asStateFlow()
 
     private val _requestDelete = MutableStateFlow(false)
@@ -43,8 +43,8 @@ class VoteViewModel @Inject constructor(
 
     fun setOpenVote() {
         _openVote.value = when (_openVote.value) {
-            0 -> 1
-            1 -> 0
+            "CLOSE" -> "OPEN"
+            "OPEN" -> "CLOSE"
             else -> throw IllegalAccessException()
         }
     }
@@ -52,116 +52,97 @@ class VoteViewModel @Inject constructor(
     fun openVote() {
         _feedDetail.value?.let {
             if (requireNotNull(_feedDetail.value).currentMemberVoteResult == "NO_RESULT") {
-                _openVote.value = 1
+                _openVote.value = "OPEN"
             }
         }
     }
 
     fun closeVote() {
-        _openVote.value = 0
-    }
-
-    fun resetRequestVote() {
-        _requestVote.value = null
+        _openVote.value = "CLOSE"
     }
 
     fun resetIsPosted() {
         _requestPostComment.value = false
     }
 
-    fun resetNetworkError() {
-        _networkError.value = false
-    }
-
     fun requestVoteFeedDetail(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                voteRepository.requestVoteFeedDetail(id)
-            }.getOrNull()?.let { feedDetail ->
-                _feedDetail.emit(feedDetail)
-            } ?: _networkError.emit(true)
+        viewModelScope.launch {
+            voteRepository.requestVoteFeedDetail(id).collect { feedDetail ->
+                feedDetail?.let {
+                    _feedDetail.emit(feedDetail)
+                }
+            }
         }
     }
 
     fun requestVoteFeedComment(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _feedDetailComment.emit(null)
-            runCatching {
-                voteRepository.requestVoteFeedComment(id)
-            }.getOrNull()?.let { feedDetailComment ->
-                _feedDetailComment.emit(feedDetailComment.commentList.filterNot { comment ->
-                    (comment.deleted && comment.replyCount == 0)
-                })
-            } ?: _networkError.emit(true)
+        viewModelScope.launch {
+            voteRepository.requestVoteFeedComment(id).collect { feedDetailComments ->
+                feedDetailComments?.let {
+                    _feedDetailComments.emit(feedDetailComments)
+                }
+            }
         }
     }
 
-    fun requestVote(index: Int, id: Int, vote: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                voteRepository.requestVote(id, RequestVote(vote))
-            }.getOrNull()?.let {
-                _requestVote.emit(index)
-                _feedDetail.emit(
-                    with(requireNotNull(_feedDetail.value)) {
-                        copy(
-                            permitCount = responsePermitVote(vote, this.permitCount),
-                            rejectCount = responseRejectVote(vote, this.rejectCount),
+    fun requestVoteFeedDelete(id: Int) {
+        viewModelScope.launch {
+            voteRepository.requestVoteFeedDelete(id).collect { resultDelete ->
+                _requestDelete.emit(resultDelete)
+            }
+        }
+    }
+
+    fun requestVote(id: Int, vote: String) {
+        viewModelScope.launch {
+            voteRepository.requestVote(id, vote).collect { result ->
+                when (result) {
+                    true -> {
+                        _requestVote.emit(vote)
+                        _feedDetail.emit(
+                            with(requireNotNull(_feedDetail.value)) {
+                                copy(
+                                    permitCount = responsePermitVote(vote, this.permitCount),
+                                    rejectCount = responseRejectVote(vote, this.rejectCount),
+                                )
+                            }
                         )
-                    })
-            } ?: _requestVote.emit(index)
-        }
-    }
-
-    fun requestVoteDelete(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                voteRepository.requestVoteDelete(id)
-            }.getOrNull()?.let {
-                _requestDelete.emit(true)
-            } ?: _networkError.emit(true)
+                    }
+                }
+            }
         }
     }
 
     fun requestPostComment(id: Int, content: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                voteRepository.requestVotePostComment(
-                    RequestPostComment(postId = id, content = content)
-                )
-            }.getOrNull()?.let {
-                _requestPostComment.emit(true)
-            } ?: _networkError.emit(true)
+        viewModelScope.launch {
+            voteRepository.requestVotePostComment(id, content).collect { result ->
+                _requestPostComment.emit(result)
+            }
         }
     }
 
     fun requestDeleteComment(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                voteRepository.requestCommentDelete(RequestCommentId(commentId = id))
-            }.getOrNull()?.let {
-                _feedDetailComment.emit((requireNotNull(_feedDetailComment.value).map { comment ->
-                    if (comment.commentId == id) {
-                        comment.copy(deleted = true)
-                    } else comment
-                }).filterNot { comment ->
-                    (comment.deleted && comment.replyCount == 0)
-                })
-            } ?: _networkError.emit(true)
+        viewModelScope.launch {
+            commentRepository.requestDeleteComment(id).collect { result ->
+                when (result) {
+                    true -> {
+                        _feedDetailComments.emit((requireNotNull(_feedDetailComments.value).map { comment ->
+                            if (comment.commentId == id) {
+                                comment.copy(deleted = true)
+                            } else comment
+                        }).filterNot { comment ->
+                            (comment.deleted && comment.replyCount == 0)
+                        })
+                    }
+                }
+            }
         }
     }
 
     fun requestPutEmoji(emojiId: Int, checked: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            runCatching {
-                voteRepository.requestPutEmoji(
-                    RequestPutEmoji(
-                        commentEmojiId = emojiId,
-                        isChecked = checked
-                    )
-                )
-            }.getOrNull()?.let {
-            } ?: _networkError.emit(true)
+        viewModelScope.launch {
+            emojiRepository.requestPutEmoji(emojiId, checked).collect {
+            }
         }
     }
 
