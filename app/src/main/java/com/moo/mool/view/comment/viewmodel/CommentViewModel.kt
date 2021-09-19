@@ -7,7 +7,6 @@ import com.moo.mool.view.comment.model.Emoji
 import com.moo.mool.view.comment.repository.CommentRepository
 import com.moo.mool.view.comment.repository.EmojiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -163,7 +162,7 @@ class CommentViewModel @Inject constructor(
     }
 
     private fun setCommentEmojiCount(selected: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _emojiList.emit(_emojiList.value.mapIndexed { index, emoji ->
                 if (selected == index) {
                     emoji.copy(
