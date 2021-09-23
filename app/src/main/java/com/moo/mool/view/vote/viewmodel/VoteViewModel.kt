@@ -8,9 +8,7 @@ import com.moo.mool.view.comment.repository.EmojiRepository
 import com.moo.mool.view.vote.model.ResponseFeedDetail
 import com.moo.mool.view.vote.repository.VoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,17 +27,14 @@ class VoteViewModel @Inject constructor(
     private val _feedDetailComments = MutableStateFlow<List<Comment>?>(null)
     val feedDetailComments = _feedDetailComments.asStateFlow()
 
-    private val _requestVote = MutableStateFlow("")
-    val requestVote = _requestVote.asStateFlow()
+    private val _requestVote = MutableSharedFlow<String>()
+    val requestVote = _requestVote.asSharedFlow()
 
     private val _requestDelete = MutableStateFlow(false)
     val requestDelete = _requestDelete.asStateFlow()
 
-    private val _requestPostComment = MutableStateFlow(false)
-    val requestPostComment = _requestPostComment.asStateFlow()
-
-    private val _networkError = MutableStateFlow(false)
-    val networkError = _networkError.asStateFlow()
+    private val _requestPostComment = MutableSharedFlow<Boolean>()
+    val requestPostComment = _requestPostComment.asSharedFlow()
 
     fun setOpenVote() {
         _openVote.value = when (_openVote.value) {
@@ -59,10 +54,6 @@ class VoteViewModel @Inject constructor(
 
     fun closeVote() {
         _openVote.value = "CLOSE"
-    }
-
-    fun resetIsPosted() {
-        _requestPostComment.value = false
     }
 
     fun requestVoteFeedDetail(id: Int) {
