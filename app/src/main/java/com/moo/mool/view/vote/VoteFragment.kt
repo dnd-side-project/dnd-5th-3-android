@@ -200,7 +200,7 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
         binding.etVoteComment.setOnFocusChangeListener { _, isFocused ->
             when (isFocused) {
                 true -> {
-                    if (binding.feed?.isVoted == false) {
+                    if (binding.fabVote.visibility == View.VISIBLE) {
                         voteViewModel.openVote()
                     }
                 }
@@ -253,15 +253,12 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun setRequestPostCommentCollect() {
         repeatOnLifecycle {
-            with(voteViewModel) {
-                requestPostComment.collect { isPosted ->
-                    if (isPosted) {
-                        resetIsPosted()
-                        requestVoteFeedComment(args.id)
-                        delay(500)
-                        afterPostedScroll()
-                        resetEtVoteCommentText()
-                    }
+            voteViewModel.requestPostComment.collect { isPosted ->
+                if (isPosted) {
+                    voteViewModel.requestVoteFeedComment(args.id)
+                    delay(500)
+                    afterPostedScroll()
+                    resetEtVoteCommentText()
                 }
             }
         }
@@ -336,12 +333,10 @@ class VoteFragment : Fragment(), PopupMenu.OnMenuItemClickListener {
 
     private fun setRequestVoteCollect() {
         repeatOnLifecycle {
-            with(voteViewModel) {
-                requestVote.collect { voted ->
-                    if (voted.isNotEmpty()) {
-                        requestVoteFeedComment(args.id)
-                        setLayoutCommentSelectClose(voted, getLayoutVoteList())
-                    }
+            voteViewModel.requestVote.collect { voted ->
+                if (voted.isNotEmpty()) {
+                    voteViewModel.requestVoteFeedComment(args.id)
+                    setLayoutCommentSelectClose(voted, getLayoutVoteList())
                 }
             }
         }
