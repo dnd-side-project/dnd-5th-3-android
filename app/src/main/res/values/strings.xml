@@ -120,6 +120,7 @@
     <string name="profile_change_nickname_fail_dialog_description">이런...이미 있는 닉네임이에요\n다른 닉네임으로 시도해주세요</string>
     <string name="profile_change_all_success_dialog_title">프로필 변경 성공!</string>
     <string name="profile_change_all_success_dialog_description">보다 멋진 프로필로 변경되었어요!\n이제 다시 활동을 시작해볼까요?</string>
+    <string name="profile_change_navigate_changePassword_fail_toast">소셜 계정은 비밀번호 변경이 불가합니다</string>
 
     <!-- ChangePassword -->
     <string name="change_password">비밀번호 변경</string>
