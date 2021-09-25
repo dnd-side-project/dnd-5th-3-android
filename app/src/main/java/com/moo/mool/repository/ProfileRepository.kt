@@ -17,6 +17,7 @@ class ProfileRepository(private val context: Context) {
         fun onSuccess()
         fun onError(message: String?)
     }
+    fun getCurrentUserNickname() = sharedManager.getCurrentUser().nickname.toString()
     fun duplicateCheckNickname(nickname: String, profileCallBack: ProfileCallBack) {
         RequestToServer.service.requestDuplicateCheckNickname(nickname)
             .enqueue(object : Callback<String> {
@@ -48,6 +49,7 @@ class ProfileRepository(private val context: Context) {
             ) {
                 if (response.isSuccessful) {
                     profileCallBack.onSuccess()
+                    sharedManager.updateNickname(nickname) // 유저 저장소에 변경한 닉네임으로 저장
                 } else {
                     try {
                         val jObjError = JSONObject(response.errorBody()!!.string())

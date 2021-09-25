@@ -13,10 +13,8 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
     private val profileRepository = ProfileRepository(getApplication<Application>().applicationContext)
 
-
     private val _checkSocialEmailSuccess = MutableStateFlow(false)
     val checkSocialEmailSuccess = _checkSocialEmailSuccess.asStateFlow()
-    val checkSocialEmailFailedMessage = MutableLiveData<String?>()
 
     val duplicateCheckNicknameSuccess = MutableLiveData<Boolean?>()
     val duplicateCheckNicknameFailedMessage = MutableLiveData<String?>()
@@ -120,4 +118,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             }
         }
     }
+
+    fun getCurrentUserNickname() = profileRepository.getCurrentUserNickname()
 }
