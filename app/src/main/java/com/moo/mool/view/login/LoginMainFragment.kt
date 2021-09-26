@@ -63,6 +63,7 @@ class LoginMainFragment : Fragment() {
 
                 requireView().findNavController().navigate(R.id.action_loginMainFragment_to_mainActivity)
                 binding.webviewGoogleLogin.clearHistory()
+                CookieManager.getInstance().removeAllCookies(null)
                 (activity as LoginActivity).finish()
 
                 return true
