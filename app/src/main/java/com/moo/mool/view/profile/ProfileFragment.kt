@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.moo.mool.R
-import com.moo.mool.databinding.DialogDefaultConfirmBinding
 import com.moo.mool.databinding.FragmentProfileBinding
 import com.moo.mool.util.*
 import com.moo.mool.view.ToastDefaultBlack
@@ -100,26 +99,16 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setCheckDuplicateNickname() {
-        val dialogBinding = DialogDefaultConfirmBinding.inflate(LayoutInflater.from(requireContext()))
-        val mAlertDialog = DefaultDialogUtil.createDialog(requireContext(), dialogBinding)
-
         binding.btnDuplicateCheckEtNickname.setOnClickListener {
             profileViewModel.duplicateCheckNickname(binding.etProfileNickname.text.toString().trim())
         }
 
         profileViewModel.duplicateCheckNicknameSuccess.observe(viewLifecycleOwner, Observer {
             if(it == true) {
-                DefaultDialogUtil.setDialogDetail(dialogBinding,
+                val mAlertDialog = DefaultDialogUtil.createDialog(requireContext(),
                     R.string.profile_change_nickname_success_dialog_title, R.string.profile_change_nickname_success_dialog_description,
-                    confirmButtonShow = true,
-                    cancelButtonShow = false,
-                    confirmButtonTextResId = null,
-                    cancelButtonTextResId = null
-                )
-                // Dialog 중복 실행 방지
-                if(mAlertDialog != null && !mAlertDialog.isShowing) {
-                    mAlertDialog.show()
-                    dialogBinding.tvDialogConfirm.setOnClickListener {
+                    true, false, null, null,
+                    {
                         deactiveDuplicateCheck()
                         with(binding.tvMessageChangeCheckNickname){
                             visibility = View.VISIBLE
@@ -128,23 +117,19 @@ class ProfileFragment : Fragment() {
                         }
                         binding.etProfileNickname.isEnabled = false
                         ActiveButtonUtil.setButtonState(requireContext(), binding.btnSave, true, R.drawable.button_default_enable, R.color.bluegray50_F9FAFC)
-                        mAlertDialog.dismiss()
-                    }
-                }
-            } else if(it == false) {
-                DefaultDialogUtil.setDialogDetail(dialogBinding,
-                    R.string.profile_change_nickname_fail_dialog_title, R.string.profile_change_nickname_fail_dialog_description,
-                    confirmButtonShow = false,
-                    cancelButtonShow = true,
-                    confirmButtonTextResId = null,
-                    cancelButtonTextResId = R.string.back
+                    }, null
                 )
-                // Dialog 중복 실행 방지
                 if(mAlertDialog != null && !mAlertDialog.isShowing) {
                     mAlertDialog.show()
-                    dialogBinding.tvDialogCancel.setOnClickListener {
-                        mAlertDialog.dismiss()
-                    }
+                }
+            } else if(it == false) {
+                val mAlertDialog = DefaultDialogUtil.createDialog(requireContext(),
+                    R.string.profile_change_nickname_fail_dialog_title, R.string.profile_change_nickname_fail_dialog_description,
+                    false, true, null, R.string.back,
+                    null, null
+                )
+                if(mAlertDialog != null && !mAlertDialog.isShowing) {
+                    mAlertDialog.show()
                 }
             }
         })
@@ -182,25 +167,15 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setChangeSaveClickListener() {
-        val dialogBinding = DialogDefaultConfirmBinding.inflate(LayoutInflater.from(requireContext()))
-        val mAlertDialog = DefaultDialogUtil.createDialog(requireContext(), dialogBinding)
 
         binding.btnSave.setOnClickListener {
             profileViewModel.updateNickname(binding.etProfileNickname.text.toString()) // 서버와 닉네임 연동하여 변경
-            DefaultDialogUtil.setDialogDetail(dialogBinding,
+            val mAlertDialog = DefaultDialogUtil.createDialog(requireContext(),
                 R.string.profile_change_all_success_dialog_title, R.string.profile_change_all_success_dialog_description,
-                confirmButtonShow = true,
-                cancelButtonShow = false,
-                confirmButtonTextResId = null,
-                cancelButtonTextResId = null
+                true, false, null, null,
+                { (activity as MainActivity).onBackPressed() }, null
             )
             mAlertDialog.show()
-
-            dialogBinding.tvDialogConfirm.setOnClickListener {
-                mAlertDialog.dismiss()
-                // 저장 후 바로 메인화면으로 되돌아가기 위해 OnBackPressed 사용
-                (activity as MainActivity).onBackPressed()
-            }
         }
     }
 
