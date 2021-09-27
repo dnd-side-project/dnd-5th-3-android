@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.webkit.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentLoginMainBinding
 import com.moo.mool.model.ResponseLogin
+import com.moo.mool.util.navigate
 import com.moo.mool.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.regex.Pattern
@@ -34,12 +34,12 @@ class LoginMainFragment : Fragment() {
 
     private fun setEmailLoginClickListener() {
         binding.btnEmailLogin.setOnClickListener {
-            requireView().findNavController().navigate(R.id.action_loginMainFragment_to_emailLoginFragment)
+            navigate(R.id.action_loginMainFragment_to_emailLoginFragment)
         }
     }
     private fun setEmailSignupClickListener() {
         binding.tvSignup.setOnClickListener {
-            requireView().findNavController().navigate(R.id.action_loginMainFragment_to_emailSignupSetIDFragment)
+            navigate(R.id.action_loginMainFragment_to_emailSignupSetIDFragment)
         }
     }
 
@@ -61,7 +61,7 @@ class LoginMainFragment : Fragment() {
                     ResponseLogin(googleEmail, googleNickname, googleAccessToken, googleRefreshToken)
                 )
 
-                requireView().findNavController().navigate(R.id.action_loginMainFragment_to_mainActivity)
+                navigate(R.id.action_loginMainFragment_to_mainActivity)
                 binding.webviewGoogleLogin.clearHistory()
                 CookieManager.getInstance().removeAllCookies(null)
                 (activity as LoginActivity).finish()
