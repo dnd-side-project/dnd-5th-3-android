@@ -1,16 +1,12 @@
 package com.moo.mool.view.write
 
-import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -19,6 +15,9 @@ import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.database.TempPost
 import com.moo.mool.databinding.FragmentTempSavedWriteBinding
+import com.moo.mool.util.DefaultDialogUtil
+import com.moo.mool.util.ToolbarDecorationUtil
+import com.moo.mool.util.popBackStack
 import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.WriteViewModel
 import java.util.*
@@ -36,7 +35,7 @@ class TempSavedWriteFragment : Fragment() {
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
-                    requireView().findNavController().popBackStack()
+                    popBackStack()
                 }
             }
 
@@ -50,7 +49,7 @@ class TempSavedWriteFragment : Fragment() {
         writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(requireActivity().application)).get(WriteViewModel::class.java)
         binding.writeViewModel = writeViewModel
 
-        setToolbarDetail()
+        ToolbarDecorationUtil.setToolbarDetail(binding.toolbarWriteTempSavedBoard, R.string.write_temp_post, requireActivity(), this)
 
         binding.tvTempSavedWriteTitle.text = currentTempPost.title
         binding.tvTempSavedWriteDetail.text = currentTempPost.content
@@ -78,34 +77,18 @@ class TempSavedWriteFragment : Fragment() {
         if (item.itemId == android.R.id.home) {
             (activity as MainActivity).onBackPressed()
         } else if(item.itemId == R.id.action_recall_temp_post) {
-            // TODO : Dialog 띄우기 코드 개선 필요
-            val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-            val mBuilder = AlertDialog.Builder(requireContext())
-                .setView(mDialogView)
-            val mAlertDialog = mBuilder.create()
-            mAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val mAlertDialog = DefaultDialogUtil.createDialog(requireContext(),
+                R.string.recall, R.string.write_temp_post_recall_dialog_description,
+                true, true, null, null,
+                {
+                    val bundle = Bundle()
+                    bundle.putParcelable("currentTempPost", currentTempPost)
+                    // 불러온 글을 WriteFragment로 데이터를 넘기면서 해당 임시 저장글 삭제하여 불러온 글이 임시저장 리스트에 남아있지 않도록 함
+                    writeViewModel.deleteTempPost(currentTempPost)
+                    requireView().findNavController().navigate(R.id.action_tempSavedWriteFragment_to_writeFragment, bundle)
+                }, null
+            )
             mAlertDialog.show()
-
-            // Dialog 제목 및 내용 설정
-            mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title).setText(R.string.recall)
-            mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description).setText(R.string.write_temp_post_recall_dialog_description)
-
-            // Dialog 확인, 취소버튼 설정
-            val confirmButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
-            val cancelButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel)
-
-            // Dialog 확인 버튼을 클릭 한 경우
-            confirmButton.setOnClickListener {
-                val bundle = Bundle()
-                bundle.putParcelable("currentTempPost", currentTempPost)
-                // 불러온 글을 WriteFragment로 데이터를 넘기면서 해당 임시 저장글 삭제하여 불러온 글이 임시저장 리스트에 남아있지 않도록 함
-                writeViewModel.deleteTempPost(currentTempPost)
-                requireView().findNavController().navigate(R.id.action_tempSavedWriteFragment_to_writeFragment, bundle)
-                mAlertDialog.dismiss()
-            }
-            cancelButton.setOnClickListener {
-                mAlertDialog.dismiss()
-            }
         }
         return true
     }
@@ -117,17 +100,6 @@ class TempSavedWriteFragment : Fragment() {
         }
     }
 
-    private fun showBackButton() {
-        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
-        this.setHasOptionsMenu(true)
-    }
-    private fun setToolbarDetail() {
-        binding.toolbarWriteTempSavedBoard.tvToolbarTitle.setText(R.string.write_temp_post)
-        (activity as MainActivity).setSupportActionBar(binding.toolbarWriteTempSavedBoard.toolbarBoard)
-        (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        showBackButton()
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

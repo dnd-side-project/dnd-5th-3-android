@@ -2,7 +2,6 @@ package com.moo.mool.view.write
 
 import android.Manifest
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -17,14 +16,12 @@ import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.*
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -35,7 +32,7 @@ import com.moo.mool.R
 import com.moo.mool.database.TempPost
 import com.moo.mool.database.TempPostDatabase
 import com.moo.mool.databinding.FragmentWriteBinding
-import com.moo.mool.util.EdittextCount
+import com.moo.mool.util.*
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.main.MainActivity
 import com.moo.mool.viewmodel.WriteViewModel
@@ -80,17 +77,9 @@ class WriteFragment : Fragment() {
         _binding = FragmentWriteBinding.inflate(layoutInflater)
         db = TempPostDatabase.getDatabase(requireContext())!!
 
-        writeViewModel =
-            ViewModelProvider(this, WriteViewModel.Factory(requireActivity().application)).get(
-                WriteViewModel::class.java
-            )
+        writeViewModel = ViewModelProvider(this, WriteViewModel.Factory(requireActivity().application)).get(WriteViewModel::class.java)
         binding.writeViewModel = writeViewModel
-        setToolbarDetail()
-
-        val mDialogView =
-            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-        val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
-        val mAlertDialog = mBuilder.create()
+        ToolbarDecorationUtil.setToolbarDetail(binding.toolbarWriteBoard, R.string.write, requireActivity(), this)
 
         textWatcherEditText()
         recallTempPost()
@@ -101,21 +90,14 @@ class WriteFragment : Fragment() {
         writeViewModel.writeSuccess.observe(viewLifecycleOwner, Observer {
             if (!it) {
                 /** 서버와 연동에 실패한 경우 **/
+                val mAlertDialog = DefaultDialogUtil.createDialog(requireContext(),
+                    R.string.write_save_fail_server_error_dialog_title, R.string.write_save_fail_server_error_dialog_description,
+                    true, false, null,null,
+                    {activeButtonSave()}, null
+                )
                 // Dialog 중복 실행 방지
                 if (mAlertDialog != null && !mAlertDialog.isShowing) {
                     mAlertDialog.show()
-
-                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
-                        .setText(R.string.write_save_fail_server_error_dialog_title)
-                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
-                        .setText(R.string.write_save_fail_server_error_dialog_description)
-
-                    val confirmButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
-                    mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility = View.GONE
-                    confirmButton.setOnClickListener {
-                        mAlertDialog.dismiss()
-                        activeButtonSave()
-                    }
                 }
             }
         })
@@ -124,8 +106,7 @@ class WriteFragment : Fragment() {
         })
 
         binding.btnWriteTempPostsArchive.setOnClickListener {
-            requireView().findNavController()
-                .navigate(R.id.action_writeFragment_to_tempListWriteFragment)
+            navigate(R.id.action_writeFragment_to_tempListWriteFragment)
         }
         return binding.root
     }
@@ -181,14 +162,6 @@ class WriteFragment : Fragment() {
         return true
     }
 
-    private fun setToolbarDetail() {
-        binding.toolbarWriteBoard.tvToolbarTitle.setText(R.string.write)
-        (activity as MainActivity).setSupportActionBar(binding.toolbarWriteBoard.toolbarBoard)
-        (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        showBackButton()
-    }
-
     private fun textWatcherEditText() {
         binding.etWriteTitle.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -202,9 +175,7 @@ class WriteFragment : Fragment() {
                 }
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                afterTextChanged(s as Editable?)
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
         })
 
         binding.etWriteContent.addTextChangedListener(object : TextWatcher {
@@ -219,9 +190,7 @@ class WriteFragment : Fragment() {
                 }
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                afterTextChanged(s as Editable?)
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
         })
     }
 
@@ -285,9 +254,7 @@ class WriteFragment : Fragment() {
                 deactiveButtonSave()
             }
             writeViewModel.writePostId.observe(viewLifecycleOwner, Observer {
-                Navigation.findNavController(view).navigate(
-                    WriteFragmentDirections.actionWriteFragmentToVoteFragment(it.toInt())
-                )
+                navigateWithData(WriteFragmentDirections.actionWriteFragmentToVoteFragment(it.toInt()))
             })
         }
     }
@@ -330,27 +297,14 @@ class WriteFragment : Fragment() {
                         .centerCrop()
                         .into(binding.imgDetailPost)
                 } else {
-                    val mDialogView = LayoutInflater.from(requireContext())
-                        .inflate(R.layout.dialog_default_confirm, null)
-                    val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
-                    val mAlertDialog = mBuilder.create()
-
+                    val mAlertDialog = DefaultDialogUtil.createDialog(requireContext(),
+                        R.string.write_save_fail_format_dialog_title, R.string.write_save_fail_format_dialog_description,
+                        true, false, null,null,
+                        null, null
+                    )
                     // Dialog 중복 실행 방지
                     if (mAlertDialog != null && !mAlertDialog.isShowing) {
                         mAlertDialog.show()
-
-                        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
-                            .setText(R.string.write_save_fail_format_dialog_title)
-                        mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
-                            .setText(R.string.write_save_fail_format_dialog_description)
-
-                        val confirmButton =
-                            mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
-                        mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility =
-                            View.GONE
-                        confirmButton.setOnClickListener {
-                            mAlertDialog.dismiss()
-                        }
                     }
                 }
             }
@@ -425,25 +379,14 @@ class WriteFragment : Fragment() {
         }
     }
 
-    private fun showBackButton() {
-        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
-        this.setHasOptionsMenu(true)
-    }
-
     private fun activeButtonSave() {
         binding.fabWriteToComplete.isEnabled = true
-        binding.fabWriteToComplete.backgroundTintList =
-            requireContext().resources.getColorStateList(
-                R.color.moomool_pink_ff227c,
-                context?.theme
-            )
+        binding.fabWriteToComplete.backgroundTintList = requireContext().resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme)
     }
 
     private fun deactiveButtonSave() {
         binding.fabWriteToComplete.isEnabled = false
-        binding.fabWriteToComplete.backgroundTintList =
-            requireContext().resources.getColorStateList(R.color.bluegray500_878C96, context?.theme)
+        binding.fabWriteToComplete.backgroundTintList = requireContext().resources.getColorStateList(R.color.bluegray500_878C96, context?.theme)
     }
 
     override fun onDestroyView() {
