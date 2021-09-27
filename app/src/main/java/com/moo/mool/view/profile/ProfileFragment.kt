@@ -116,7 +116,7 @@ class ProfileFragment : Fragment() {
                             setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
                         }
                         binding.etProfileNickname.isEnabled = false
-                        ActiveButtonUtil.setButtonState(requireContext(), binding.btnSave, true, R.drawable.button_default_enable, R.color.bluegray50_F9FAFC)
+                        ActiveButtonUtil.setButtonActive(requireContext(), binding.btnSave)
                     }, null
                 )
                 if(mAlertDialog != null && !mAlertDialog.isShowing) {
