@@ -10,23 +10,16 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentEmailSignupSetNicknameBinding
-import com.moo.mool.util.EdittextCount
-import com.moo.mool.util.HideKeyBoardUtil
+import com.moo.mool.util.*
 import com.moo.mool.view.login.LoginActivity
 import com.moo.mool.viewmodel.SignupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EmailSignupSetNicknameFragment : Fragment() {
@@ -40,7 +33,7 @@ class EmailSignupSetNicknameFragment : Fragment() {
     ): View? {
         _binding = FragmentEmailSignupSetNicknameBinding.inflate(layoutInflater, container, false)
 
-        setToolbarDetail()
+        ToolbarDecorationUtil.setToolbarDetail(binding.toolbarSignupBoard, R.string.signup, requireActivity(), this)
         textWatcherEditText()
         setEtClearClickListener()
         setEtEditorActionListener(binding.etSignupEmailNickname)
@@ -64,78 +57,59 @@ class EmailSignupSetNicknameFragment : Fragment() {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        (activity as LoginActivity).onBackPressed()
+        if (item.itemId == android.R.id.home) {
+            (activity as LoginActivity).onBackPressed()
+        }
         return true
-    }
-    private fun showBackButton() {
-        (activity as LoginActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        (activity as LoginActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
-        this.setHasOptionsMenu(true)
-    }
-    private fun setToolbarDetail() {
-        binding.toolbarSignupBoard.tvToolbarTitle.setText(R.string.signup)
-        (activity as LoginActivity).setSupportActionBar(binding.toolbarSignupBoard.toolbarBoard)
-        (activity as LoginActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        showBackButton()
     }
 
     private fun textWatcherEditText() {
         binding.etSignupEmailNickname.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                // 비밀번호, 비밀번호 확인 칸에 텍스트 작성시 아래에 안내 메시지 출력
-                if(!s.toString().trim().isNullOrBlank()){
-                    binding.btnDeleteEtEmailNickname.visibility = View.VISIBLE
-                    binding.tvMessageEmailNicknameCheck.visibility = View.VISIBLE
-                } else {
-                    binding.btnDeleteEtEmailNickname.visibility = View.INVISIBLE
-                    binding.tvMessageEmailNicknameCheck.visibility = View.INVISIBLE
-                    deactiveButtonNext()
+                with(binding) {
+                    // 비밀번호, 비밀번호 확인 칸에 텍스트 작성시 아래에 안내 메시지 출력
+                    if(!s.toString().trim().isNullOrBlank()){
+                        btnDeleteEtEmailNickname.visibility = View.VISIBLE
+                        tvMessageEmailNicknameCheck.visibility = View.VISIBLE
+                    } else {
+                        btnDeleteEtEmailNickname.visibility = View.INVISIBLE
+                        tvMessageEmailNicknameCheck.visibility = View.INVISIBLE
+                        ActiveButtonUtil.setButtonDeactivate(requireContext(), binding.btnNext)
+                    }
                 }
 
-                // TODO : 닉네임 형식 확인 코드 작성
-                if(EdittextCount.getGraphemeCount(s.toString().trim()) <= 8 && !s.toString().trim().isNullOrBlank()) {
-                    signupViewModel.duplicateCheckNickname(s.toString().trim())
-                    signupViewModel.duplicateCheckNicknameSuccess.observe(viewLifecycleOwner, Observer {
-                        if(it) { /** 중복계정 확인 구문 **/
-                            binding.tvMessageEmailNicknameCheck.setText(getString(R.string.success_message_email_signup_nickname))
-                            binding.tvMessageEmailNicknameCheck.setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
-                            activeButtonNext()
-                        } else {
-                            binding.tvMessageEmailNicknameCheck.setText(getString(R.string.fail_message_email_signup_nickname_duplicate))
-                            binding.tvMessageEmailNicknameCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
-                            deactiveButtonNext()
-                        }
-                    })
-                    signupViewModel.signupFailedMessage.observe(viewLifecycleOwner, Observer {
-                        Log.e("Duplicate Check Error", it.toString())
-                    })
-                } else {
-                    // 형식 검사 실패시
-                    binding.tvMessageEmailNicknameCheck.setText(getString(R.string.fail_message_email_signup_nickname_format))
-                    binding.tvMessageEmailNicknameCheck.setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
-                    deactiveButtonNext()
+                with(binding.tvMessageEmailNicknameCheck) {
+                    if(EdittextCount.getGraphemeCount(s.toString().trim()) <= 8 && !s.toString().trim().isNullOrBlank()) {
+                        signupViewModel.duplicateCheckNickname(s.toString().trim())
+                        signupViewModel.duplicateCheckNicknameSuccess.observe(viewLifecycleOwner, Observer {
+                            if(it) { /** 중복계정 확인 구문 **/
+                                text = getString(R.string.success_message_email_signup_nickname)
+                                setTextColor(resources.getColorStateList(R.color.moomool_blue_0098ff, context?.theme))
+                                ActiveButtonUtil.setButtonActive(requireContext(), binding.btnNext)
+                            } else {
+                                text = getString(R.string.fail_message_email_signup_nickname_duplicate)
+                                setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                                ActiveButtonUtil.setButtonDeactivate(requireContext(), binding.btnNext)
+                            }
+                        })
+                        signupViewModel.signupFailedMessage.observe(viewLifecycleOwner, Observer {
+                            Log.e("Duplicate Check Error", it.toString())
+                        })
+                    } else {
+                        // 형식 검사 실패시
+                        text = getString(R.string.fail_message_email_signup_nickname_format)
+                        setTextColor(resources.getColorStateList(R.color.moomool_pink_ff227c, context?.theme))
+                        ActiveButtonUtil.setButtonDeactivate(requireContext(), binding.btnNext)
+                    }
                 }
             }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { afterTextChanged(s as Editable?) }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
         })
     }
 
     private fun setEtClearClickListener() {
-        binding.btnDeleteEtEmailNickname.setOnClickListener{
-            binding.etSignupEmailNickname.setText("")
-        }
-    }
-
-    private fun activeButtonNext() {
-        binding.btnNext.isEnabled = true
-        binding.btnNext.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_enable))
-        binding.btnNext.setTextColor(resources.getColorStateList(R.color.bluegray50_F9FAFC, context?.theme))
-    }
-    private fun deactiveButtonNext() {
-        binding.btnNext.isEnabled = false
-        binding.btnNext.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.button_default_disable))
-        binding.btnNext.setTextColor(resources.getColorStateList(R.color.bluegray600_626670, context?.theme))
+        ActiveButtonUtil.setClearButton(binding.btnDeleteEtEmailNickname, binding.etSignupEmailNickname)
     }
 
     private fun setEtEditorActionListener(editText: EditText) {
@@ -162,14 +136,12 @@ class EmailSignupSetNicknameFragment : Fragment() {
     }
 
     private fun setRequestLoginCollect() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                signupViewModel.loginSuccess
-                    .collect { loginSuccess ->
-                        if (loginSuccess) { // 자동 로그인 성공시 바로 메인 화면으로 이동
-                            requireView().findNavController().navigate(R.id.action_emailSignupSetNicknameFragment_to_mainActivity)
-                            (activity as LoginActivity).finish()
-                        } }
+        repeatOnLifecycle {
+            signupViewModel.loginSuccess.collect { loginSuccess ->
+                if (loginSuccess) { // 자동 로그인 성공시 바로 메인 화면으로 이동
+                    navigate(R.id.action_emailSignupSetNicknameFragment_to_mainActivity)
+                    (activity as LoginActivity).finish()
+                }
             }
         }
     }
@@ -196,5 +168,4 @@ class EmailSignupSetNicknameFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
