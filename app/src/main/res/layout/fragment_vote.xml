@@ -359,7 +359,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:backgroundTint="@{isOpen.equals(`CLOSE`) ? @color/bluegray200_E1E3E8 : @color/bluegray700_4D535E}"
-            android:src="@{isOpen.equals(`CLOSE`) ? @drawable/ic_feed_logo : @drawable/ic_x_sign}"
+            android:src="@{isOpen.equals(`CLOSE`) ? @drawable/ic_judge : @drawable/ic_x_sign}"
             android:visibility="@{!feed.isVoted &amp;&amp; feed.currentMemberVoteResult.equals(`NO_RESULT`) ? View.VISIBLE : View.INVISIBLE}"
             app:borderWidth="0dp"
             app:elevation="0dp"
