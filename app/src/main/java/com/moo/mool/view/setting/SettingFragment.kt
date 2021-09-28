@@ -1,6 +1,5 @@
 package com.moo.mool.view.setting
 
-import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.SharedPreferences
@@ -11,14 +10,15 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import com.moo.mool.BuildConfig
 import com.moo.mool.R
 import com.moo.mool.databinding.FragmentSettingBinding
+import com.moo.mool.util.DefaultDialogUtil
+import com.moo.mool.util.ToolbarDecorationUtil
+import com.moo.mool.util.navigate
 import com.moo.mool.view.ToastDefaultBlack
 import com.moo.mool.view.login.LoginActivity
 import com.moo.mool.view.main.MainActivity
@@ -36,7 +36,7 @@ class SettingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSettingBinding.inflate(layoutInflater)
-        setToolbarDetail()
+        ToolbarDecorationUtil.setToolbarDetail(binding.toolbarSettingBoard, R.string.setting, requireActivity(), this)
         setLogoutClickListener()
         setDeleteAccountClickListener()
         setHideUnusedFeature()
@@ -50,28 +50,21 @@ class SettingFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        (activity as MainActivity).onBackPressed()
+        if (item.itemId == android.R.id.home) {
+            (activity as MainActivity).onBackPressed()
+        }
         return true
     }
 
-    private fun showBackButton() {
-        (activity as MainActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_back)
-        this.setHasOptionsMenu(true)
-    }
-
     private fun setHideUnusedFeature() { // TODO: Hide 처리된 기능들 구현
-        binding.tvMessageSetting.visibility = View.GONE
-        binding.btnSettingNotification.visibility = View.GONE
-        binding.btnSettingMotion.visibility = View.GONE
-        binding.btnSettingInformationNotice.visibility = View.GONE
-    }
-
-    private fun setToolbarDetail() {
-        binding.toolbarSettingBoard.tvToolbarTitle.setText(R.string.setting)
-        (activity as MainActivity).setSupportActionBar(binding.toolbarSettingBoard.toolbarBoard)
-        (activity as MainActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        showBackButton()
+        with(binding){
+            View.GONE.also {
+                tvMessageSetting.visibility = it
+                btnSettingNotification.visibility = it
+                btnSettingMotion.visibility = it
+                btnSettingInformationNotice.visibility = it
+            }
+        }
     }
 
     private fun deleteSharedPreferencesInfo() {
@@ -83,8 +76,7 @@ class SettingFragment : Fragment() {
 
     private fun setNoticeClickListener() {
         binding.btnSettingInformationNotice.setOnClickListener {
-            requireView().findNavController()
-                .navigate(R.id.action_settingFragment_to_noticeListFragment)
+            navigate(R.id.action_settingFragment_to_noticeListFragment)
         }
     }
 
@@ -115,102 +107,63 @@ class SettingFragment : Fragment() {
     }
 
     private fun setLogoutClickListener() {
+        val mAlertDialog = DefaultDialogUtil.createDialog(requireContext(),
+            R.string.setting_logout, R.string.setting_logout_dialog_description,
+            true, true, null,null, {
+                deleteSharedPreferencesInfo()
+                settingViewModel.deleteTempPostAll()
+                val loginIntent = Intent(activity, LoginActivity::class.java)
+                startActivity(loginIntent)
+                (activity as MainActivity).finish()
+            }, null
+        )
+
         binding.tvSettingLogout.setOnClickListener {
-            val mDialogView =
-                LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-            val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
-            val mAlertDialog = mBuilder.create()
             // Dialog 중복 실행 방지
             if (mAlertDialog != null && !mAlertDialog.isShowing) {
                 mAlertDialog.show()
-
-                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
-                    .setText(R.string.setting_logout)
-                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
-                    .setText(R.string.setting_logout_dialog_description)
-
-                val confirmButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
-                val cancelButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel)
-                cancelButton.setOnClickListener {
-                    mAlertDialog.dismiss()
-                }
-                confirmButton.setOnClickListener {
-                    deleteSharedPreferencesInfo()
-                    settingViewModel.deleteTempPostAll()
-                    val loginIntent = Intent(activity, LoginActivity::class.java)
-                    startActivity(loginIntent)
-                    (activity as MainActivity).finish()
-
-                    mAlertDialog.dismiss()
-                }
             }
         }
     }
 
     private fun setDeleteAccountClickListener() {
+        val mAlertDialogFarewell = DefaultDialogUtil.createDialog(requireContext(),
+            R.string.setting_delete_account_complete, R.string.setting_delete_account_complete_dialog_description,
+            true, false, null,null, {
+                val loginIntent = Intent(activity, LoginActivity::class.java)
+                startActivity(loginIntent)
+                (activity as MainActivity).finish()
+            }, null
+        )
+
+        val mAlertDialog = DefaultDialogUtil.createDialog(requireContext(),
+            R.string.setting_delete_account, R.string.setting_delete_account_check_dialog_description,
+            true, true, null,null, {
+                settingViewModel.deleteAccount()
+                settingViewModel.deleteTempPostAll()
+                mAlertDialogFarewell.show()
+                deleteSharedPreferencesInfo()
+            }, null
+        )
+
         binding.tvSettingDeleteAccount.setOnClickListener {
-            val mDialogView =
-                LayoutInflater.from(requireContext()).inflate(R.layout.dialog_default_confirm, null)
-            val mBuilder = AlertDialog.Builder(requireContext()).setView(mDialogView)
-            val mAlertDialog = mBuilder.create()
-            // Dialog 중복 실행 방지
             if (mAlertDialog != null && !mAlertDialog.isShowing) {
                 mAlertDialog.show()
-
-                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
-                    .setText(R.string.setting_delete_account)
-                mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
-                    .setText(R.string.setting_delete_account_check_dialog_description)
-
-                val confirmButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
-                val cancelButton = mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel)
-                cancelButton.setOnClickListener {
-                    mAlertDialog.dismiss()
-                }
-                confirmButton.setOnClickListener {
-                    settingViewModel.deleteAccount()
-                    settingViewModel.deleteTempPostAll()
-                    mAlertDialog.dismiss()
-                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_title)
-                        .setText(R.string.setting_delete_account_complete)
-                    mDialogView.findViewById<TextView>(R.id.tv_message_dialog_description)
-                        .setText(R.string.setting_delete_account_complete_dialog_description)
-                    mDialogView.findViewById<TextView>(R.id.tv_dialog_cancel).visibility =
-                        View.GONE
-                    mAlertDialog.setCancelable(false)
-                    mAlertDialog.show()
-                    deleteSharedPreferencesInfo()
-
-                    // 메인 로그인 화면으로 돌아가도록 설정
-                    val deleteAccountConfirmButton =
-                        mDialogView.findViewById<TextView>(R.id.tv_dialog_confirm)
-                    deleteAccountConfirmButton.setOnClickListener {
-                        val loginIntent = Intent(activity, LoginActivity::class.java)
-                        startActivity(loginIntent)
-                        (activity as MainActivity).finish()
-                    }
-                }
             }
         }
     }
 
     private fun setNotificationSettingClickListener() {
         binding.btnSettingNotification.setOnClickListener {
-            ToastDefaultBlack.createToast(
-                requireContext(),
-                getString(R.string.fail_navigate_page_developing)
-            )?.show()
-            // requireView().findNavController().navigate(R.id.action_settingFragment_to_settingNotificationFragment)
+            ToastDefaultBlack.createToast(requireContext(), getString(R.string.fail_navigate_page_developing))?.show()
+            // navigate(R.id.action_settingFragment_to_settingNotificationFragment)
         }
     }
 
     private fun setMotionSettingClickListener() {
         binding.btnSettingMotion.setOnClickListener {
-            ToastDefaultBlack.createToast(
-                requireContext(),
-                getString(R.string.fail_navigate_page_developing)
-            )?.show()
-            // requireView().findNavController().navigate(R.id.action_settingFragment_to_settingMotionFragment)
+            ToastDefaultBlack.createToast(requireContext(), getString(R.string.fail_navigate_page_developing))?.show()
+            // navigate(R.id.action_settingFragment_to_settingMotionFragment)
         }
     }
 
